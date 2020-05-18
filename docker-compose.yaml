@@ -1,0 +1,55 @@
+version: '3.5'
+services:
+  db:
+    container_name: postgres
+    image: postgres:latest
+    env_file: ./db/database.conf
+    ports:
+      - 5432:5432  
+    volumes:
+      - ./db/data:/var/lib/postgresql
+
+  chainer:
+    build:
+      context: krakend-smev
+      dockerfile: Dockerfile
+    container_name: chainer
+    volumes:
+      - ./chainer:/etc/krakend
+    ports:
+      - 8080:8000
+    command: [ "run", "-c", "/etc/krakend/config.json" ]
+
+  json_2_xml:
+    build:
+      context: json2xml-transformer
+      dockerfile: Dockerfile
+    container_name: json_2_xml
+    ports:
+      - 5001:5000
+    depends_on:
+      - chainer
+
+  record_repository:
+    build:
+      context: record-repository
+      dockerfile: Dockerfile
+    container_name: record_repository
+    env_file: ./record-repository/app.conf
+    ports:
+      - 5002:5000
+    depends_on:
+      - chainer
+      - db
+
+  smev_connector:
+    build:
+      context: smev-connector
+      dockerfile: Dockerfile
+    container_name: smev_connector
+    env_file: ./smev-connector/app.conf
+    ports:
+      - 5003:5000
+    depends_on:
+      - chainer
+      - db

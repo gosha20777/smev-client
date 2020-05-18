@@ -1,0 +1,4 @@
+zeep
+fastapi
+uvicorn
+lxml

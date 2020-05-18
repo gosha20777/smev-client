@@ -1,0 +1,164 @@
+{
+    "version": 2,
+    "name": "mogt gateway",
+    "host": [ "0.0.0.0" ],
+    "port": 8000,
+    "cache_ttl": "3600s",
+    "timeout": "5s",
+    "extra_config": {
+      "github_com/devopsfaith/krakend-gologging": {
+        "level":  "DEBUG",
+        "prefix": "[GATEWAY]",
+        "syslog": false,
+        "stdout": true
+      },
+    "github_com/devopsfaith/krakend-cors": {
+       "allow_origins": [ "http://localhost:8080" ],
+       "allow_methods": [ "POST", "GET", "PUT", "DELETE" ],
+       "max_age": "12h"
+      },
+      "github_com/devopsfaith/krakend-metrics": {
+        "collection_time": "60s",
+        "proxy_disabled": false,
+        "router_disabled": false,
+        "backend_disabled": false,
+        "endpoint_disabled": false,
+        "listen_address": ":8090"
+      }
+    },
+    "endpoints": [   
+		{
+			"endpoint": "/v1/signer/{cert_type}",
+			"method": "POST",
+			"output_encoding": "json",
+			"backend": [
+			{
+				"host":[ "http://localhost:5000" ],
+				"url_pattern": "/api/v1/{cert_type}",
+				"encoding": "json",
+				"method": "POST"
+			}
+			]
+		},
+
+		{
+			"endpoint": "/v1/json2xml/{query_type}",
+			"method": "POST",
+			"output_encoding": "json",
+			"backend": [
+			{
+				"host":[ "http://localhost:5001" ],
+				"url_pattern": "/api/v1/{query_type}",
+				"encoding": "json",
+				"method": "POST"
+			}
+			]
+		},
+
+		{
+			"endpoint": "/v1/records",
+			"method": "GET",
+			"output_encoding": "json",
+			"backend": [
+			{
+				"host":[ "http://localhost:5002" ],
+				"url_pattern": "/api/v1/records",
+				"encoding": "json",
+				"method": "GET"
+			}
+			]
+		},
+		{
+			"endpoint": "/v1/record/{id}",
+			"method": "GET",
+			"output_encoding": "json",
+			"backend": [
+			{
+				"host":[ "http://localhost:5002" ],
+				"url_pattern": "/api/v1/record/{id}",
+				"encoding": "json",
+				"method": "GET"
+			}
+			]
+		},
+		{
+			"endpoint": "/v1/record/{id}/{mesage_type}",
+			"method": "GET",
+			"output_encoding": "json",
+			"backend": [
+			{
+				"host":[ "http://localhost:5002" ],
+				"url_pattern": "/api/v1/record/{id}/{mesage_type}",
+				"encoding": "json",
+				"method": "GET"
+			}
+			]
+		},
+		{
+			"endpoint": "/v1/record/{id}/{mesage_type}",
+			"method": "PUT",
+			"output_encoding": "json",
+			"backend": [
+			{
+				"host":[ "http://localhost:5002" ],
+				"url_pattern": "/api/v1/record/{id}/{mesage_type}",
+				"encoding": "json",
+				"method": "POUT"
+			}
+			]
+		},
+		{
+			"endpoint": "/v1/record/{id}/{mesage_type}/xml",
+			"method": "GET",
+			"output_encoding": "xml",
+			"backend": [
+			{
+				"host":[ "http://localhost:5002" ],
+				"url_pattern": "/api/v1/record/{id}/{mesage_type}",
+				"encoding": "xml",
+				"method": "GET"
+			}
+			]
+		},
+		{
+			"endpoint": "/v1/record/{id}/{mesage_type}/xml",
+			"method": "PUT",
+			"output_encoding": "xml",
+			"backend": [
+			{
+				"host":[ "http://localhost:5002" ],
+				"url_pattern": "/api/v1/record/{id}/{mesage_type}",
+				"encoding": "xml",
+				"method": "POUT"
+			}
+			]
+		},
+		{
+			"endpoint": "/v1/record/{id}",
+			"method": "DELETE",
+			"output_encoding": "json",
+			"backend": [
+			{
+				"host":[ "http://localhost:5002" ],
+				"url_pattern": "/api/v1/record/{id}",
+				"encoding": "json",
+				"method": "DELETE"
+			}
+			]
+		},
+
+		{
+			"endpoint": "/v1/send-to-smev/{smev_server}",
+			"method": "POST",
+			"output_encoding": "json",
+			"backend": [
+			{
+				"host":[ "http://localhost:5003" ],
+				"url_pattern": "/api/v1/record/{smev_server}",
+				"encoding": "json",
+				"method": "POST"
+			}
+			]
+		}
+    ]
+}

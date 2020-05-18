@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema
+  targetNamespace="urn://x-artefacts-gis-ergz-documents-prolongation/2.0.0"
+  elementFormDefault="qualified"
+  attributeFormDefault="unqualified"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:egrz="urn://x-artefacts-gis-ergz-documents-prolongation/2.0.0"
+  xmlns:egrzt="urn://x-artefacts-gis-ergz-types/2.0.0">
+
+  <xs:import namespace="urn://x-artefacts-gis-ergz-types/2.0.0" schemaLocation="common/gis-egrz-types.xsd"/>
+
+  <xs:element name="DocumentsProlongationRequest" type="egrz:DocumentsProlongationRequestType">
+    <xs:annotation>
+      <xs:documentation>Запрос на дополнительный период для загрузки томов раздела реестра из ГИС ЕГРЗ</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:element name="DocumentsProlongationResponse" type="egrz:DocumentsProlongationResponseType">
+    <xs:annotation>
+      <xs:documentation>Ответ на запрос на дополнительный период для загрузки томов раздела реестра из ГИС ЕГРЗ</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+
+  <xs:complexType name="DocumentsProlongationRequestType">
+    <xs:annotation>
+      <xs:documentation>Запрос на дополнительный период для загрузки томов раздела реестра из ГИС ЕГРЗ</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="egrzt:PrintOutNumber">
+        <xs:annotation>
+          <xs:documentation>Номер родительского сообщения</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Operation" type="egrz:OperationType">
+        <xs:annotation>
+          <xs:documentation>Операция для выполнения</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="DocumentsProlongationResponseType">
+    <xs:annotation>
+      <xs:documentation>Ответ на запрос на дополнительный период для загрузки томов раздела реестра из ГИС ЕГРЗ</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="ProlongationDate" type="xs:dateTime" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Дата и время хранения томов</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IsDeleted" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>true - файлы томов архива успешно удалены</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="OperationType">
+    <xs:annotation>
+      <xs:documentation>Операция для выполнения</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="Prolongation" type="egrz:ProlongationType">
+          <xs:annotation>
+            <xs:documentation>Запрос на увеличение срока хранения томов</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Delete" type="egrz:DeleteType">
+          <xs:annotation>
+            <xs:documentation>Запрос на удаление томов</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ProlongationType">
+    <xs:annotation>
+      <xs:documentation>Запрос на увеличение срока хранения томов</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="ProlongationPeriod" type="egrz:ProlongationPeriodType">
+        <xs:annotation>
+          <xs:documentation>Период (в днях), на который требуется увеличить срок хранения томов</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="ProlongationPeriodType">
+    <xs:annotation>
+      <xs:documentation>Период (в днях), на который требуется увеличить срок хранения томов</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="DeleteType">
+    <xs:annotation>
+      <xs:documentation>Операция удаления томов</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="delete"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>

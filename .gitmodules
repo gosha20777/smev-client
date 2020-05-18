@@ -1,0 +1,3 @@
+[submodule "krakend-smev"]
+	path = krakend-smev
+	url = https://github.com/gosha20777/krakend-smev.git

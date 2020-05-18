@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema
+  targetNamespace="urn://x-artefacts-gis-ergz/2.0.0"
+  elementFormDefault="qualified"
+  attributeFormDefault="unqualified"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:egrz="urn://x-artefacts-gis-ergz/2.0.0"
+  xmlns:egrzt="urn://x-artefacts-gis-ergz-types/2.0.0">
+
+  <xs:import namespace="urn://x-artefacts-gis-ergz-types/2.0.0" schemaLocation="common/gis-egrz-types.xsd"/>
+
+  <xs:element name="FullPrintOutRequest" type="egrz:FullPrintOutRequestType">
+    <xs:annotation>
+      <xs:documentation>Запрос на предоставление выписки из единого государственного Реестра заключений экспертизы проектной документации объектов капитального строительства</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:element name="FullPrintOutResponse" type="egrz:FullPrintOutResponseType">
+    <xs:annotation>
+      <xs:documentation>Ответ на запрос на предоставление выписки из единого государственного Реестра заключений экспертизы проектной документации объектов капитального строительства</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+
+  <xs:complexType name="FullPrintOutRequestType">
+    <xs:annotation>
+      <xs:documentation>Запрос на предоставление выписки из единого государственного Реестра заключений экспертизы проектной документации объектов капитального строительства</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:group ref="egrzt:ExpertiseIdentityGroup">
+        <xs:annotation>
+          <xs:documentation>Номер и дата заключения экспертизы</xs:documentation>
+        </xs:annotation>
+      </xs:group>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="FullPrintOutResponseType">
+    <xs:annotation>
+      <xs:documentation>Ответ на запрос на предоставление выписки из единого государственного Реестра заключений экспертизы проектной документации объектов капитального строительства</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="egrzt:PrintOutNumber">
+        <xs:annotation>
+          <xs:documentation>Номер выписки</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="egrzt:RequesterInfo">
+        <xs:annotation>
+          <xs:documentation>Сведения о лице, по запросу которого предоставляется выписка</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PrintOut" type="egrz:PrintOutType">
+        <xs:annotation>
+          <xs:documentation>Выписка из единого государственного Реестра заключений экспертизы проектной документации объектов капитального строительства</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PrintOutComment" type="egrzt:PrintOutCommentType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Примечание к выписке</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="PrintOutType">
+    <xs:annotation>
+      <xs:documentation>Выписка из единого государственного Реестра заключений экспертизы проектной документации объектов капитального строительства</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element ref="egrzt:PublicPrintOut">
+          <xs:annotation>
+            <xs:documentation>Выписка из единого государственного Реестра заключений экспертизы проектной документации объектов капитального строительства (общедоступные сведения)</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element ref="egrzt:FullPrintOut">
+          <xs:annotation>
+            <xs:documentation>Полная выписка из единого государственного Реестра заключений экспертизы проектной документации объектов капитального строительства</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>
