@@ -1,0 +1,61 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+    <soap:Body>
+        <ns2:GetResponseResponse xmlns:ns3="urn://x-artefacts-smev-gov-ru/services/message-exchange/types/faults/1.2" 
+            xmlns:ns2="urn://x-artefacts-smev-gov-ru/services/message-exchange/types/1.2" 
+            xmlns="urn://x-artefacts-smev-gov-ru/services/message-exchange/types/basic/1.2">
+            <ns2:ResponseMessage>
+                <ns2:Response Id="SIGNED_BY_SMEV">
+                    <ns2:OriginalMessageId>ac168024-9458-11ea-a83f-3b14b8490b06</ns2:OriginalMessageId>
+                    <ns2:SenderProvidedResponseData Id="SIGNED_ASYNC_BY_SMEV">
+                        <ns2:MessageID>b5d3a22b-9458-11ea-8f37-fa163e627e23</ns2:MessageID>
+                        <ns2:To>eyJzaWQiOjgwMDgwLCJtaWQiOiJhYzE2ODAyNC05NDU4LTExZWEtYTgzZi0zYjE0Yjg0OTBiMDYiLCJlb2wiOjAsInNsYyI6IngtYXJ0ZWZhY3RzLWdpcy1lcmd6LWRvY3VtZW50c18yLjAuMF9Eb2N1bWVudHNSZXF1ZXN0IiwibW5tIjoiNTAwNTAyXzNUIn0=</ns2:To>
+                        <ns2:AsyncProcessingStatus>
+                            <ns2:OriginalMessageId>ac168024-9458-11ea-a83f-3b14b8490b06</ns2:OriginalMessageId>
+                            <ns2:StatusCategory>requestIsRejectedBySmev</ns2:StatusCategory>
+                            <ns2:StatusDetails>Бизнес-данные сообщения не соответствуют схеме, зарегистрированной в СМЭВ. MessageId = ac168024-9458-11ea-a83f-3b14b8490b06</ns2:StatusDetails>
+                            <ns2:SmevFault>
+                                <Code>tsmev3:P:TSMEV3_ASYNC_CORE2:TR:ASYNC:PP:BSV:3</Code>
+                                <Description>SMEV-403:Бизнес-данные сообщения не соответствуют схеме, зарегистрированной в СМЭВ. MessageId = ac168024-9458-11ea-a83f-3b14b8490b06</Description>
+                            </ns2:SmevFault>
+                        </ns2:AsyncProcessingStatus>
+                    </ns2:SenderProvidedResponseData>
+                    <ns2:MessageMetadata>
+                        <ns2:MessageId>b5d3a22b-9458-11ea-8f37-fa163e627e23</ns2:MessageId>
+                        <ns2:MessageType>RESPONSE</ns2:MessageType>
+                        <ns2:Sender>
+                            <ns2:Mnemonic>smev</ns2:Mnemonic>
+                        </ns2:Sender>
+                        <ns2:SendingTimestamp>2020-05-12T16:58:51.000+03:00</ns2:SendingTimestamp>
+                        <ns2:Recipient>
+                            <ns2:Mnemonic>500502_3T</ns2:Mnemonic>
+                        </ns2:Recipient>
+                        <ns2:DeliveryTimestamp>2020-05-19T12:46:28.151+03:00</ns2:DeliveryTimestamp>
+                        <ns2:Status>messageIsDelivered</ns2:Status>
+                    </ns2:MessageMetadata>
+                </ns2:Response>
+                <ns2:SMEVSignature>
+                    <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+                        <ds:SignedInfo>
+                            <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                            <ds:SignatureMethod Algorithm="urn:ietf:params:xml:ns:cpxmlsec:algorithms:gostr34102012-gostr34112012-256"/>
+                            <ds:Reference URI="#SIGNED_BY_SMEV">
+                                <ds:Transforms>
+                                    <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                                    <ds:Transform Algorithm="urn://smev-gov-ru/xmldsig/transform"/>
+                                </ds:Transforms>
+                                <ds:DigestMethod Algorithm="urn:ietf:params:xml:ns:cpxmlsec:algorithms:gostr34112012-256"/>
+                                <ds:DigestValue>sSKTQIc+SeBm1rQa+bVJ/uPpgZ+qbO3dTYJeBfeWJjs=</ds:DigestValue>
+                            </ds:Reference>
+                        </ds:SignedInfo>
+                        <ds:SignatureValue>/qQTMmYZndEiTYy+K4DFUaRiPGCywE8WM4SbX8+c77D1QG7nhS4AuRk5YhJc52EUAHlZCDyFvcbnqhguJZnzug==</ds:SignatureValue>
+                        <ds:KeyInfo>
+                            <ds:X509Data>
+                                <ds:X509Certificate>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</ds:X509Certificate>
+                            </ds:X509Data>
+                        </ds:KeyInfo>
+                    </ds:Signature>
+                </ns2:SMEVSignature>
+            </ns2:ResponseMessage>
+        </ns2:GetResponseResponse>
+    </soap:Body>
+</soap:Envelope>

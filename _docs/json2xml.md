@@ -7,7 +7,7 @@
 *config files:* 
 
 - `./json2xml-transformer/XSD-SMEV-NUMBER/*.xsd` - smev3 mesage type's xsd chemes
-- `./json2xml-transformer/*.yaml` - logging config
+- `./json2xml-transformer/log-config.yaml` - logging config
 
 ## API
 

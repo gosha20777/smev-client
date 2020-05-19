@@ -14,10 +14,11 @@ services:
       context: krakend-smev
       dockerfile: Dockerfile
     container_name: chainer
+    network_mode: "host"
     volumes:
       - ./chainer:/etc/krakend
     ports:
-      - 8080:8000
+      - 8080:8080
     command: [ "run", "-c", "/etc/krakend/config.json" ]
 
   json_2_xml:
@@ -49,7 +50,9 @@ services:
     container_name: smev_connector
     env_file: ./smev-connector/app.conf
     ports:
-      - 5003:5000
+      - 5003:5003
+    network_mode: "host"
+    command: uvicorn server:app --host 0.0.0.0 --port 5003
     depends_on:
       - chainer
       - db

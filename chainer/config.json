@@ -2,7 +2,7 @@
     "version": 2,
     "name": "mogt gateway",
     "host": [ "0.0.0.0" ],
-    "port": 8000,
+    "port": 8080,
     "cache_ttl": "3600s",
     "timeout": "5s",
     "extra_config": {
@@ -58,12 +58,12 @@
 		{
 			"endpoint": "/v1/records",
 			"method": "GET",
-			"output_encoding": "json",
+			"output_encoding": "no-op",
 			"backend": [
 			{
 				"host":[ "http://localhost:5002" ],
 				"url_pattern": "/api/v1/records",
-				"encoding": "json",
+				"encoding": "no-op",
 				"method": "GET"
 			}
 			]
@@ -110,12 +110,12 @@
 		{
 			"endpoint": "/v1/record/{id}/{mesage_type}/xml",
 			"method": "GET",
-			"output_encoding": "xml",
+			"output_encoding": "no-op",
 			"backend": [
 			{
 				"host":[ "http://localhost:5002" ],
-				"url_pattern": "/api/v1/record/{id}/{mesage_type}",
-				"encoding": "xml",
+				"url_pattern": "/api/v1/record/{id}/{mesage_type}/xml",
+				"encoding": "no-op",
 				"method": "GET"
 			}
 			]
@@ -123,12 +123,12 @@
 		{
 			"endpoint": "/v1/record/{id}/{mesage_type}/xml",
 			"method": "PUT",
-			"output_encoding": "xml",
+			"output_encoding": "no-op",
 			"backend": [
 			{
 				"host":[ "http://localhost:5002" ],
-				"url_pattern": "/api/v1/record/{id}/{mesage_type}",
-				"encoding": "xml",
+				"url_pattern": "/api/v1/record/{id}/{mesage_type}/xml",
+				"encoding": "no-op",
 				"method": "POUT"
 			}
 			]

@@ -129,7 +129,7 @@ async def update_record_content(req: record.RecordUpdate, id: str, mesage_type: 
     if result == None:
         raise HTTPException(404, detail="no such mesage in record")
 
-    return { 'updated records': result }
+    return { 'updated_records': result }
 
 # get record info
 @app.put('/api/v1/record/{id}/{mesage_type}/xml')
@@ -169,7 +169,7 @@ async def update_record_content_xml(req: Request, id: str, mesage_type: str, db:
     if result == None:
         raise HTTPException(404, detail="no such mesage in record")
 
-    return { 'updated records': result }
+    return { 'updated_records': result }
 
 # get record info
 @app.get('/api/v1/record/{id}/{mesage_type}/xml')
@@ -219,4 +219,4 @@ async def remove_record(id: str, mesage_type: str, req: Request, db: Session = D
     if result == None:
         raise HTTPException(404, detail="no such mesage in record")
 
-    return { 'remove records': result }
+    return { 'remove_records': result }
