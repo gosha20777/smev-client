@@ -26,7 +26,11 @@ async def send_mesage(req: SmevMesage, smev_server: str):
 
     headers = {'content-type': 'text/xml'}
     body = req.xml
-    response = requests.post(host['url'], data=body, headers=headers, timeout=10)
+    proxies = {
+        "http": "http://192.168.110.33:3128",
+        "https": "https://192.168.110.33:3128",
+    }
+    response = requests.post(host['url'], data=body, headers=headers, proxies=proxies, timeout=10)
     try:
         response = re.findall(r'<soap:Envelope[\s\S]*?</soap:Envelope>', response.content.decode('utf-8'))[0]
         xml = ET.fromstring(response)
@@ -35,7 +39,7 @@ async def send_mesage(req: SmevMesage, smev_server: str):
     except Exception as e:
         raise HTTPException(400, f'invalid smev response: {str(e)}')
 
-@cron.interval_schedule(seconds=5)
+@cron.interval_schedule(seconds=20)
 def call_query_function():
     # build GetResponseRequest
     body = { "id": "0", "msgType": "GetResponseRequest", "tagForSign": "SIGNED_BY_CALLER" }
@@ -51,7 +55,11 @@ def call_query_function():
     xmlstr_req = body
     headers = {'content-type': 'text/xml'}
     host = 'http://smev3-n0.test.gosuslugi.ru:7500/smev/v1.2/ws?wsd'
-    response = requests.post(host, data=body, headers=headers, timeout=5)
+    proxies = {
+        "http": "http://192.168.110.33:3128",
+        "https": "https://192.168.110.33:3128",
+    }
+    response = requests.post(host, data=body, headers=headers, proxies=proxies, timeout=5)
     try:    
         response = re.findall(r'<soap:Envelope[\s\S]*?</soap:Envelope>', response.content.decode('utf-8'))[0]
         xml = ET.fromstring(response)
