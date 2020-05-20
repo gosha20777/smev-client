@@ -7,6 +7,7 @@ from models import record
 from controllers import db_controller
 import uuid
 import os
+import re
 import json
 import lxml.etree as ET
 
@@ -23,8 +24,8 @@ def get_db():
         db.close()
 
 # create file in repo
-@app.get('/api/v1/record/new')
-async def create_record(id: str = str(uuid.uuid4()), db: Session = Depends(get_db)):
+@app.get('/api/v1/record/{id}/new')
+async def create_record(id: str, db: Session = Depends(get_db)):
     db_msg = await db_controller.get_record(db=db, id=id)
     if db_msg != None:
         msg = record.Record().create_from_db(db_msg)
@@ -89,6 +90,13 @@ async def get_record_content(id: str, mesage_type: str, db: Session = Depends(ge
 
     root = ET.fromstring(result)
     result = ET.tostring(root, encoding='utf-8')
+
+    req_id = id
+    try:
+        id = re.findall(r'<ns2:OriginalMessageId>[\s\S]*?</ns2:OriginalMessageId>', result)[0]
+        id = re.findall(r'[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}', id)[0]
+    except:
+        id = req_id
 
     return {'id': id, 'xml': result }
 
@@ -209,12 +217,12 @@ async def get_record_content_xml(id: str, mesage_type: str, db: Session = Depend
     return Response(content=result, media_type="application/xml")
 
 @app.delete('/api/v1/record/{id}')
-async def remove_record(id: str, mesage_type: str, req: Request, db: Session = Depends(get_db)):
+async def remove_record(id: str, req: Request, db: Session = Depends(get_db)):
     rec = await db_controller.get_record(db=db, id=id)
     if rec == None:
         raise HTTPException(404, detail="no such record")
     
-    result = db_controller.remove_record(db=db, id=id)
+    result = await db_controller.remove_record(db=db, id=id)
 
     if result == None:
         raise HTTPException(404, detail="no such mesage in record")

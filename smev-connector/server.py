@@ -31,11 +31,18 @@ async def send_mesage(req: SmevMesage, smev_server: str):
         "https": "https://192.168.110.33:3128",
     }
     response = requests.post(host['url'], data=body, headers=headers, proxies=proxies, timeout=10)
+    #response = requests.post(host['url'], data=body, headers=headers, timeout=10)
     try:
         response = re.findall(r'<soap:Envelope[\s\S]*?</soap:Envelope>', response.content.decode('utf-8'))[0]
         xml = ET.fromstring(response)
         xmlstr = ET.tostring(xml, encoding='utf-8').decode('utf-8')
-        return SmevMesage(id=req.id, xml=xmlstr)
+        id = req.id
+        try:
+            id = re.findall(r'<ns2:OriginalMessageId>[\s\S]*?</ns2:OriginalMessageId>', xmlstr)[0]
+            id = re.findall(r'[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}', id)[0]
+        except:
+            id = req.id
+        return SmevMesage(id=id, xml=xmlstr)
     except Exception as e:
         raise HTTPException(400, f'invalid smev response: {str(e)}')
 
@@ -60,6 +67,7 @@ def call_query_function():
         "https": "https://192.168.110.33:3128",
     }
     response = requests.post(host, data=body, headers=headers, proxies=proxies, timeout=5)
+    #response = requests.post(host, data=body, headers=headers, timeout=5)
     try:    
         response = re.findall(r'<soap:Envelope[\s\S]*?</soap:Envelope>', response.content.decode('utf-8'))[0]
         xml = ET.fromstring(response)

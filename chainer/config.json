@@ -103,7 +103,7 @@
 				"host":[ "http://localhost:5002" ],
 				"url_pattern": "/api/v1/record/{id}/{mesage_type}",
 				"encoding": "json",
-				"method": "POUT"
+				"method": "PUT"
 			}
 			]
 		},
@@ -129,7 +129,7 @@
 				"host":[ "http://localhost:5002" ],
 				"url_pattern": "/api/v1/record/{id}/{mesage_type}/xml",
 				"encoding": "no-op",
-				"method": "POUT"
+				"method": "PUT"
 			}
 			]
 		},
@@ -154,7 +154,7 @@
 			"backend": [
 			{
 				"host":[ "http://localhost:5003" ],
-				"url_pattern": "/api/v1/record/{smev_server}",
+				"url_pattern": "/api/v1/send/{smev_server}",
 				"encoding": "json",
 				"method": "POST"
 			}
