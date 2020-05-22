@@ -130,3 +130,5 @@ dmypy.json
 
 .virtualenv/
 .vscode/
+redis/
+file-repository/storage/
