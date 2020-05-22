@@ -17,7 +17,7 @@ import json
 # init
 db_smev_file.Base.metadata.create_all(bind=engine)
 app = FastAPI()
-resdis_connection = Redis(host='redis', port=6379, db=0)
+resdis_connection = Redis(host='redis', port=6378, db=0)
 queue = Queue('test_queue', connection=resdis_connection)
 
 

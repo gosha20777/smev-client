@@ -72,9 +72,9 @@ services:
   
   redis:
     image: redis:4.0.6-alpine
-    container_name: redus
+    container_name: redis
     ports:
-      - "6379:6379"
+      - "6378:6379"
     volumes:
       - ./redis:/data
 
