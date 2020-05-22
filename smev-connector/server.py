@@ -82,7 +82,7 @@ def call_query_function():
         body = {  "xml": xmlstr }
         headers = {'content-type': 'application/json'}
         host = f'http://localhost:5002/api/v1/record/{id}/GetResponseResponse'
-        response = requests.post(host, json=body, headers=headers, timeout=5)
+        response = requests.put(host, json=body, headers=headers, timeout=5)
         if response.status_code != 200:
             raise Exception(f'can not update GetResponseResponse mesage record: status code {response.status_code}')
     except Exception as e:
