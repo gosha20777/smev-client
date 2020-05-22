@@ -1,41 +1,16 @@
 from sqlalchemy.orm import Session
-from models import photo, db_models
+from models import smev_file, db_smev_file
 
-async def get_photo(db: Session, id: str):
-    return db.query(db_models.Photo).filter(db_models.Photo.id == id).first()
+async def get_file(db: Session, id: str):
+    return db.query(db_smev_file.SmevFile).filter(db_smev_file.SmevFile.id == id).first()
 
-async def get_photos(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(db_models.Photo).offset(skip).limit(limit).all()
+async def get_files(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(db_smev_file.SmevFile).offset(skip).limit(limit).all()
 
-async def annotate_photo(db: Session, photo: photo.PhotoAnnotate):
-    rows = db.query(db_models.Photo).filter(db_models.Photo.id == photo.id).update(
-        {
-            db_models.Photo.annotation: photo.annotation,
-            db_models.Photo.label: photo.label
-        })
+async def create_file(db: Session, file: smev_file.SmevFile):
+    db_file = db_smev_file.SmevFile(id=file.id, path=file.path)
+    db.add(db_file)
     db.commit()
-    return db.query(db_models.Photo).filter(db_models.Photo.id == photo.id).first()
-
-async def change_photo_rate(db: Session, id: str, approve_rate: int):
-    rows = db.query(db_models.Photo).filter(db_models.Photo.id == id).update(
-        {
-            db_models.Photo.approve_rate: approve_rate
-        })
-    db.commit()
-    return db.query(db_models.Photo).filter(db_models.Photo.id == photo.id).first()
-
-async def change_photo_approve_status(db: Session, id: str, is_approved: bool):
-    rows = db.query(db_models.Photo).filter(db_models.Photo.id == id).update(
-        {
-            db_models.Photo.is_approved: is_approved
-        })
-    db.commit()
-    return db.query(db_models.Photo).filter(db_models.Photo.id == photo.id).first()
-
-async def create_photo(db: Session, photo: photo.PhotoBase):
-    db_photo = db_models.Photo(id=photo.id, path=photo.path)
-    db.add(db_photo)
-    db.commit()
-    db.refresh(db_photo)
-    return db_photo
+    db.refresh(db_file)
+    return db_file
     

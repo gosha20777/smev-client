@@ -4,7 +4,7 @@
     "host": [ "0.0.0.0" ],
     "port": 8080,
     "cache_ttl": "3600s",
-    "timeout": "5s",
+    "timeout": "10s",
     "extra_config": {
       "github_com/devopsfaith/krakend-gologging": {
         "level":  "DEBUG",
@@ -148,6 +148,46 @@
 		},
 
 		{
+			"endpoint": "/v1/file/{operation_type}",
+			"method": "POST",
+			"output_encoding": "json",
+			"backend": [
+			{
+				"host":[ "http://localhost:5004" ],
+				"url_pattern": "/api/v1/file/{operation_type}",
+				"encoding": "json",
+				"method": "POST"
+			}
+			]
+		},
+		{
+			"endpoint": "/v1/file/{id}",
+			"method": "GET",
+			"output_encoding": "no-op",
+			"backend": [
+			{
+				"host":[ "http://localhost:5004" ],
+				"url_pattern": "/api/v1/file/{id}",
+				"encoding": "no-op",
+				"method": "GET"
+			}
+			]
+		},
+		{
+			"endpoint": "/v1/files",
+			"method": "GET",
+			"output_encoding": "no-op",
+			"backend": [
+			{
+				"host":[ "http://localhost:5004" ],
+				"url_pattern": "/api/v1/files",
+				"encoding": "no-op",
+				"method": "GET"
+			}
+			]
+		},
+
+		{
 			"endpoint": "/v1/send-to-smev/{smev_server}",
 			"method": "POST",
 			"output_encoding": "json",
@@ -159,10 +199,9 @@
 				"method": "POST",
 				"extra_config": {
 					"github.com/devopsfaith/krakend/http": {
-					"return_error_details": "smev_connector"
-					 }
-				}
-
+						"return_error_details": "smev_commector"
+					}
+				}				
 			}
 			]
 		}

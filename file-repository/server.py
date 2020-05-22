@@ -2,17 +2,24 @@ from fastapi import FastAPI, HTTPException, Request, File, UploadFile, Depends, 
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from models.db import SessionLocal, engine
-from models import db_models
-from models import photo
+from models import db_smev_file
+from models import smev_file
 from controllers import file_controller
 from controllers import db_controller
+from ftp_worker import worker
+from redis import Redis
+from rq import Queue, Worker
+from rq.job import Job
+import rq
 import os
 import json
 
 # init
-db_models.Base.metadata.create_all(bind=engine)
-
+db_smev_file.Base.metadata.create_all(bind=engine)
 app = FastAPI()
+resdis_connection = Redis(host='redis', port=6379, db=0)
+queue = Queue('test_queue', connection=resdis_connection)
+
 
 def get_db():
     try:
@@ -22,94 +29,89 @@ def get_db():
         db.close()
 
 # create file in repo
-@app.post('/api/v1/photo/new')
+@app.post('/api/v1/file/new')
 async def create_file(file: UploadFile = File(...), db: Session = Depends(get_db)):
     try:
-        if not await file_controller.is_image(file):
-            raise Exception('is not image')
-
         id = await file_controller.calculate_id(file)
-        if await db_controller.get_photo(db=db, id=id) != None:
-            return { "id": id, "path": path }
+        f = await db_controller.get_file(db=db, id=id) 
+        if f != None:
+            return { "id": id, "path": f.path }
 
         path = await file_controller.save_upload_file(file, id)
-        
-        p = photo.PhotoBase()
-        p.id = id
-        p.path = path
-        await db_controller.create_photo(db=db, photo=p)
-
-        return { "id": id, "path": path }
+        f = smev_file.SmevFile(id=id, path=path)
+        return await db_controller.create_file(db=db, file=f)
     except Exception as e:
         raise HTTPException(400, detail=str(e))
 
+# create file in repo
+@app.post('/api/v1/file/merge')
+async def merge_file(files: smev_file.SmevMergeFile, db: Session = Depends(get_db)):
+    pathes = []
+    for id in files.ids:
+        f = await db_controller.get_file(db=db, id=id)
+        if f == None:
+            raise HTTPException(400, f"no such file {id}")
+        pathes.append(f.path)
+    id, path = await file_controller.megre_files(pathes)
+    f = await db_controller.get_file(db=db, id=id) 
+    if f != None:
+        return { "id": id, "path": f.path }
+    f = smev_file.SmevFile(id=id, path=path)
+    return await db_controller.create_file(db=db, file=f)
+    #try:
+    #    pathes = []
+    #    for id in files.ids:
+    #        f = await db_controller.get_file(db=db, id=id)
+    #        if f == None:
+    #            raise HTTPException(400, f"no such file {id}")
+    #        pathes.append(f.path)
+
+    #    id, path = await file_controller.megre_files(pathes)
+    #    f = await db_controller.get_file(db=db, id=id) 
+    #    if f != None:
+    #        return { "id": id, "path": f.path }
+
+    #    f = smev_file.SmevFile(id=id, path=path)
+    #    return await db_controller.create_file(db=db, file=f)
+    #except Exception as e:
+    #    raise HTTPException(400, detail=str(e))
+
+# create file in repo
+@app.post('/api/v1/file/from_smev')
+async def get_file_from_smev(file: smev_file.SmevFtpFile, db: Session = Depends(get_db)):
+    job = queue.enqueue(
+            worker.get_file_from_ftp,
+            file.path, file.user, file.password
+        )
+    return {'job': job.id}
+
+@app.get('/api/v1/file/from_smev/{task_id}')
+async def get_ftp_worker_result(task_id: str, db: Session = Depends(get_db)):
+    try:     
+        job = Job.fetch(task_id, connection=resdis_connection)
+        if job.result is None:
+            return {'status': job.get_status()}
+
+        id, path = job.result
+        f = smev_file.SmevFile(id=id, path=path)
+        return await db_controller.create_file(db=db, file=f)
+    except rq.exceptions.NoSuchJobError:
+        return {'status': 'no such job'}
+    except RuntimeError as ex:
+        return {'error': ex}
+
 # get photo info
-@app.get('/api/v1/photo/info/{id}')
-async def create_file(id: str, db: Session = Depends(get_db)):
-    p = await db_controller.get_photo(db=db, id=id)
-    if p == None:
-        raise HTTPException(404, detail="no such photo")
-    return p
+@app.get('/api/v1/file/{id}')
+async def get_file(id: str, db: Session = Depends(get_db)):
+    f = await db_controller.get_file(db=db, id=id)
+    if f == None:
+        raise HTTPException(404, detail="no such file")
+    return FileResponse(f.path)
 
-# change photo annotation
-@app.post('/api/v1/photo/anno/{id}')
-async def create_file(id: str, anno: photo.PhotoAnnotate, db: Session = Depends(get_db)):
-    p = await db_controller.get_photo(db=db, id=id)
-    if p == None:
-        raise HTTPException(404, detail="no such photo")
-    if anno.annotation == None and anno.label == None:
-        raise HTTPException(400, "invalid annotation")
-
-    anno.id = id
-    if anno.annotation == None:
-        anno.annotation = p.annotation
-    if anno.label == None:
-        anno.label = p.label
-        
-    return await db_controller.annotate_photo(db=db, photo=anno)
-
-# get photo annotation in json format
-@app.get('/api/v1/photo/anno/{id}')
-async def create_file(id: str, db: Session = Depends(get_db)):
-    try:
-        p = await db_controller.get_photo(db=db, id=id)
-        if p == None:
-            raise HTTPException(404, detail="no such photo")
-        if p.annotation == None:
-            raise HTTPException(404, detail="photo has no annotation")
-        return json.loads(p.annotation)
-    except HTTPException as e:
-        raise HTTPException(status_code=e.status_code, detail=e.detail, headers=e.headers)
-    except Exception as e:
-        raise HTTPException(500, detail="unable to parse annotation: {}".format(str(e)))
-
-# get photo annotation in voc format
-@app.get('/api/v1/photo/anno_voc/{id}')
-async def create_file(id: str, db: Session = Depends(get_db)):
-    p = await db_controller.get_photo(db=db, id=id)
-    if p == None:
-        raise HTTPException(404, detail="no such photo")
-    raise HTTPException(404, detail="no inplement")
-
-# change photo approve_rate
-@app.get('/api/v1/photo/rate/{id}/{rate}')
-async def create_file(id: str, rate: int, db: Session = Depends(get_db)):
-    p = await db_controller.get_photo(db=db, id=id)
-    if p == None:
-        raise HTTPException(404, detail="no such photo")
-    return await db_controller.change_photo_rate(db=db, id=id, approve_rate=rate)
-
-# change photo approve status
-@app.get('/api/v1/photo/approve/{id}')
-async def create_file(id: str, approve: bool = False, db: Session = Depends(get_db)):
-    p = await db_controller.get_photo(db=db, id=id)
-    if p == None:
-        raise HTTPException(404, detail="no such photo")
-    return await db_controller.change_photo_approve_status(db=db, id=id, is_approved=approve)
-
-# get photo data
-@app.get('/api/v1/photo/data/{path}')
-async def create_file(path: str):
-    if not os.path.isfile(path):
-        raise HTTPException(404, detail="no such photo")
-    return FileResponse(path)
+# get photo info
+@app.get('/api/v1/files')
+async def get_files(page: int = 0, db: Session = Depends(get_db)):
+    files = await db_controller.get_files(db=db, skip=50*page, limit=50)
+    if files == None:
+        raise HTTPException(404, detail="no files")
+    return files

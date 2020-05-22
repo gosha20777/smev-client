@@ -1,0 +1,2409 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema
+  targetNamespace="urn://x-artefacts-gis-ergz-types/2.0.0"
+  elementFormDefault="qualified"
+  attributeFormDefault="unqualified"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:egrzt="urn://x-artefacts-gis-ergz-types/2.0.0">
+
+  <xs:element name="PrintOutNumber" type="egrzt:PrintOutNumberType">
+    <xs:annotation>
+      <xs:documentation>Номер родительского сообщения</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:element name="VolumeID" type="egrzt:ArchiveFileIDType">
+    <xs:annotation>
+      <xs:documentation>Идентификатор запрашиваемого тома архива документов раздела реестра в ГИС ЕГРЗ</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:element name="RequesterInfo" type="egrzt:RequesterInfoType">
+    <xs:annotation>
+      <xs:documentation>Сведения о лице, по запросу которого предоставляется выписка</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:element name="FullPrintOut" type="egrzt:FullPrintOutType">
+    <xs:annotation>
+      <xs:documentation>Полная выписка из единого государственного Реестра заключений экспертизы проектной документации объектов капитального строительства</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:element name="Archive" type="egrzt:ArchiveType">
+    <xs:annotation>
+      <xs:documentation>Архив документов раздела реестра в ГИС ЕГРЗ</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:element name="PublicPrintOut" type="egrzt:PublicPrintOutType">
+    <xs:annotation>
+      <xs:documentation>Выписка из единого государственного Реестра заключений экспертизы проектной документации объектов капитального строительства (общедоступные сведения)</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:simpleType name="PrintOutNumberType">
+    <xs:annotation>
+      <xs:documentation>Номер выписки</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="36"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="PrintOutCommentType">
+    <xs:annotation>
+      <xs:documentation>Примечание к выписке</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="4000"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="ArchiveType">
+    <xs:annotation>
+      <xs:documentation>Архив документов раздела реестра в ГИС ЕГРЗ</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="FilesCount" type="egrzt:FilesCountType">
+        <xs:annotation>
+          <xs:documentation>Общее количество томов</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TotalSize" type="egrzt:FileSizeType">
+        <xs:annotation>
+          <xs:documentation>Общий размер томов</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Files" type="egrzt:ArchiveFileType" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Тома архива документов раздела реестра в ГИС ЕГРЗ</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ArchiveFileType">
+    <xs:annotation>
+      <xs:documentation>Том архива документов раздела реестра в ГИС ЕГРЗ</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="ID" type="egrzt:ArchiveFileIDType">
+        <xs:annotation>
+          <xs:documentation>Идентификатор файла архива документов раздела реестра в ГИС ЕГРЗ</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CRCCheckSum" type="egrzt:CRCCheckSumType">
+        <xs:annotation>
+          <xs:documentation>Контрольная сумма CRC файла архива документов раздела реестра в ГИС ЕГРЗ</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Number" type="egrzt:ArchiveFileNumberType">
+        <xs:annotation>
+          <xs:documentation>Порядковый номер файла архива документов раздела реестра в ГИС ЕГРЗ</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Size" type="egrzt:FileSizeType">
+        <xs:annotation>
+          <xs:documentation>Размер файла архива документов раздела реестра в ГИС ЕГРЗ</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="RequesterInfoType">
+    <xs:annotation>
+      <xs:documentation>Сведения о лице, по запросу которого предоставляется выписка</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="UL" type="egrzt:OrganizationInfoType">
+          <xs:annotation>
+            <xs:documentation>Сведения о юридическом лице (ЮЛ)</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="IP" type="egrzt:IPInfoType">
+          <xs:annotation>
+            <xs:documentation>Сведения об индивидуальном предпринимателе (ИП)</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="FL" type="egrzt:FLInfoType">
+          <xs:annotation>
+            <xs:documentation>Сведения о физическом лице (ФЛ)</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+      <xs:element name="RequestReceiveDate" type="xs:date">
+        <xs:annotation>
+          <xs:documentation>Дата поступления запроса</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="FullPrintOutType">
+    <xs:annotation>
+      <xs:documentation>Полная выписка из единого государственного Реестра заключений экспертизы проектной документации объектов капитального строительства</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Status" type="egrzt:StatusType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Статус раздела реестра</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ExpertiseConclusionInfo" type="egrzt:ExpertiseConclusionInfoType">
+        <xs:annotation>
+          <xs:documentation>Подраздел 1. Заключение экспертизы</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ExpertisePDInfo" type="egrzt:ExpertisePDInfoType">
+        <xs:annotation>
+          <xs:documentation>Подраздел 2. Сведения, содержащиеся в документах, представленных для проведения экспертизы проектной документации</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ExpertiseRIIInfo" type="egrzt:ExpertiseRIIInfoType">
+        <xs:annotation>
+          <xs:documentation>Подраздел 3. Сведения, содержащиеся в документах, представленных для проведения экспертизы результатов инженерных изысканий</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ExpertiseConclusionInfoType">
+    <xs:annotation>
+      <xs:documentation>Подраздел 1. Заключение экспертизы</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:group ref="egrzt:ExpertiseIdentityGroup">
+        <xs:annotation>
+          <xs:documentation>Номер и дата заключения экспертизы</xs:documentation>
+        </xs:annotation>
+      </xs:group>
+      <xs:element name="ReestrDate" type="xs:date">
+        <xs:annotation>
+          <xs:documentation>Дата выдачи</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Type" type="egrzt:ExpertiseType">
+        <xs:annotation>
+          <xs:documentation>Форма экспертизы</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Result" type="egrzt:ResultType">
+        <xs:annotation>
+          <xs:documentation>Результат проведенной экспертизы</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SubjectRF" type="egrzt:SubjectRFType">
+        <xs:annotation>
+          <xs:documentation>Субъект РФ</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DocumentationType" type="egrzt:ExpertiseDocumentationType">
+        <xs:annotation>
+          <xs:documentation>Вид объекта экспертизы</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="WorkType" type="egrzt:ExpertiseWorkType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Вид работ</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DocumentationName" type="egrzt:DocumentationNameType">
+        <xs:annotation>
+          <xs:documentation>Наименование объекта экспертизы</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ExpertOrganization" type="egrzt:OrganizationInfoType">
+        <xs:annotation>
+          <xs:documentation>1.2 Сведения об экспертной организации</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ExpertsInfo" type="egrzt:ExpertsInfoType">
+        <xs:annotation>
+          <xs:documentation>Информация о блоке "1.3 Сведения об экспертах, подписавших заключение"</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Approver" type="egrzt:ApproverType">
+        <xs:annotation>
+          <xs:documentation>1.4 Сведения о лице, утвердившем заключение экспертизы</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SpecialMarks" type="egrzt:ListSpecialMarksType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>1.5 Особые отметки, в том числе сведения о ранее выданных заключениях экспертизы в отношении проектной документации, подготовленной применительно к тому же объекту капитального строительства и (или) результатов инженерных изысканий, выполненных в отношении этого объекта капитального строительства</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="BudgetSourcesInfo" type="egrzt:BudgetSourcesInfoType">
+        <xs:annotation>
+          <xs:documentation>Информация о блоке 1.6 Источник финансирования</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Cadastre" type="egrzt:CadastreType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Информация о блоке 1.7 Сведения о кадастровых номерах земельных участков</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SpecialComments" type="egrzt:SpecialCommentsType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>1.8 Дополнительная информация</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ExpertisePDInfoType">
+    <xs:annotation>
+      <xs:documentation>Сведения, содержащиеся в документах, представленных для проведения экспертизы проектной документации</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="ObjectName" type="egrzt:ObjectNameType">
+        <xs:annotation>
+          <xs:documentation>Наименование объекта капитального строительства</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="BuildingAddress" type="egrzt:BuildingAddressType">
+        <xs:annotation>
+          <xs:documentation>Адрес (местоположение) объекта капитального строительства</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ObjectType" type="egrzt:ObjectTypeType">
+        <xs:annotation>
+          <xs:documentation>Тип объекта</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="FunctionalPurposeInfo" type="egrzt:FunctionalPurposeInfoType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Сведения о функциональном назначении ОКС</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PrimaryTEPs" type="egrzt:ListTEPsType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>2.1 Основные проектируемые технико-экономические показатели</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CapitalBuildingsInfo" type="egrzt:CapitalBuildingsInfoType">
+        <xs:annotation>
+          <xs:documentation>Информация о блоке "2.2 Сведения об объектах капитального строительства"</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CapitalBuildingEstimatePrice" type="egrzt:CapitalBuildingEstimatePriceInfoType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>2.3 Сметная стоимость объекта капитального строительства</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="EstimatePriceCheck" type="egrzt:EstimatePriceCheckType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>2.4 Сведения о проверке достоверности определения сметной стоимости</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="AreaConditions" type="egrzt:ListTEPsType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>2.5 Сведения о природных и иных условиях территории, на которой планируется осуществлять строительство</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DeveloperOrganizationInfo" type="egrzt:DeveloperOrganizationInfoType">
+        <xs:annotation>
+          <xs:documentation>Информация о блоке "2.6 Cведения о застройщике (техническом заказчике), обеспечившем подготовку проектной документации"</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PlannerOrganizationsInfo" type="egrzt:OrganizationsInfoType">
+        <xs:annotation>
+          <xs:documentation>Информация о блоке "2.7 Cведения об индивидуальных предпринимателях и (или) юридических лицах, подготовивших проектную документацию"</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PreviousExpertisesInfo" type="egrzt:PreviousExpertisesInfoType">
+        <xs:annotation>
+          <xs:documentation>Информация о блоке "2.8 Сведения об использовании экономически эффективной проектной документации"</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SpecialComments" type="egrzt:SpecialCommentsPDType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>2.9 Дополнительная информация</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ExpertiseResultEconomyEfficiencyInfo" type="egrzt:ExpertiseResultEconomyEfficiencyInfoType">
+        <xs:annotation>
+          <xs:documentation>Информация о блоке "2.10 Сведения о признании проектной документации экономически эффективной проектной документацией повторного использования в соответствии с решением Министерства строительства и жилищно-коммунального хозяйства Российской Федерации"</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="RightsInfo" type="egrzt:RightsInfoType">
+        <xs:annotation>
+          <xs:documentation>Информация о блоке "2.11 Исключительное право на проектную документацию повторного использования либо права на ее многократное использование (в том числе для подготовки на ее основе проектной документации)"</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ExpertiseRIIInfoType">
+    <xs:annotation>
+      <xs:documentation>Подраздел 3. Сведения, содержащиеся в документах, представленных для проведения экспертизы результатов инженерных изысканий</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="RegionLocations" type="egrzt:ListRegionLocationsType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Местоположение района</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="RIITechnicalReports" type="egrzt:ListRIITechnicalReportsType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>3.1 Сведения об индивидуальных предпринимателях и (или) юридических лицах, подготовивших технический отчет по результатам инженерных изысканий</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="RIIDeveloperOrganizationInfo" type="egrzt:DeveloperOrganizationInfoType">
+        <xs:annotation>
+          <xs:documentation>3.2 Сведения о застройщике (техническом заказчике), обеспечившем проведение инженерных изысканий</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SpecialComments" type="egrzt:SpecialCommentsRIIType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>3.3 Дополнительная информация</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="CapitalBuildingEstimatePriceInfoType">
+    <xs:annotation>
+      <xs:documentation>Информация о Сметной стоимости объекта капитального строительства</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="NoEstimatePriceGroups" type="egrzt:NoDataType">
+          <xs:annotation>
+            <xs:documentation>Сообщение об отсутсвии данных</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="EstimatePriceGroups" type="egrzt:ListEstimatePriceGroupsType">
+          <xs:annotation>
+            <xs:documentation>Группы показателей сметной стоимости объекта капитального строительства</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ListEstimatePriceGroupsType">
+    <xs:annotation>
+      <xs:documentation>Список групп показателей сметной стоимости объекта капитального строительства</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="EstimatePriceGroup" type="egrzt:EstimatePriceGroupType" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Группа показателей сметной стоимости объекта капитального строительства</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="EstimatePriceGroupType">
+    <xs:annotation>
+      <xs:documentation>Группа показателей сметной стоимости объекта капитального строительства</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Name" type="egrzt:TEPGroupNameType">
+        <xs:annotation>
+          <xs:documentation>Наименование группы показателей</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="EstimatePriceTEPs" type="egrzt:ListTEPsType">
+        <xs:annotation>
+          <xs:documentation>Показатели сметной стоимости объекта капитального строительства</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ExpertsInfoType">
+    <xs:annotation>
+      <xs:documentation>Информация об экспертах</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="NoExperts" type="egrzt:NoDataType">
+          <xs:annotation>
+            <xs:documentation>Сообщение об отсутсвии данных</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Experts" type="egrzt:ListExpertsType">
+          <xs:annotation>
+            <xs:documentation>Сведения об экспертах</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ListExpertsType">
+    <xs:annotation>
+      <xs:documentation>Сведения об экспертах</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Expert" type="egrzt:ExpertType" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Информация об эксперте</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ExpertType">
+    <xs:annotation>
+      <xs:documentation>Информация об эксперте</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:group ref="egrzt:FIO">
+        <xs:annotation>
+          <xs:documentation>ФИО эксперта</xs:documentation>
+        </xs:annotation>
+      </xs:group>
+      <xs:element name="Activity" type="egrzt:ActivityType">
+        <xs:annotation>
+          <xs:documentation>Направление деятельности</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Position" type="egrzt:PositionType">
+        <xs:annotation>
+          <xs:documentation>Должность</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SNILSInfo" type="egrzt:SNILSInfoType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Информация о СНИЛС</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CertificateNumber" type="egrzt:CertificateNumberType">
+        <xs:annotation>
+          <xs:documentation>Номер аттестата</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IssueDateInfo" type="egrzt:DateInfoType">
+        <xs:annotation>
+          <xs:documentation>Информация о Дате получения</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ValidBeforeInfo" type="egrzt:DateInfoType">
+        <xs:annotation>
+          <xs:documentation>Информация о Дате окончания действия</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ApproverType">
+    <xs:annotation>
+      <xs:documentation>Сведения о лице, утвердившем заключение экспертизы</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:group ref="egrzt:FIO">
+        <xs:annotation>
+          <xs:documentation>ФИО лица</xs:documentation>
+        </xs:annotation>
+      </xs:group>
+      <xs:element name="Position" type="egrzt:PositionType">
+        <xs:annotation>
+          <xs:documentation>Должность</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="DateInfoType">
+    <xs:annotation>
+      <xs:documentation>Информация о дате</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="NoDate" type="egrzt:NoDataType">
+          <xs:annotation>
+            <xs:documentation>Сообщение об отсутсвии данных</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Date" type="xs:date">
+          <xs:annotation>
+            <xs:documentation>Дата</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ListSpecialMarksType">
+    <xs:annotation>
+      <xs:documentation>Особые отметки, в том числе сведения о ранее выданных заключениях экспертизы в отношении проектной документации, подготовленной применительно к тому же объекту капитального строительства и (или) результатов инженерных изысканий, выполненных в отношении этого объекта капитального строительства</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="SpecialMark" type="egrzt:SpecialMarkType" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Особая отметка</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="SpecialMarkType">
+    <xs:annotation>
+      <xs:documentation>Особая отметка</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="IntroductionDate" type="xs:date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Дата внесения сведений</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Text" type="egrzt:SpecialMarkTextType">
+        <xs:annotation>
+          <xs:documentation>Текст особой отметки</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="BudgetSourcesInfoType">
+    <xs:annotation>
+      <xs:documentation>Информация об Источниках финансирования</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="NoBudgetSources" type="egrzt:NoDataType">
+          <xs:annotation>
+            <xs:documentation>Сообщение об отсутсвии данных</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="BudgetSources" type="egrzt:ListBudgetSourcesType">
+          <xs:annotation>
+            <xs:documentation>Источники финансирования</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ListBudgetSourcesType">
+    <xs:annotation>
+      <xs:documentation>Источники финансирования</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="BudgetSource" type="egrzt:BudgetSourceType" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="BudgetSourceType">
+    <xs:annotation>
+      <xs:documentation>Источник финансирования</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="BudgetType" type="egrzt:BudgetTypeType">
+        <xs:annotation>
+          <xs:documentation>Вид финансирования</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:choice>
+        <xs:element name="BudgetLevel" type="egrzt:BudgetLevelType">
+          <xs:annotation>
+            <xs:documentation>Уровень бюджета</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="UL" type="egrzt:OrganizationInfoType">
+          <xs:annotation>
+            <xs:documentation>Сведения о юридическом лице (ЮЛ)</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+      <xs:element name="BudgetValueInfo" type="egrzt:BudgetValueInfoType">
+        <xs:annotation>
+          <xs:documentation>Размер финансирования, %</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="BudgetValueInfoType">
+    <xs:annotation>
+      <xs:documentation>Информация о Размере финансирования</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="NoBudgetValue" type="egrzt:NoDataType">
+          <xs:annotation>
+            <xs:documentation>Сообщение об отсутсвии данных</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="BudgetValue" type="xs:decimal">
+          <xs:annotation>
+            <xs:documentation>Размер финансирования, %</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="CadastreType">
+    <xs:annotation>
+      <xs:documentation>Сведения о кадастровых номерах земельных участков</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="SiteInventoryNumbersInfo" type="egrzt:SiteInventoryNumbersInfoType">
+        <xs:annotation>
+          <xs:documentation>Информация о Кадастровых номерах земельных участков</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="GPZUInfo" type="egrzt:GPZUInfoType">
+        <xs:annotation>
+          <xs:documentation>Информация о ГПЗУ</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DPTInfo" type="egrzt:DPTInfoType">
+        <xs:annotation>
+          <xs:documentation>Информация о ДПТ</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="SiteInventoryNumbersInfoType">
+    <xs:annotation>
+      <xs:documentation>Информация о Кадастровых номерах земельных участков</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="NoSiteInventoryNumbers" type="egrzt:NoDataType">
+          <xs:annotation>
+            <xs:documentation>Сообщение об отсутсвии данных</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="SiteInventoryNumbers" type="egrzt:ListSiteInventoryNumbersType">
+          <xs:annotation>
+            <xs:documentation>Кадастровые номера земельных участков</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ListSiteInventoryNumbersType">
+    <xs:annotation>
+      <xs:documentation>Кадастровые номера земельных участков</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="SiteInventoryNumber" type="egrzt:SiteInventoryNumberType" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Кадастровый номер земельного участка</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="GPZUInfoType">
+    <xs:annotation>
+      <xs:documentation>Информация о ГПЗУ</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="NoGPZU" type="egrzt:NoDataType">
+          <xs:annotation>
+            <xs:documentation>Сообщение об отсутсвии данных</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="ListGPZU" type="egrzt:ListGPZUType">
+          <xs:annotation>
+            <xs:documentation>Список ГПЗУ</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ListGPZUType">
+    <xs:annotation>
+      <xs:documentation>Список ГПЗУ</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="GPZU" type="egrzt:GPZUType" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>ГПЗУ</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="GPZUType">
+    <xs:annotation>
+      <xs:documentation>ГПЗУ</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Number" type="egrzt:GPZUNumberType">
+        <xs:annotation>
+          <xs:documentation>Номер документа ГПЗУ</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ApprovalDate" type="xs:date">
+        <xs:annotation>
+          <xs:documentation>Дата утверждения</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="DPTInfoType">
+    <xs:annotation>
+      <xs:documentation>Информация о ДПТ</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="NoDPT" type="egrzt:NoDataType">
+          <xs:annotation>
+            <xs:documentation>Сообщение об отсутсвии данных</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="ListDPT" type="egrzt:ListDPTType">
+          <xs:annotation>
+            <xs:documentation>Список ДПТ</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ListDPTType">
+    <xs:annotation>
+      <xs:documentation>Список ДПТ</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="DPT" type="egrzt:DPTType" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>ДПТ</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="DPTType">
+    <xs:annotation>
+      <xs:documentation>ДПТ</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Number" type="egrzt:DPTNumberType">
+        <xs:annotation>
+          <xs:documentation>Номер документа ДПТ</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ApprovalDate" type="xs:date">
+        <xs:annotation>
+          <xs:documentation>Дата утверждения</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="KOSFNIndustryType">
+    <xs:annotation>
+      <xs:documentation>Классификация отрасли по КОСФН</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Code" type="egrzt:KOSFNIndustryCodeType">
+        <xs:annotation>
+          <xs:documentation>Код отрасли по КОСФН</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Name" type="egrzt:KOSFNIndustryNameType">
+        <xs:annotation>
+          <xs:documentation>Наименование отрасли</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="KOSFNSubIndustryType">
+    <xs:annotation>
+      <xs:documentation>Классификация подотрасли по КОСФН</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Code" type="egrzt:KOSFNSubIndustryCodeType">
+        <xs:annotation>
+          <xs:documentation>Код подотрасили по КОСФН</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Name" type="egrzt:KOSFNSubIndustryNameType">
+        <xs:annotation>
+          <xs:documentation>Наименование подотрасли</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="KOSFNBuildingObjectType">
+    <xs:annotation>
+      <xs:documentation>Классификация группы ОКС по КОСФН</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Code" type="egrzt:KOSFNBuildingObjectCodeType">
+        <xs:annotation>
+          <xs:documentation>Код группы ОКС по КОСФН</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Name" type="egrzt:KOSFNBuildingObjectNameType">
+        <xs:annotation>
+          <xs:documentation>Наименование группы ОКС</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="KOSFNBuildingObjectTypeType">
+    <xs:annotation>
+      <xs:documentation>Классификация вида ОКС по КОСФН</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Code" type="egrzt:KOSFNBuildingObjectTypeCodeType">
+        <xs:annotation>
+          <xs:documentation>Код вида ОКС по КОСФН</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Name" type="egrzt:KOSFNBuildingObjectTypeNameType">
+        <xs:annotation>
+          <xs:documentation>Наименование вида ОКС</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ListTEPsType">
+    <xs:annotation>
+      <xs:documentation>Технико-экономические показатели</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="TEP" type="egrzt:TEPType" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Технико-экономический показатель (ТЭП)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="TEPType">
+    <xs:annotation>
+      <xs:documentation>Технико-экономический показатель (ТЭП)</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Name" type="egrzt:TEPNameType">
+        <xs:annotation>
+          <xs:documentation>Наименование ТЭП</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IsRequired" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>Показатель мощности</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Value" type="egrzt:TEPValueType" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Значение ТЭП</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="CapitalBuildingsInfoType">
+    <xs:annotation>
+      <xs:documentation>Информация о блоке "Сведения об объектах капитального строительства"</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="NoCapitalBuildings" type="egrzt:NoDataType">
+          <xs:annotation>
+            <xs:documentation>Сообщение об отсутсвии данных</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="CapitalBuildings" type="egrzt:ListCapitalBuildingsType">
+          <xs:annotation>
+            <xs:documentation>Сведения об объектах капитального строительства</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ListCapitalBuildingsType">
+    <xs:annotation>
+      <xs:documentation>Сведения об объектах капитального строительства</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="CapitalBuilding" type="egrzt:CapitalBuildingType" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="CapitalBuildingType">
+    <xs:annotation>
+      <xs:documentation>Объект капитального строительства (ОКС)</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Name" type="egrzt:ObjectNameType">
+        <xs:annotation>
+          <xs:documentation>Наименование объекта капитального строительства</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Address" type="egrzt:BuildingAddressType">
+        <xs:annotation>
+          <xs:documentation>Адрес (местоположение)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="FunctionalPurposeInfo" type="egrzt:FunctionalPurposeInfoType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Сведения о функциональном назначении ОКС</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SecondaryTEPs" type="egrzt:ListTEPsType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Проектируемые технико-экономические показатели (ТЭП)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="FunctionalPurposeInfoType">
+    <xs:annotation>
+      <xs:documentation>Сведения о функциональном назначении ОКС</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="NoFunctionalPurpose" type="egrzt:NoDataType">
+          <xs:annotation>
+            <xs:documentation>Сообщение об отсутсвии данных</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="FunctionalPurpose" type="egrzt:FunctionalPurposeType">
+          <xs:annotation>
+            <xs:documentation>Функциональное назначение объекта</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="KOSFN" type="egrzt:KOSFNType">
+          <xs:annotation>
+            <xs:documentation>Классификация объекта ОКС по КОСФН</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="EstimatePriceCheckType">
+    <xs:annotation>
+      <xs:documentation>Сведения о проверке достоверности определения сметной стоимости</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="AuthenticityCheck" type="egrzt:AuthenticityCheckType">
+        <xs:annotation>
+          <xs:documentation>Проверка достоверности</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ValidationDateInfo" type="egrzt:DateInfoType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Дата заключения</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ValidationNumber" type="egrzt:ValidationNumberType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Номер заключения</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ValidationResultInfo" type="egrzt:ValidationResultInfoType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Результат проверки</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="RightsInfoType">
+    <xs:annotation>
+      <xs:documentation>Информация о блоке "Исключительное право на проектную документацию повторного использования либо права на ее многократное использование (в том числе для подготовки на ее основе проектной документации)"</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="NoRights" type="egrzt:NoDataType">
+          <xs:annotation>
+            <xs:documentation>Сообщение об отсутсвии данных</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Rights" type="egrzt:RightsType">
+          <xs:annotation>
+            <xs:documentation>Исключительное право на проектную документацию повторного использования либо права на ее многократное использование (в том числе для подготовки на ее основе проектной документации)</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="RightsType">
+    <xs:annotation>
+      <xs:documentation>Исключительное право на проектную документацию повторного использования либо права на ее многократное использование (в том числе для подготовки на ее основе проектной документации)</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="RightsDocument" type="egrzt:RightsDocumentType">
+          <xs:annotation>
+            <xs:documentation>Сведения о документе, подтверждающем передачу исключительного права на проектную документацию повторного использования либо права на ее многократное использование (в том числе для подготовки на ее основе проектной документации) Российской Федерации, субъекту Российской Федерации или муниципальному образованию</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="RightsOwner" type="egrzt:RightsOwnerType">
+          <xs:annotation>
+            <xs:documentation>Сведения о лице, которому принадлежит исключительное право на проектную документацию либо право на ее многократное использование, в том числе для подготовки на ее основе проектной документации</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="RightsDocumentType">
+    <xs:annotation>
+      <xs:documentation>Сведения о документе, подтверждающем передачу исключительного права на проектную документацию повторного использования либо права на ее многократное использование (в том числе для подготовки на ее основе проектной документации) Российской Федерации, субъекту Российской Федерации или муниципальному образованию</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="PublicFormationName" type="egrzt:PublicFormationNameType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Наименование публичного образования</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="RightsDocumentInfo" type="egrzt:RightsDocumentInfoType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Сведения о документе</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="RightsOwnerType">
+    <xs:annotation>
+      <xs:documentation>Сведения о лице, которому принадлежит исключительное право на проектную документацию либо право на ее многократное использование, в том числе для подготовки на ее основе проектной документации</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="PublicFormationName" type="egrzt:PublicFormationNameType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Наименование публичного образования</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="UL" type="egrzt:OrganizationInfoType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Сведения об организации</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ListRegionLocationsType">
+    <xs:annotation>
+      <xs:documentation>Местоположение района</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="RegionLocation" type="egrzt:RegionLocationType" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Местоположение</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ListRIITechnicalReportsType">
+    <xs:annotation>
+      <xs:documentation>Список Сведений об индивидуальных предпринимателях и (или) юридических лицах, подготовивших технический отчет по результатам инженерных изысканий</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="RIITechnicalReport" type="egrzt:RIITechnicalReportType" maxOccurs="unbounded" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="RIITechnicalReportType">
+    <xs:annotation>
+      <xs:documentation>Сведения об индивидуальных предпринимателях и (или) юридических лицах, подготовивших технический отчет по результатам инженерных изысканий</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="TechnicalReportName" type="egrzt:TechnicalReportNameType">
+        <xs:annotation>
+          <xs:documentation>Наименование технического отчета</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TechnicalReportDate" type="egrzt:DateInfoType">
+        <xs:annotation>
+          <xs:documentation>Дата подготовки технического отчета</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="OrganizationsInfo" type="egrzt:OrganizationsInfoType">
+        <xs:annotation>
+          <xs:documentation>Информация об организациях проводивших инженерные изыскания</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="PublicPrintOutType">
+    <xs:annotation>
+      <xs:documentation>Выписка из единого государственного Реестра заключений экспертизы проектной документации объектов капитального строительства (общедоступные сведения)</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="ExpertOrganization" type="egrzt:OrganizationInfoType">
+        <xs:annotation>
+          <xs:documentation>Сведения об экспертной организации</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:group ref="egrzt:ExpertiseIdentityGroup">
+        <xs:annotation>
+          <xs:documentation>Номер и дата заключения экспертизы</xs:documentation>
+        </xs:annotation>
+      </xs:group>
+      <xs:element name="Result" type="egrzt:ResultType">
+        <xs:annotation>
+          <xs:documentation>Результат проведенной экспертизы</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DocumentationType" type="egrzt:ExpertiseDocumentationType">
+        <xs:annotation>
+          <xs:documentation>Сведения об объекте экспертизы</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="WorkType" type="egrzt:ExpertiseWorkType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Вид работ</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SubjectRF" type="egrzt:SubjectRFType">
+        <xs:annotation>
+          <xs:documentation>Субъект РФ</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DeveloperOrganizationInfo" type="egrzt:DeveloperOrganizationInfoType">
+        <xs:annotation>
+          <xs:documentation>Информация о блоке "Сведения о застройщике (техническом заказчике), обеспечившем подготовку проектной документации"</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Type" type="egrzt:ExpertiseType">
+        <xs:annotation>
+          <xs:documentation>Форма экспертизы</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PreviousExpertisesInfo" type="egrzt:PreviousExpertisesInfoType">
+        <xs:annotation>
+          <xs:documentation>Информация о блоке "Сведения об использовании экономически эффективной проектной документации"</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ExpertiseResultEconomyEfficiencyInfo" type="egrzt:ExpertiseResultEconomyEfficiencyInfoType">
+        <xs:annotation>
+          <xs:documentation>Информация о блоке "Сведения о признании проектной документации экономически эффективной проектной документацией повторного использования в соответствии с решением Министерства строительства и жилищно-коммунального хозяйства Российской Федерации"</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="RightsInfo" type="egrzt:RightsInfoType">
+        <xs:annotation>
+          <xs:documentation>Информация о блоке "Исключительное право на проектную документацию повторного использования либо права на ее многократное использование (в том числе для подготовки на ее основе проектной документации)"</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PlannerOrganizationsInfo" type="egrzt:OrganizationsInfoType">
+        <xs:annotation>
+          <xs:documentation>Информация о блоке "Cведения об индивидуальных предпринимателях и (или) юридических лицах, подготовивших проектную документацию"</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ObjectName" type="egrzt:ObjectNameType">
+        <xs:annotation>
+          <xs:documentation>Наименование объекта капитального строительства</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="BuildingAddress" type="egrzt:BuildingAddressType">
+        <xs:annotation>
+          <xs:documentation>Адрес (местоположение) объекта капитального строительства</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:group name="ExpertiseIdentityGroup">
+    <xs:annotation>
+      <xs:documentation>Номер и дата заключения экспертизы</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="ExpertiseResultNumber" type="egrzt:ActNumberType">
+        <xs:annotation>
+          <xs:documentation>Номер заключения экспертизы</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ExpertiseResultDate" type="xs:date">
+        <xs:annotation>
+          <xs:documentation>Дата заключения экспертизы</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+
+  <xs:complexType name="AnyOrganizationsInfoType">
+    <xs:annotation>
+      <xs:documentation>Информация об организациях (ЮЛ/ФЛ/ИП)</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="NoOrganizations" type="egrzt:NoDataType">
+          <xs:annotation>
+            <xs:documentation>Сообщение об отсутсвии данных</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Organizations" type="egrzt:ListAnyOrganizationsType">
+          <xs:annotation>
+            <xs:documentation>Сведения об организациях (ЮЛ/ФЛ/ИП)</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="DeveloperOrganizationInfoType">
+    <xs:annotation>
+      <xs:documentation>Информация о блоке "Сведения о застройщике (техническом заказчике)"</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="NoDeveloperOrganizations" type="egrzt:NoDataType">
+          <xs:annotation>
+            <xs:documentation>Сообщение об отсутсвии данных</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="DeveloperOrganizations" type="egrzt:ListDeveloperOrganizationsType">
+          <xs:annotation>
+            <xs:documentation>Сведения о застройщике (техническом заказчике)</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ListDeveloperOrganizationsType">
+    <xs:annotation>
+      <xs:documentation>Сведения о застройщике (техническом заказчике)</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="DeveloperOrganizations" type="egrzt:AnyOrganizationsInfoType">
+        <xs:annotation>
+          <xs:documentation>Сведения о застройщике</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TechnicalEmployers" type="egrzt:AnyOrganizationsInfoType">
+        <xs:annotation>
+          <xs:documentation>Сведения о техническом заказчике</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ListAnyOrganizationsType">
+    <xs:annotation>
+      <xs:documentation>Сведения об организациях (ЮЛ/ФЛ/ИП)</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element name="UL" type="egrzt:OrganizationInfoType">
+          <xs:annotation>
+            <xs:documentation>Сведения о юридическом лице (ЮЛ)</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="IP" type="egrzt:IPInfoType">
+          <xs:annotation>
+            <xs:documentation>Сведения об индивидуальном предпринимателе (ИП)</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="FL" type="egrzt:FLInfoType">
+          <xs:annotation>
+            <xs:documentation>Сведения о физическом лице (ФЛ)</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="PreviousExpertisesInfoType">
+    <xs:annotation>
+      <xs:documentation>Информация о блоке "Сведения об использовании экономически эффективной проектной документации"</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="NoPreviousExpertises" type="egrzt:NoDataType">
+          <xs:annotation>
+            <xs:documentation>Сообщение об отсутсвии данных</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="PreviousExpertises" type="egrzt:ListPreviousExpertisesType">
+          <xs:annotation>
+            <xs:documentation>Список сведений об использовании экономически эффективной проектной документации</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ListPreviousExpertisesType">
+    <xs:annotation>
+      <xs:documentation>Список сведений об использовании экономически эффективной проектной документации</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="PreviousExpertise" type="egrzt:PreviousExpertiseType" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Сведения об использовании экономически эффективной проектной документации</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="PreviousExpertiseType">
+    <xs:annotation>
+      <xs:documentation>Сведения об использовании экономически эффективной проектной документации</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Number" type="egrzt:NumberType">
+        <xs:annotation>
+          <xs:documentation>Номер заключения экспертизы</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Date" type="xs:date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Дата заключения экспертизы</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ExpertiseResultEconomyEfficiencyInfoType">
+    <xs:annotation>
+      <xs:documentation>Информация о блоке "Сведения о признании проектной документации экономически эффективной проектной документацией повторного использования в соответствии с решением Министерства строительства и жилищно-коммунального хозяйства Российской Федерации"</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="NoExpertiseResultEconomyEfficiencyInfo" type="egrzt:NoDataType">
+          <xs:annotation>
+            <xs:documentation>Сообщение об отсутсвии данных</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="ExpertiseResultEconomyEfficiency" type="egrzt:ExpertiseResultEconomyEfficiencyType">
+          <xs:annotation>
+            <xs:documentation>Сведения о признании проектной документации экономически эффективной проектной документацией повторного использования в соответствии с решением Министерства строительства и жилищно-коммунального хозяйства Российской Федерации</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ExpertiseResultEconomyEfficiencyType">
+    <xs:annotation>
+      <xs:documentation>Сведения о признании проектной документации экономически эффективной проектной документацией повторного использования в соответствии с решением Министерства строительства и жилищно-коммунального хозяйства Российской Федерации</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Number" type="egrzt:ExpertiseResultEconomyEfficiencyNumberType">
+        <xs:annotation>
+          <xs:documentation>Номер решения</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Date" type="xs:date" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Дата решения</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="OrganizationsInfoType">
+    <xs:annotation>
+      <xs:documentation>Информация о ЮЛ</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="NoOrganizations" type="egrzt:NoDataType">
+          <xs:annotation>
+            <xs:documentation>Сообщение об отсутсвии данных</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Organizations" type="egrzt:ListOrganizationsType">
+          <xs:annotation>
+            <xs:documentation>Список cведений о ЮЛ</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ListOrganizationsType">
+    <xs:annotation>
+      <xs:documentation>Список cведений о ЮЛ</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element name="UL" type="egrzt:OrganizationInfoType">
+          <xs:annotation>
+            <xs:documentation>Сведения о юридическом лице (ЮЛ)</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="IP" type="egrzt:IPInfoType">
+          <xs:annotation>
+            <xs:documentation>Сведения об индивидуальном предпринимателе (ИП)</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="OrganizationInfoType">
+    <xs:annotation>
+      <xs:documentation>Информация об организации (юридическом лице)</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Name" type="egrzt:OrgNameType">
+        <xs:annotation>
+          <xs:documentation>Полное наименование</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="INNInfo" type="egrzt:ULInnInfoType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Информация об ИНН</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="KPPInfo" type="egrzt:KPPInfoType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Информация о КПП</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="OGRNInfo" type="egrzt:OGRNInfoType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Информация об ОГРН</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Address" type="egrzt:AddressType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Адрес</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Location" type="egrzt:AddressType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Место нахождения</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Phone" type="egrzt:PhoneType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Телефон</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Email" type="egrzt:EmailType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Адрес электронной почты</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="IPInfoType">
+    <xs:annotation>
+      <xs:documentation>Информация об ИП</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:group ref="egrzt:FIO">
+        <xs:annotation>
+          <xs:documentation>ФИО ИП</xs:documentation>
+        </xs:annotation>
+      </xs:group>
+      <xs:element name="OGRNIPInfo" type="egrzt:OGRNIPInfoType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Информация об ОГРНИП</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Address" type="egrzt:AddressType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Адрес</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Phone" type="egrzt:PhoneType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Телефон</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Email" type="egrzt:EmailType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Адрес электронной почты</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="FLInfoType">
+    <xs:annotation>
+      <xs:documentation>Информация о физическом лице (ФЛ)</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:group ref="egrzt:FIO">
+        <xs:annotation>
+          <xs:documentation>ФИО ФЛ</xs:documentation>
+        </xs:annotation>
+      </xs:group>
+      <xs:element name="SNILSInfo" type="egrzt:SNILSInfoType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Информация о СНИЛС</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Address" type="egrzt:AddressType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Почтовый адрес</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Phone" type="egrzt:PhoneType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Телефон</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Email" type="egrzt:EmailType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Адрес электронной почты</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ULInnInfoType">
+    <xs:annotation>
+      <xs:documentation>Информация об ИНН ЮЛ</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="NoINN" type="egrzt:NoDataType">
+          <xs:annotation>
+            <xs:documentation>Сообщение об отсутсвии данных</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="INN" type="egrzt:ULInnType">
+          <xs:annotation>
+            <xs:documentation>ИНН</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="KPPInfoType">
+    <xs:annotation>
+      <xs:documentation>Информация о КПП</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="NoKPP" type="egrzt:NoDataType">
+          <xs:annotation>
+            <xs:documentation>Сообщение об отсутсвии данных</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="KPP" type="egrzt:KPPType">
+          <xs:annotation>
+            <xs:documentation>КПП</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="OGRNInfoType">
+    <xs:annotation>
+      <xs:documentation>Информация об ОГРН</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="NoOGRN" type="egrzt:NoDataType">
+          <xs:annotation>
+            <xs:documentation>Сообщение об отсутсвии данных</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="OGRN" type="egrzt:OGRNType">
+          <xs:annotation>
+            <xs:documentation>ОГРН</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="SNILSInfoType">
+    <xs:annotation>
+      <xs:documentation>Информация о СНИЛС</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="NoSNILS" type="egrzt:NoDataType">
+          <xs:annotation>
+            <xs:documentation>Сообщение об отсутсвии данных</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="SNILS" type="egrzt:SNILSType">
+          <xs:annotation>
+            <xs:documentation>СНИЛС</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="OGRNIPInfoType">
+    <xs:annotation>
+      <xs:documentation>Информация об ОГРНИП</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="NoOGRNIP" type="egrzt:NoDataType">
+          <xs:annotation>
+            <xs:documentation>Сообщение об отсутсвии данных</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="OGRNIP" type="egrzt:OGRNIPType">
+          <xs:annotation>
+            <xs:documentation>ОГРНИП</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="SubjectRFType">
+    <xs:annotation>
+      <xs:documentation>Субъект РФ</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Name" type="egrzt:SubjectRFNameType">
+        <xs:annotation>
+          <xs:documentation>Наименование субъекта РФ</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Number" type="egrzt:SubjectRFNumberType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Код субъекта РФ</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="PatronymicInfoType">
+    <xs:annotation>
+      <xs:documentation>Информация об отчестве</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="NoPatronymic" type="egrzt:NoDataType">
+          <xs:annotation>
+            <xs:documentation>Сообщение об отсутсвии данных</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Patronymic" type="egrzt:PatronymicType">
+          <xs:annotation>
+            <xs:documentation>Отчество</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ValidationResultInfoType">
+    <xs:annotation>
+      <xs:documentation>Информация о Результате проверки</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="NoValidationResult" type="egrzt:NoDataType">
+          <xs:annotation>
+            <xs:documentation>Сообщение об отсутсвии данных</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="ValidationResult" type="egrzt:ValidationResultType">
+          <xs:annotation>
+            <xs:documentation>Результат проверки</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="KOSFNType">
+    <xs:annotation>
+      <xs:documentation>Классификация по КОСФН</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="KOSFNIndustry" type="egrzt:KOSFNIndustryType">
+        <xs:annotation>
+          <xs:documentation>Классификация отрасли по КОСФН</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="KOSFNSubIndustry" type="egrzt:KOSFNSubIndustryType">
+        <xs:annotation>
+          <xs:documentation>Классификация подотрасли по КОСФН</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="KOSFNBuildingObject" type="egrzt:KOSFNBuildingObjectType">
+        <xs:annotation>
+          <xs:documentation>Классификация группы ОКС по КОСФН</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="KOSFNBuildingObjectType" type="egrzt:KOSFNBuildingObjectTypeType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Классификация вида ОКС по КОСФН</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:group name="FIO">
+    <xs:annotation>
+      <xs:documentation>Имя Фамилия (Отчество)</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="FirstName" type="egrzt:FirstNameType">
+        <xs:annotation>
+          <xs:documentation>Имя</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LastName" type="egrzt:LastNameType">
+        <xs:annotation>
+          <xs:documentation>Фамилия</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PatronymicInfo" type="egrzt:PatronymicInfoType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Информация об отчестве</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+
+  <xs:simpleType name="OrgNameType">
+    <xs:annotation>
+      <xs:documentation>Наименование организации (юридического лица)</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="500"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="RightsDocumentInfoType">
+    <xs:annotation>
+      <xs:documentation>Сведения о документе, подтверждающем передачу исключительных прав на использование ПД</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="4000"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="PublicFormationNameType">
+    <xs:annotation>
+      <xs:documentation>Наименование публичного образования</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="600"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ULInnType">
+    <xs:annotation>
+      <xs:documentation>ИНН юридического лица</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[0-9]{10}"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="KPPType">
+    <xs:annotation>
+      <xs:documentation>Код причины постановки на учет (КПП)</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="([0-9]{1}[1-9]{1}|[1-9]{1}[0-9]{1})([0-9]{2})([0-9A-F]{2})([0-9]{3})"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="OGRNType">
+    <xs:annotation>
+      <xs:documentation>ОГРН</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[0-9]{13}"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="OGRNIPType">
+    <xs:annotation>
+      <xs:documentation>ОГРНИП</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[0-9]{15}"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="SNILSType">
+    <xs:annotation>
+      <xs:documentation>СНИЛС</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[0-9]{3}-[0-9]{3}-[0-9]{3} [0-9]{2}"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="AddressType">
+    <xs:annotation>
+      <xs:documentation>Адрес</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="2000"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="BuildingAddressType">
+    <xs:annotation>
+      <xs:documentation>Адрес (местоположение) объекта капитального строительства</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="4000"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="EmailType">
+    <xs:annotation>
+      <xs:documentation>Адрес электронной почты</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="200"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="PhoneType">
+    <xs:annotation>
+      <xs:documentation>Телефон</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="100"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ActNumberType">
+    <xs:annotation>
+      <xs:documentation>Актуальный номер заключения экспертизы</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[0-9][0-9]-[1-2]-[1-2]-[1-3]-[0-9]{6}-2[0-9]{3}"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ResultType">
+    <xs:annotation>
+      <xs:documentation>Результат проведенной экспертизы</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="400"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ExpertiseDocumentationType">
+    <xs:annotation>
+      <xs:documentation>Сведения об объекте экспертизы</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="200"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ObjectNameType">
+    <xs:annotation>
+      <xs:documentation>Наименование объекта капитального строительства</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="4000"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ExpertiseWorkType">
+    <xs:annotation>
+      <xs:documentation>Вид работ</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="400"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ExpertiseType">
+    <xs:annotation>
+      <xs:documentation>Форма экспертизы</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="200"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="FirstNameType">
+    <xs:annotation>
+      <xs:documentation>Имя</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="egrzt:RusName">
+      <xs:maxLength value="200"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="LastNameType">
+    <xs:annotation>
+      <xs:documentation>Фамилия</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="egrzt:RusName">
+      <xs:maxLength value="200"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="PatronymicType">
+    <xs:annotation>
+      <xs:documentation>Отчество</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="egrzt:RusName">
+      <xs:maxLength value="200"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="RusName">
+    <xs:annotation>
+      <xs:documentation>Русское наименование</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[а-яА-ЯеЁ\-\s]+"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="NoDataType">
+    <xs:annotation>
+      <xs:documentation>Сообщение об отстутсвии данных</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="100"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="NumberType">
+    <xs:annotation>
+      <xs:documentation>Номер заключения экспертизы</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="200"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="SubjectRFNameType">
+    <xs:annotation>
+      <xs:documentation>Наименование субъекта РФ</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="400"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="SubjectRFNumberType">
+    <xs:annotation>
+      <xs:documentation>Номер субъекта РФ</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[0-9][0-9]"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ExpertiseResultEconomyEfficiencyNumberType">
+    <xs:annotation>
+      <xs:documentation>Номер решения о признании проектной документации экономически эффективной проектной документацией повторного использования в соответствии с решением Министерства строительства и жилищнокоммунального хозяйства Российской Федерации</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="400"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="DocumentationNameType">
+    <xs:annotation>
+      <xs:documentation>Наименование объекта экспертизы</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="8000"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ActivityType">
+    <xs:annotation>
+      <xs:documentation>Направление деятельности</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="600"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="PositionType">
+    <xs:annotation>
+      <xs:documentation>Должность</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="900"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="CertificateNumberType">
+    <xs:annotation>
+      <xs:documentation>Номер аттестата</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="200"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="StatusType">
+    <xs:annotation>
+      <xs:documentation>Статус раздела реестра</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="200"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="SpecialMarkTextType">
+    <xs:annotation>
+      <xs:documentation>Текст особой отметки</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="10000"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="BudgetTypeType">
+    <xs:annotation>
+      <xs:documentation>Вид финансирования</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="400"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="BudgetLevelType">
+    <xs:annotation>
+      <xs:documentation>Уровень бюджета</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="400"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="SiteInventoryNumberType">
+    <xs:annotation>
+      <xs:documentation>Кадастровый номер земельного участка</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="400"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="GPZUNumberType">
+    <xs:annotation>
+      <xs:documentation>Номер документа ГПЗУ</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="400"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="DPTNumberType">
+    <xs:annotation>
+      <xs:documentation>Номер документа ДПТ</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="400"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="SpecialCommentsType">
+    <xs:annotation>
+      <xs:documentation>Особые отметки подраздела 1</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="4000"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="SpecialCommentsPDType">
+    <xs:annotation>
+      <xs:documentation>Особые отметки подраздела 2</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="4000"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="SpecialCommentsRIIType">
+    <xs:annotation>
+      <xs:documentation>Особые отметки подраздела 3</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="4000"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ObjectTypeType">
+    <xs:annotation>
+      <xs:documentation>Тип объекта</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="200"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="FunctionalPurposeType">
+    <xs:annotation>
+      <xs:documentation>Функциональное назначение объекта</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="4000"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="KOSFNCodeType">
+    <xs:annotation>
+      <xs:documentation>Код КОСФН</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="200"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="KOSFNIndustryCodeType">
+    <xs:annotation>
+      <xs:documentation>Код отрасли по КОСФН</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="400"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="KOSFNSubIndustryCodeType">
+    <xs:annotation>
+      <xs:documentation>Код подотрасли по КОСФН</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="400"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="KOSFNBuildingObjectCodeType">
+    <xs:annotation>
+      <xs:documentation>Код группы ОКС по КОСФН</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="200"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="KOSFNBuildingObjectTypeCodeType">
+    <xs:annotation>
+      <xs:documentation>Код вида ОКС по КОСФН</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="200"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="KOSFNIndustryNameType">
+    <xs:annotation>
+      <xs:documentation>Наименование отрасли по КОСФН</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="2000"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="KOSFNSubIndustryNameType">
+    <xs:annotation>
+      <xs:documentation>Наименование подотрасли по КОСФН</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="2000"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="KOSFNBuildingObjectNameType">
+    <xs:annotation>
+      <xs:documentation>Наименование группы ОКС по КОСФН</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="2000"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="KOSFNBuildingObjectTypeNameType">
+    <xs:annotation>
+      <xs:documentation>Наименование вида ОКС по КОСФН</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="2000"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="TEPNameType">
+    <xs:annotation>
+      <xs:documentation>Наименование ТЭП</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="800"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="TEPValueType">
+    <xs:annotation>
+      <xs:documentation>Значение ТЭП</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="2000"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="AuthenticityCheckType">
+    <xs:annotation>
+      <xs:documentation>Проверка достоверности</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="50"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ValidationNumberType">
+    <xs:annotation>
+      <xs:documentation>Номер заключения проверки достоверности</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="400"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ValidationResultType">
+    <xs:annotation>
+      <xs:documentation>Результат проверки</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="50"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="RegionLocationType">
+    <xs:annotation>
+      <xs:documentation>Местоположение</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="800"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="TechnicalReportNameType">
+    <xs:annotation>
+      <xs:documentation>Наименование технического отчета</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="600"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="TEPGroupNameType">
+    <xs:annotation>
+      <xs:documentation>Наименование группы ТЭП</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="200"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ArchiveFileIDType">
+    <xs:annotation>
+      <xs:documentation>Идентификатор файла архива документов раздела реестра в ГИС ЕГРЗ</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="200"/>
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ArchiveFileNumberType">
+    <xs:annotation>
+      <xs:documentation>Порядковый номер файла архива документов раздела реестра в ГИС ЕГРЗ</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="CRCCheckSumType">
+    <xs:annotation>
+      <xs:documentation>Контрольная сумма CRC</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[0-9A-F]+"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="FilesCountType">
+    <xs:annotation>
+      <xs:documentation>Количество файлов</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="FileSizeType">
+    <xs:annotation>
+      <xs:documentation>Размер файла</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:long">
+      <xs:minInclusive value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>

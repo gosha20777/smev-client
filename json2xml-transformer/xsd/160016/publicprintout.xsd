@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema
+	targetNamespace="urn://x-artefacts-gis-ergz-public/2.0.0"
+	elementFormDefault="qualified" attributeFormDefault="unqualified"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:egrz="urn://x-artefacts-gis-ergz-public/2.0.0"
+	xmlns:egrzt="urn://x-artefacts-gis-ergz-types/2.0.0">
+	
+	<xs:import namespace="urn://x-artefacts-gis-ergz-types/2.0.0" schemaLocation="common/gis-egrz-types.xsd" />
+	
+	<xs:element name="PublicPrintOutRequest" type="egrz:PublicPrintOutRequestType">
+		<xs:annotation>
+			<xs:documentation>Запрос на получение публичной выписки из реестра заключений</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+	<xs:element name="PublicPrintOutResponse" type="egrz:PublicPrintOutResponseType">
+		<xs:annotation>
+			<xs:documentation>Ответ на запрос на получение публичной выписки из реестра заключений</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+
+	<xs:complexType name="PublicPrintOutRequestType">
+    <xs:annotation>
+      <xs:documentation>Запрос на получение публичной выписки из реестра заключений</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:group ref="egrzt:ExpertiseIdentityGroup">
+			  <xs:annotation>
+				  <xs:documentation>Номер и дата заключения экспертизы</xs:documentation>
+			  </xs:annotation>
+		  </xs:group>
+    </xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="PublicPrintOutResponseType">
+    <xs:annotation>
+      <xs:documentation>Ответ на запрос на получение публичной выписки из реестра заключений</xs:documentation>
+    </xs:annotation>
+		<xs:sequence>
+			<xs:element ref="egrzt:PrintOutNumber">
+				<xs:annotation>
+					<xs:documentation>Номер выписки</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ReestrDate" type="xs:date">
+				<xs:annotation>
+					<xs:documentation>Дата включения сведений в реестр</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element ref="egrzt:PublicPrintOut">
+				<xs:annotation>
+					<xs:documentation>Публичная выписка</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>

@@ -43,6 +43,41 @@ services:
     depends_on:
       - chainer
       - db
+  file_repository:
+    build:
+      context: file-repository
+      dockerfile: Dockerfile
+    container_name: file_repository
+    env_file: ./file-repository/app.conf
+    volumes:
+      - ./file-repository/storage/:/app/storage/
+    ports:
+      - 5004:5000
+    depends_on:
+      - chainer
+      - redis
+      - db
+
+  ftp_worker:
+    build:
+      context: file-repository/ftp_worker
+      dockerfile: Dockerfile
+    container_name: ftp_worker
+    env_file: ./file-repository/app.conf
+    volumes:
+      - ./file-repository/storage/:/app/storage/
+    depends_on:
+      - file_repository
+      - redis
+  
+  redis:
+    image: redis:4.0.6-alpine
+    container_name: redus
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis:/data
+
 
   smev_connector:
     build:

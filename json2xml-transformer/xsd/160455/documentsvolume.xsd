@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema
+  targetNamespace="urn://x-artefacts-gis-ergz-documents-volume/2.0.0"
+  elementFormDefault="qualified"
+  attributeFormDefault="unqualified"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:egrz="urn://x-artefacts-gis-ergz-documents-volume/2.0.0"
+  xmlns:egrzt="urn://x-artefacts-gis-ergz-types/2.0.0">
+
+  <xs:import namespace="urn://x-artefacts-gis-ergz-types/2.0.0" schemaLocation="common/gis-egrz-types.xsd"/>
+
+  <xs:element name="DocumentsVolumeRequest" type="egrz:DocumentsVolumeRequestType">
+    <xs:annotation>
+      <xs:documentation>Запрос на предоставление отдельного тома архива документов раздела реестра по идентификационным данным</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:element name="DocumentsVolumeResponse" type="egrz:DocumentsVolumeResponseType">
+    <xs:annotation>
+      <xs:documentation>Ответ на запрос на предоставление отдельного тома архива документов раздела реестра по идентификационным данным</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+
+  <xs:complexType name="DocumentsVolumeRequestType">
+    <xs:annotation>
+      <xs:documentation>Запрос на предоставление отдельного тома архива документов раздела реестра по идентификационным данным</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="egrzt:PrintOutNumber">
+        <xs:annotation>
+          <xs:documentation>Номер родительского сообщения</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="egrzt:VolumeID">
+        <xs:annotation>
+          <xs:documentation>Идентификатор запрашиваемого тома архива документов раздела реестра в ГИС ЕГРЗ</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="DocumentsVolumeResponseType">
+    <xs:annotation>
+      <xs:documentation>Ответ на запрос на предоставление отдельного тома архива документов раздела реестра по идентификационным данным</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="egrzt:Archive">
+        <xs:annotation>
+          <xs:documentation>Архив документов раздела реестра в ГИС ЕГРЗ</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>

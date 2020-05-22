@@ -3,25 +3,46 @@ import os
 import shutil
 import hashlib
 from datetime import date
-import imghdr
-from PIL import Image
 from io import BytesIO
+from typing import List
+import random
 
 async def save_upload_file(upload_file: UploadFile, id: str):
     try:
         time_path = os.path.join('storage', str(date.today()))
-        full_path = os.path.join(time_path, f'{id}.png')
-
+        full_path = os.path.join(time_path, f'{id}.{upload_file.filename}')
         if not os.path.isdir(time_path):
             os.mkdir(time_path)
         
         await upload_file.seek(0)
-        im = Image.open(BytesIO(await upload_file.read()))
-        im.save(full_path, format="PNG")
+        data = BytesIO(await upload_file.read())
+        with open(full_path, 'wb') as f:
+            shutil.copyfileobj(data, f)
+        
+        return full_path
     except Exception as e:
         raise Exception('unable to save file '+str(e))
     
     return full_path
+
+async def megre_files(pathes: List[str]):
+    if len(pathes) < 1:
+        raise Exception('pathes list is empty')
+
+    hash_object = hashlib.sha1(bytes([random.randrange(0, 256) for _ in range(0, 2024)]))
+    id = hash_object.hexdigest()
+    time_path = os.path.join('storage', str(date.today()))
+    full_path = os.path.join(time_path, f'{id}.{os.path.basename(pathes[0])}')
+
+    if not os.path.isdir(time_path):
+            os.mkdir(time_path)
+
+    with open(full_path,'wb') as wfd:
+        for f in pathes:
+            with open(f,'rb') as fd:
+                shutil.copyfileobj(fd, wfd)
+
+    return id, full_path
 
 async def calculate_id(upload_file: UploadFile):
     try:
@@ -32,12 +53,15 @@ async def calculate_id(upload_file: UploadFile):
         raise Exception("unable to calculate hash " + str(e))
     return hex_dig
 
-async def is_image(upload_file: UploadFile):
-    try:
-        await upload_file.seek(0)
-        img_type = imghdr.what(BytesIO(await upload_file.read()))
-        if img_type != 'png' and img_type != 'jpeg' and img_type != 'bmp':
-            return False
-        return True
-    except Exception as e:
-        raise Exception("unable to check image " + str(e))
+def get_digest(file_path):
+    h = hashlib.sha1()
+
+    with open(file_path, 'rb') as file:
+        while True:
+            # Reading is buffered, so we can read smaller chunks.
+            chunk = file.read(h.block_size)
+            if not chunk:
+                break
+            h.update(chunk)
+
+    return h.hexdigest()
