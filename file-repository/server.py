@@ -110,7 +110,7 @@ async def get_file(id: str, db: Session = Depends(get_db)):
     f = await db_controller.get_file(db=db, id=id)
     if f == None:
         raise HTTPException(404, detail="no such file")
-    return FileResponse(f.path)
+    return FileResponse(f.path, media_type='application/zip')
 
 # get photo info
 @app.get('/api/v1/files')
