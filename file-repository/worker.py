@@ -23,7 +23,7 @@ def _get_file_from_ftp(path: str, host: str, user: str = 'anonimus', password: s
 
     with ftplib.FTP(host) as ftp:
         ftp.login(user=user, passwd=password)
-        with open(os.path.basename(path), 'wb') as f:
+        with open(full_path, 'wb') as f:
             try:
                 ftp.retrbinary('RETR %s' % path, f.write)
             except EOFError:
