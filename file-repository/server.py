@@ -6,7 +6,7 @@ from models import db_smev_file
 from models import smev_file
 from controllers import file_controller
 from controllers import db_controller
-from ftp_worker import worker
+import worker
 from redis import Redis
 from rq import Queue, Worker
 from rq.job import Job

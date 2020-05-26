@@ -14,4 +14,4 @@ class SmevMergeFile(BaseModel):
 class SmevFtpFile(BaseModel):
     user: str
     password: str
-    file_path: str
+    path: str

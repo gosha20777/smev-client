@@ -27,7 +27,7 @@ async def send_mesage(req: SmevMesage, smev_server: str):
     headers = {'content-type': 'text/xml'}
     body = req.xml
     response = requests.post(host['url'], data=body, headers=headers, timeout=10)
-    response = response.content.decode('utf-8')
+    response = response.content.decode('utf-8', errors='ignore')
     try:
         response = re.findall(r'<soap:Envelope[\s\S]*?</soap:Envelope>', response)[0]
         xml = ET.fromstring(response)
@@ -41,6 +41,20 @@ async def send_mesage(req: SmevMesage, smev_server: str):
         return SmevMesage(id=id, xml=xmlstr)
     except Exception as e:
         raise HTTPException(400, f'invalid smev response {str(e)}: {response}')
+
+# create file in repo
+@app.post('/api/v1/send/{smev_server}/raw')
+async def send_mesage_raw(req: SmevMesage, smev_server: str):
+    if(smev_hosts[smev_server] == None):
+        raise HTTPException(400, f'no such smev host: {smev_server}')
+
+    host = smev_hosts[smev_server]
+
+    headers = {'content-type': 'text/xml'}
+    body = req.xml
+    response = requests.post(host['url'], data=body, headers=headers, timeout=10)
+    return Response(content=response.content, media_type="application/text")
+
 
 @cron.interval_schedule(seconds=20)
 def call_query_function():
@@ -60,7 +74,7 @@ def call_query_function():
         headers = {'content-type': 'text/xml'}
         host = 'http://smev3-n0.test.gosuslugi.ru:7500/smev/v1.2/ws?wsd'
         response = requests.post(host, data=body, headers=headers, timeout=5)
-        response = response.content.decode('utf-8')
+        response = response.content.decode('utf-8', errors='ignore')
         try:    
             response = re.findall(r'<soap:Envelope[\s\S]*?</soap:Envelope>', response)[0]
             xml = ET.fromstring(response)

@@ -216,6 +216,101 @@ async def get_record_content_xml(id: str, mesage_type: str, db: Session = Depend
 
     return Response(content=result, media_type="application/xml")
 
+# get record id
+@app.get('/api/v1/record/{id}/{mesage_type}/id')
+async def get_record_content_id(id: str, mesage_type: str, db: Session = Depends(get_db)):
+    rec = await db_controller.get_record(db=db, id=id)
+    if rec == None:
+        raise HTTPException(404, detail="no such record")
+    
+    result = None
+    if mesage_type == 'GetRequestRequest':
+        result = rec.get_request_request
+    elif mesage_type == 'GetRequestResponse':
+        result = rec.get_request_response
+    elif mesage_type == 'GetResponseRequest':
+        result = rec.get_response_request
+    elif mesage_type == 'GetResponseResponse':
+        result = rec.get_response_response
+
+    elif mesage_type == 'SendRequestRequest':
+        result = rec.send_request_request
+    elif mesage_type == 'SendRequestResponse':
+        result = rec.send_request_response
+    elif mesage_type == 'SendResponseRequest':
+        result = rec.send_response_request
+    elif mesage_type == 'SendResponseResponse':
+        result = rec.send_response_response
+
+    elif mesage_type == 'AckRequest':
+        result = rec.ack_request
+
+    if result == None:
+        raise HTTPException(404, detail="no such mesage in record")
+
+    root = ET.fromstring(result)
+    result = ET.tostring(root, encoding='utf-8')
+    id = ""
+    try:
+        id = re.findall(r'<ns2:MessageId>[\s\S]*?</ns2:MessageId>', result)[0]
+        id = re.findall(r'[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}', id)[0]
+    except:
+        raise HTTPException(404, detail="MessageId is not found")
+    return {'id': id}
+
+# get record id
+@app.get('/api/v1/record/{id}/{mesage_type}/tfp_attachment')
+async def get_record_content_attachment(id: str, mesage_type: str, db: Session = Depends(get_db)):
+    rec = await db_controller.get_record(db=db, id=id)
+    if rec == None:
+        raise HTTPException(404, detail="no such record")
+    
+    result = None
+    if mesage_type == 'GetRequestRequest':
+        raise HTTPException(404, detail="GetRequestRequest have no attachment")
+    elif mesage_type == 'GetRequestResponse':
+        result = rec.get_request_response
+    elif mesage_type == 'GetResponseRequest':
+        raise HTTPException(404, detail="no attachment")
+    elif mesage_type == 'GetResponseResponse':
+        result = rec.get_response_response
+
+    elif mesage_type == 'SendRequestRequest':
+        raise HTTPException(404, detail="no attachment")
+    elif mesage_type == 'SendRequestResponse':
+        result = rec.send_request_response
+    elif mesage_type == 'SendResponseRequest':
+        raise HTTPException(404, detail="no attachment")
+    elif mesage_type == 'SendResponseResponse':
+        result = rec.send_response_response
+
+    elif mesage_type == 'AckRequest':
+        raise HTTPException(404, detail="no attachment")
+
+    if result == None:
+        raise HTTPException(404, detail="no such mesage in record")
+
+    root = ET.fromstring(result)
+    result = ET.tostring(root, encoding='utf-8')
+    path = None
+    user = None
+    password = None
+    try:
+        user = re.findall(r'<UserName>[\s\S]*?</UserName>', result)[0]
+        user = user.replace('<UserName>', '', 1)
+        user = user.replace('</UserName>', '', 1)
+        
+        password = re.findall(r'<Password>[\s\S]*?</Password>', result)[0]
+        password = password.replace('<Password>', '', 1)
+        password = password.replace('</Password>', '', 1)
+
+        path = re.findall(r'<FileName>[\s\S]*?</FileName>', result)[0]
+        path = path.replace('<FileName>', '', 1)
+        path = path.replace('</FileName>', '', 1)
+    except:
+        raise HTTPException(404, detail="Attacnment info is not found")
+    return { 'user': user, 'password': password, 'path': path }
+
 @app.delete('/api/v1/record/{id}')
 async def remove_record(id: str, req: Request, db: Session = Depends(get_db)):
     rec = await db_controller.get_record(db=db, id=id)
