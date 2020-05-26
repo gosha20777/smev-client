@@ -108,13 +108,13 @@
 			]
 		},
 		{
-			"endpoint": "/v1/record/{id}/{mesage_type}/xml",
+			"endpoint": "/v1/record/{id}/{mesage_type}/{content_type}",
 			"method": "GET",
 			"output_encoding": "no-op",
 			"backend": [
 			{
 				"host":[ "http://localhost:5002" ],
-				"url_pattern": "/api/v1/record/{id}/{mesage_type}/xml",
+				"url_pattern": "/api/v1/record/{id}/{mesage_type}/{content_type}",
 				"encoding": "no-op",
 				"method": "GET"
 			}
@@ -174,13 +174,13 @@
 			]
 		},
 		{
-			"endpoint": "/v1/file/from_smev/{id}",
+			"endpoint": "/v1/file/{id}/{task}",
 			"method": "GET",
 			"output_encoding": "no-op",
 			"backend": [
 			{
 				"host":[ "http://localhost:5004" ],
-				"url_pattern": "/api/v1/file/from_smev/{id}",
+				"url_pattern": "/api/v1/file/{id}/{task}",
 				"encoding": "no-op",
 				"method": "GET"
 			}
