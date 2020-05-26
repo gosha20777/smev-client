@@ -95,7 +95,10 @@ async def get_ftp_worker_result(task_id: str, db: Session = Depends(get_db)):
 
         id, path = job.result
         f = smev_file.SmevFile(id=id, path=path)
-        return await db_controller.create_file(db=db, file=f)
+        result = await db_controller.get_file(db=db, id=id)
+        if result == None:
+            result = await db_controller.create_file(db=db, file=f)
+        return result
     except rq.exceptions.NoSuchJobError:
         return {'status': 'no such job'}
     except RuntimeError as ex:
