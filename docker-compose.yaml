@@ -1,5 +1,13 @@
 version: '3.5'
 services:
+  nginx:
+    container_name: nginx
+    image: nginx
+    ports:
+      - 8080:8080
+    network_mode: "host"  
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
   db:
     container_name: postgres
     image: postgres:latest
@@ -19,7 +27,7 @@ services:
     volumes:
       - ./chainer:/etc/krakend
     ports:
-      - 8080:8080
+      - 8090:8090
     command: [ "run", "-c", "/etc/krakend/config.json" ]
 
   json_2_xml:
@@ -92,3 +100,14 @@ services:
     depends_on:
       - chainer
       - db
+
+  redoc:
+    image: redocly/redoc
+    container_name: redoc
+    ports:
+      - 5080:80
+    volumes:
+      - ./redoc:/usr/share/nginx/html/swagger/
+    env_file: ./redoc/app.conf
+    depends_on:
+      - chainer

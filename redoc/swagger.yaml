@@ -1,0 +1,166 @@
+swagger: "2.0"
+info:
+  description: ""
+  version: "1.0.0"
+  title: "MOGT Smev3 API"
+  termsOfService: "https://www.mogt.ru/"
+  contact:
+    email: "mogt_info@mosreg.ru"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "localhost"
+basePath: "/v1"
+tags:
+- name: "json2xml"
+  description: "Json to xml conversion according to smev 3 xsd schemes"
+- name: "smev signer"
+  description: "Converting messages to smev-3.X format"
+- name: "record repository"
+  description: "manipulating and storing smev message series"
+- name: "file repository"
+  description: "manipulating and storing smev files"
+- name: "smev connector"
+  description: "connect and communicate with smev 3 endpoints"
+schemes:
+- "https"
+- "http"
+paths:
+  /json2xml/{query_type}:
+    post:
+      tags:
+      - "json2xml"
+      summary: "Convert json to xml"
+      description: ""
+      operationId: "json2xml"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "query_type"
+        in: "path"
+        description: "Name smev type"
+        required: true
+        type: "string"
+        format: "str"
+      - in: "body"
+        name: "body"
+        description: "Smev message template"
+        required: true
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Json2XmlResponse"
+  /signer/{cert_type}:
+    post:
+      tags:
+      - "smev signer"
+      summary: "Convert message to smev-3.X format"
+      description: ""
+      operationId: "signer"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "cert_type"
+        in: "path"
+        description: "Sertificate alias"
+        required: true
+        type: "string"
+        format: "str"
+      - in: "body"
+        name: "body"
+        description: "Smev message xml template"
+        required: true
+        schema:
+          $ref: "#/definitions/SmevSignerRequest"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/SmevMesageXmlResponse"
+  /records:
+    post:
+      tags:
+      - "record repository"
+      summary: "Convert message to smev-3.X format"
+      description: ""
+      operationId: "signer"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "cert_type"
+        in: "path"
+        description: "Sertificate alias"
+        required: true
+        type: "string"
+        format: "str"
+      - in: "body"
+        name: "body"
+        description: "Smev message xml template"
+        required: true
+        schema:
+          $ref: "#/definitions/SmevSignerRequest"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/SmevMesageXmlResponse"
+            
+definitions:
+  Json2XmlResponse:
+    type: "object"
+    properties:
+      xml:
+        type: "string"
+        format: "xml"
+  SmevSignerRequest:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        format: "uuid or 0"
+      xml:
+        type: "string"
+        format: "xml"
+      to:
+        type: "string"
+        format: "uuid"
+        required: false
+      msgType:
+        type: "string"
+        enum:
+        - "SendRequestRequest"
+        - "SendResponseRequest"
+        - "GetRequestRequest"
+        - "GetResponseRequest"
+        - "AckRequest"
+      tagForSign:
+        type: "string"
+        enum:
+        - "SIGNED_BY_CONSUMER"
+        - "SIGNED_BY_CALLER"
+      attachments:
+        type: "array"
+        items:
+          type: "string"
+          format: "file id"
+
+  SmevMesageXmlResponse:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      xml:
+        type: "string"
+        format: "xml"
+
+externalDocs:
+  description: "Find out more about"
+  url: "http://mogt"
