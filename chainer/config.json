@@ -2,7 +2,7 @@
     "version": 2,
     "name": "mogt gateway",
     "host": [ "0.0.0.0" ],
-    "port": 8080,
+    "port": 8090,
     "cache_ttl": "3600s",
     "timeout": "10s",
     "extra_config": {
@@ -13,7 +13,7 @@
         "stdout": true
       },
     "github_com/devopsfaith/krakend-cors": {
-       "allow_origins": [ "http://localhost:8080" ],
+       "allow_origins": [ "http://localhost:8090" ],
        "allow_methods": [ "POST", "GET", "PUT", "DELETE" ],
        "max_age": "12h"
       },
@@ -23,7 +23,7 @@
         "router_disabled": false,
         "backend_disabled": false,
         "endpoint_disabled": false,
-        "listen_address": ":8090"
+        "listen_address": ":8091"
       }
     },
     "endpoints": [   
