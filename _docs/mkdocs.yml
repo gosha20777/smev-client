@@ -2,12 +2,13 @@ site_name: Smev 3 client
 nav:
   - Home: index.md
   - Architecture Description: architecture-description.md
-  - Components:
+  - Core API Components:
     - Json2xml: json2xml.md
     - Xml Signer: xml-signer.md
     - Smev Connector: smev-connector.md
     - Record Repository: record-repository.md
     - File Repository: file-repository.md
-
+  - External API / Plugins:
+    - Json2xml: json2xml.md
 theme:
   name: 'material'
