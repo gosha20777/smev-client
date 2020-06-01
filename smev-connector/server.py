@@ -32,10 +32,6 @@ async def send_mesage(req: SmevMesage, smev_server: str):
         response = re.findall(r'<soap:Envelope[\s\S]*?</soap:Envelope>', response)[0]
         xml = ET.fromstring(response)
         xmlstr = ET.tostring(xml, encoding='utf-8').decode('utf-8')
-        try:
-            re.findall(r'<ns2:MessageId>[\s\S]*?</ns2:MessageId>', xmlstr)[0]
-        except:
-            raise Exception("No message id")
         id = req.id
         try:
             id = re.findall(r'<ns2:OriginalMessageId>[\s\S]*?</ns2:OriginalMessageId>', xmlstr)[0]
@@ -44,7 +40,11 @@ async def send_mesage(req: SmevMesage, smev_server: str):
             id = req.id
         return SmevMesage(id=id, xml=xmlstr)
     except Exception as e:
-        raise HTTPException(400, f'invalid smev response {str(e)}: {response}')
+        try:
+            xml = ET.fromstring(response)
+            response = ET.tostring(xml, encoding='utf-8').decode('utf-8')
+        finally:
+            raise HTTPException(400, f'invalid smev response {str(e)}: {response}')
 
 # create file in repo
 @app.post('/api/v1/send/{smev_server}/raw')

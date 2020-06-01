@@ -30,12 +30,12 @@
 		{
 			"endpoint": "/v1/signer/{cert_type}",
 			"method": "POST",
-			"output_encoding": "json",
+			"output_encoding": "no-op",
 			"backend": [
 			{
 				"host":[ "http://localhost:5000" ],
 				"url_pattern": "/api/v1/{cert_type}",
-				"encoding": "json",
+				"encoding": "no-op",
 				"method": "POST"
 			}
 			]
@@ -44,12 +44,12 @@
 		{
 			"endpoint": "/v1/json2xml/{query_type}",
 			"method": "POST",
-			"output_encoding": "json",
+			"output_encoding": "no-op",
 			"backend": [
 			{
 				"host":[ "http://localhost:5001" ],
 				"url_pattern": "/api/v1/{query_type}",
-				"encoding": "json",
+				"encoding": "no-op",
 				"method": "POST"
 			}
 			]
@@ -71,12 +71,12 @@
 		{
 			"endpoint": "/v1/record/{id}",
 			"method": "GET",
-			"output_encoding": "json",
+			"output_encoding": "no-op",
 			"backend": [
 			{
 				"host":[ "http://localhost:5002" ],
 				"url_pattern": "/api/v1/record/{id}",
-				"encoding": "json",
+				"encoding": "no-op",
 				"method": "GET"
 			}
 			]
@@ -84,12 +84,12 @@
 		{
 			"endpoint": "/v1/record/{id}/{mesage_type}",
 			"method": "GET",
-			"output_encoding": "json",
+			"output_encoding": "no-op",
 			"backend": [
 			{
 				"host":[ "http://localhost:5002" ],
 				"url_pattern": "/api/v1/record/{id}/{mesage_type}",
-				"encoding": "json",
+				"encoding": "no-op",
 				"method": "GET"
 			}
 			]
@@ -97,12 +97,12 @@
 		{
 			"endpoint": "/v1/record/{id}/{mesage_type}",
 			"method": "PUT",
-			"output_encoding": "json",
+			"output_encoding": "no-op",
 			"backend": [
 			{
 				"host":[ "http://localhost:5002" ],
 				"url_pattern": "/api/v1/record/{id}/{mesage_type}",
-				"encoding": "json",
+				"encoding": "no-op",
 				"method": "PUT"
 			}
 			]
@@ -136,12 +136,12 @@
 		{
 			"endpoint": "/v1/record/{id}",
 			"method": "DELETE",
-			"output_encoding": "json",
+			"output_encoding": "no-op",
 			"backend": [
 			{
 				"host":[ "http://localhost:5002" ],
 				"url_pattern": "/api/v1/record/{id}",
-				"encoding": "json",
+				"encoding": "no-op",
 				"method": "DELETE"
 			}
 			]
@@ -150,12 +150,12 @@
 		{
 			"endpoint": "/v1/file/{operation_type}",
 			"method": "POST",
-			"output_encoding": "json",
+			"output_encoding": "no-op",
 			"backend": [
 			{
 				"host":[ "http://localhost:5004" ],
 				"url_pattern": "/api/v1/file/{operation_type}",
-				"encoding": "json",
+				"encoding": "no-op",
 				"method": "POST"
 			}
 			]
@@ -204,18 +204,13 @@
 		{
 			"endpoint": "/v1/send-to-smev/{smev_server}",
 			"method": "POST",
-			"output_encoding": "json",
+			"output_encoding": "no-op",
 			"backend": [
 			{
 				"host":[ "http://localhost:5003" ],
 				"url_pattern": "/api/v1/send/{smev_server}",
-				"encoding": "json",
-				"method": "POST",
-				"extra_config": {
-					"github.com/devopsfaith/krakend/http": {
-						"return_error_details": "smev_commector"
-					}
-				}				
+				"encoding": "no-op",
+				"method": "POST"		
 			}
 			]
 		},
@@ -228,12 +223,7 @@
 				"host":[ "http://localhost:5003" ],
 				"url_pattern": "/api/v1/send/{smev_server}/raw",
 				"encoding": "no-op",
-				"method": "POST",
-				"extra_config": {
-					"github.com/devopsfaith/krakend/http": {
-						"return_error_details": "smev_commector"
-					}
-				}				
+				"method": "POST"
 			}
 			]
 		},
@@ -242,17 +232,13 @@
 			"endpoint": "/v1/plugin/{plugin_name}",
 			"method": "POST",
 			"output_encoding": "no-op",
+			"timeout": "20s",
 			"backend": [
 			{
 				"host":[ "http://localhost:5005" ],
 				"url_pattern": "/api/v1/plugin/{plugin_name}",
 				"encoding": "no-op",
-				"method": "POST",
-				"extra_config": {
-					"github.com/devopsfaith/krakend/http": {
-						"return_error_details": "smev_commector"
-					}
-				}				
+				"method": "POST"				
 			}
 			]
 		}
