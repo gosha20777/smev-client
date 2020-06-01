@@ -162,6 +162,7 @@
 		},
 		{
 			"endpoint": "/v1/file/{id}",
+			"timeout": "20m",
 			"method": "GET",
 			"output_encoding": "no-op",
 			"backend": [
