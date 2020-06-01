@@ -111,6 +111,13 @@ services:
     env_file: ./redoc/app.conf
     depends_on:
       - chainer
+  wiki:
+    image: squidfunk/mkdocs-material
+    container_name: wiki
+    ports:
+      - 5081:8000
+    volumes:
+      - ./_docs:/docs
 
   plugin_app:
     build:
