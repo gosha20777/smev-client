@@ -235,6 +235,25 @@
 				}				
 			}
 			]
+		},
+
+		{
+			"endpoint": "/v1/plugin/{plugin_name}",
+			"method": "POST",
+			"output_encoding": "no-op",
+			"backend": [
+			{
+				"host":[ "http://localhost:5005" ],
+				"url_pattern": "/api/v1/plugin/{plugin_name}",
+				"encoding": "no-op",
+				"method": "POST",
+				"extra_config": {
+					"github.com/devopsfaith/krakend/http": {
+						"return_error_details": "smev_commector"
+					}
+				}				
+			}
+			]
 		}
     ]
 }

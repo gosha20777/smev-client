@@ -32,6 +32,10 @@ async def send_mesage(req: SmevMesage, smev_server: str):
         response = re.findall(r'<soap:Envelope[\s\S]*?</soap:Envelope>', response)[0]
         xml = ET.fromstring(response)
         xmlstr = ET.tostring(xml, encoding='utf-8').decode('utf-8')
+        try:
+            re.findall(r'<ns2:MessageId>[\s\S]*?</ns2:MessageId>', xmlstr)[0]
+        except:
+            raise Exception("No message id")
         id = req.id
         try:
             id = re.findall(r'<ns2:OriginalMessageId>[\s\S]*?</ns2:OriginalMessageId>', xmlstr)[0]
