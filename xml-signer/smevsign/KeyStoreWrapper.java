@@ -7,6 +7,7 @@ import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.security.cert.Certificate;
 
 public class KeyStoreWrapper {
 	private static KeyStore keyStore;
@@ -31,5 +32,15 @@ public class KeyStoreWrapper {
 		if (certificate == null)
 			throw new Exception("No certificate in alias: " + alias);
 		return (X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(new ByteArrayInputStream(certificate.getEncoded()));
+	}
+
+	public static Certificate getCertificate(String alias) throws Exception {
+		if (!isInit) init();
+		if (!keyStore.containsAlias(alias))
+			throw new Exception("No such alias in keystore: " + alias);
+		Certificate certificate = keyStore.getCertificate(alias);
+		if (certificate == null)
+			throw new Exception("No certificate in alias: " + alias);
+		return CertificateFactory.getInstance("X509").generateCertificate(new ByteArrayInputStream(certificate.getEncoded()));
 	}
 }

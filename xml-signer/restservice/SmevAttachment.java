@@ -2,23 +2,25 @@ package restservice;
 
 public class SmevAttachment {
 
-    private String hash;
+    private String fileName;
     private String mimeType;
     private String signature;
+    private String content;
 
-    public SmevAttachment(String hash, String mimeType, String signature) {
+    public SmevAttachment(String fileName, String mimeType, String signature, String content) {
         super();
-        this.hash = hash;
+        this.fileName = fileName;
         this.mimeType = mimeType;
         this.signature = signature;
+        this.content = content;
     }
 
-    public String getHash() {
-        return hash;
+    public String getFileName() {
+        return fileName;
     }
 
-    public void setHash(String hash) {
-        this.hash = hash;
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     public String getMimeType() {
@@ -35,5 +37,13 @@ public class SmevAttachment {
 
     public void setSignature(String signature) {
         this.signature = signature;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }

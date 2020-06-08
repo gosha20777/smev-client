@@ -20,13 +20,16 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
+import java.security.cert.Certificate;
 import javax.xml.soap.SOAPMessage;
 import com.fasterxml.uuid.Generators;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static smevsign.KeyStoreWrapper.getPrivateKey;
 import static smevsign.KeyStoreWrapper.getX509Certificate;
+import static smevsign.KeyStoreWrapper.getCertificate;
 import smevsign.SignAttributesSupplier;
 import smevsign.Signer;
+import smevsign.cms.CMSSign;
 import smevsign.*;
 
 public class SmevTeamplateTransformer
@@ -41,9 +44,8 @@ public class SmevTeamplateTransformer
         this.KEY_PASS = keyPassword;
     }
     
-    public SmevMesage Transform(SmevTeamplate teamplate) throws Exception {
+    public SmevMesage Transform(SmevTeamplate teamplate, String shemeType) throws Exception {
         String XML_WRAPPER = "";
-        String ATTACHMENT_WRAPPER = "";
         String XML_OUTPUT = "";
 
         // метод / тип сообщения к СМЭВ : SendRequestRequest, GetResponseRequest, AckRequest
@@ -57,9 +59,9 @@ public class SmevTeamplateTransformer
         String XML_INPUT = teamplate.getXml();
 
         // проверяем файл с нужной оберткой запроса и читаем его в строку
-        File wrapper_file = new File(this.APP_PATH+"wrap-"+MSG_TYPE+".inc");
+        File wrapper_file = new File(this.APP_PATH+"wrap-"+MSG_TYPE+"-"+shemeType+".inc");
         if (!wrapper_file.isFile()) {
-            throw new Exception("Wrapper file is not found for this MSG_TYPE. Check path to file or MSG_TYPE:\n "+APP_PATH+"wrap-"+MSG_TYPE+".inc");
+            throw new Exception("Wrapper file is not found for this MSG_TYPE. Check path to file or MSG_TYPE:\n "+APP_PATH+"wrap-"+MSG_TYPE+"-"+shemeType+".inc");
         }
 
         try {
@@ -69,7 +71,7 @@ public class SmevTeamplateTransformer
             fis.close();
             XML_WRAPPER = new String(data,"UTF-8");
         } catch (Exception e) {
-            throw new Exception("Can't read wrapper file content: "+APP_PATH+"wrap-"+MSG_TYPE+".inc", e);
+            throw new Exception("Can't read wrapper file content: "+APP_PATH+"wrap-"+MSG_TYPE+"-"+shemeType+".inc", e);
         }
 
         // оборачиваем входящее сообщение в обертку
@@ -84,44 +86,102 @@ public class SmevTeamplateTransformer
         // вставляем MessageID в шаблон
         XML_INPUT = XML_INPUT.replace("#MESSAGE_ID#",MESSAGE_ID);
 
-        /*
-        if(teamplate.getAttachment() != null){
-            File attachment_wrapper_file = new File(this.APP_PATH+"wrap-Attachment.inc");
-            if (!attachment_wrapper_file.isFile()) {
-                throw new Exception("Wrapper file is not found for this MSG_TYPE. Check path to file or MSG_TYPE:\n "+APP_PATH+"wrap-"+MSG_TYPE+".inc");
-            }
-
-            try {
-                FileInputStream fis = new FileInputStream(attachment_wrapper_file);
-                byte[] data = new byte[(int) attachment_wrapper_file.length()];
-                fis.read(data);
-                fis.close();
-                ATTACHMENT_WRAPPER = new String(data,"UTF-8");
-            } catch (Exception e) {
-                throw new Exception("Can't read wrapper file content: wrap-Attachment.inc", e);
-            }
-
-            ATTACHMENT_WRAPPER = ATTACHMENT_WRAPPER.replace("#MESSAGE_ID#",MESSAGE_ID);
-            ATTACHMENT_WRAPPER = ATTACHMENT_WRAPPER.replace("#FILE_HASH#",teamplate.getAttachment().getHash());
-            ATTACHMENT_WRAPPER = ATTACHMENT_WRAPPER.replace("#FILE_TYPE#",teamplate.getAttachment().getMimeType());
-            ATTACHMENT_WRAPPER = ATTACHMENT_WRAPPER.replace("#PKS7#",teamplate.getAttachment().getSignature());
-        }
-
-        XML_INPUT = XML_INPUT.replace("#ATTACHMENT_BLOCK#",ATTACHMENT_WRAPPER);
-        System.out.println("#ATTACHMENT_BLOCK# "+ ATTACHMENT_WRAPPER);
-        */
-
         // вставляем To в шаблон если это надо
         if (MSG_TYPE.equals("SendResponseRequest")){
             XML_INPUT = XML_INPUT.replace("#TO#",teamplate.getTo());
 	        System.out.println("replace");
         }
+        
+        // вставляем вложение, если есть
+        String ATTACHMENT_HEADER_LIST_WRAPPER = "";
+        String ATTACHMENT_CONTENT_LIST_WRAPPER = "";
+        if(teamplate.getAttachment() != null){
+            //AttachmentHeaderList
+            File attachment_header_list_file = new File(this.APP_PATH+"wrap-AttachmentHeaderList.inc");
+            if (!attachment_header_list_file.isFile()) {
+                throw new Exception("Wrapper file is not found. Check path to file:\n "+APP_PATH+"wrap-AttachmentHeaderList.inc");
+            }
+
+            try {
+                FileInputStream fis = new FileInputStream(attachment_header_list_file);
+                byte[] data = new byte[(int) attachment_header_list_file.length()];
+                fis.read(data);
+                fis.close();
+                ATTACHMENT_HEADER_LIST_WRAPPER = new String(data,"UTF-8");
+            } catch (Exception e) {
+                throw new Exception("Can't read wrapper file content: wrap-AttachmentHeaderList.inc", e);
+            }
+
+            //AttachmentHeader
+            String ATTACHMENT_HEADER_WRAPPER = "";
+            File attachment_header_file = new File(this.APP_PATH+"wrap-AttachmentHeader.inc");
+            if (!attachment_header_file.isFile()) {
+                throw new Exception("Wrapper file is not found. Check path to file:\n "+APP_PATH+"wrap-AttachmentHeader.inc");
+            }
+            
+            try {
+                FileInputStream fis = new FileInputStream(attachment_header_file);
+                byte[] data = new byte[(int) attachment_header_file.length()];
+                fis.read(data);
+                fis.close();
+                ATTACHMENT_HEADER_WRAPPER = new String(data,"UTF-8");
+            } catch (Exception e) {
+                throw new Exception("Can't read wrapper file content: wrap-AttachmentHeader.inc", e);
+            }
+            ATTACHMENT_HEADER_WRAPPER = ATTACHMENT_HEADER_WRAPPER.replace("#FILE_NAME#", teamplate.getAttachment().getFileName());
+            ATTACHMENT_HEADER_WRAPPER = ATTACHMENT_HEADER_WRAPPER.replace("#MIME_TYPE#", teamplate.getAttachment().getMimeType());
+            ATTACHMENT_HEADER_WRAPPER = ATTACHMENT_HEADER_WRAPPER.replace("#SIGNATURE#", teamplate.getAttachment().getSignature());
+            
+            ATTACHMENT_HEADER_LIST_WRAPPER = ATTACHMENT_HEADER_LIST_WRAPPER.replace("#ATTACHMENT_HEADER#",ATTACHMENT_HEADER_WRAPPER);
+
+            //AttachmentContentList
+            File attachment_content_list_file = new File(this.APP_PATH+"wrap-AttachmentContentList.inc");
+            if (!attachment_content_list_file.isFile()) {
+                throw new Exception("Wrapper file is not found. Check path to file:\n "+APP_PATH+"wrap-AttachmentContentList.inc");
+            }
+
+            try {
+                FileInputStream fis = new FileInputStream(attachment_content_list_file);
+                byte[] data = new byte[(int) attachment_content_list_file.length()];
+                fis.read(data);
+                fis.close();
+                ATTACHMENT_CONTENT_LIST_WRAPPER = new String(data,"UTF-8");
+            } catch (Exception e) {
+                throw new Exception("Can't read wrapper file content: wrap-AttachmentContentList.inc", e);
+            }
+
+            //AttachmentContent
+            String ATTACHMENT_CONTENT_WRAPPER = "";
+            File attachment_content_file = new File(this.APP_PATH+"wrap-AttachmentContent.inc");
+            if (!attachment_content_file.isFile()) {
+                throw new Exception("Wrapper file is not found. Check path to file:\n "+APP_PATH+"wrap-AttachmentContent.inc");
+            }
+            
+            try {
+                FileInputStream fis = new FileInputStream(attachment_content_file);
+                byte[] data = new byte[(int) attachment_content_file.length()];
+                fis.read(data);
+                fis.close();
+                ATTACHMENT_CONTENT_WRAPPER = new String(data,"UTF-8");
+            } catch (Exception e) {
+                throw new Exception("Can't read wrapper file content: wrap-AttachmentContent.inc", e);
+            }
+            ATTACHMENT_CONTENT_WRAPPER = ATTACHMENT_CONTENT_WRAPPER.replace("#FILE_NAME#", teamplate.getAttachment().getFileName());
+            ATTACHMENT_CONTENT_WRAPPER = ATTACHMENT_CONTENT_WRAPPER.replace("#CONTENT#", teamplate.getAttachment().getContent());
+            
+            ATTACHMENT_CONTENT_LIST_WRAPPER = ATTACHMENT_CONTENT_LIST_WRAPPER.replace("#ATTACHMENT_CONTENT#",ATTACHMENT_CONTENT_WRAPPER);
+        }
+        XML_INPUT = XML_INPUT.replace("#ATTACHMENT_HEADER_LIST#",ATTACHMENT_HEADER_LIST_WRAPPER);
+        XML_INPUT = XML_INPUT.replace("#ATTACHMENT_CONTENT_LIST#",ATTACHMENT_CONTENT_LIST_WRAPPER);
+        
 
         // формируем TIMSTAMP и делаем вставку в шаблон
         // пример даты: 2020-01-28T10:09:55.141+03:00
         DateTimeFormatter dtfmt = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
         String TIMESTAMP = dtfmt.format(ZonedDateTime.now());
         XML_INPUT = XML_INPUT.replace("#TIMESTAMP#",TIMESTAMP);
+        // заменяем все ентеры и пробелы после них
+        // XML_INPUT = TrimXml(XML_INPUT);
         // подписываем и пишем в файл
         try {
             System.out.println("Input xml:\n" + XML_INPUT + "\n");
@@ -138,6 +198,47 @@ public class SmevTeamplateTransformer
         }
 
         return new SmevMesage(MESSAGE_ID, XML_OUTPUT);
+    }
+
+    public byte[] signPkcs7(byte[] data) throws Exception{
+        final PrivateKey[] keys = new PrivateKey[1];
+        keys[0] = getKey();
+        final Certificate[] certs = new Certificate[1];
+        certs[0] = getCert();
+
+        return CMSSign.createHashCMS(data, keys, certs, null, false);
+    }
+
+	public PrivateKey getKey() throws Exception {
+		return getPrivateKey(this.KEY_ALIAS, this.KEY_PASS.toCharArray());
+	}
+
+    public Certificate getCert() throws Exception {
+		return getCertificate(this.KEY_ALIAS);
+	}
+
+    private static String TrimXml(String input) {
+        BufferedReader reader = new BufferedReader(new StringReader(input));
+        try{
+            String str;
+            String trimmedXML = "";
+            while ( (str = reader.readLine() ) != null){
+                String str1 = str;
+                if (str1.length()>0)
+                    str1 = str1.trim();
+                if (str1.length()>0){
+                    if(str1.charAt(str1.length()-1) == '>'){
+                        trimmedXML = trimmedXML + str.trim();
+                    }
+                    else{
+                        trimmedXML = trimmedXML + str;
+                    }
+                }
+            }
+            return trimmedXML;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // интерфейс конфигурации для подписания

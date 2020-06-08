@@ -1,5 +1,7 @@
 import static spark.Spark.*;
-
+import java.security.PrivateKey;
+import java.security.cert.Certificate;
+import java.util.Base64;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.HashMap;
@@ -42,8 +44,15 @@ public class Server {
 
             LOG.info(String.format("Application is started at port %s", args[0]));
 
-            post("/api/v1/:alias", (request, response) -> {
+            post("/api/v1/message/:alias", (request, response) -> {
                 try {
+                    String shemeType = request.queryParams("type");
+                    shemeType = shemeType != null ? shemeType : "1.2";
+                    if (!shemeType.equals("1.1") &
+                        !shemeType.equals("1.2")){
+                        throw new Exception("Invalid input: type - `" + shemeType + "`");
+                    }
+
                     SmevTeamplate teamplate = new Gson().fromJson(request.body(), restservice.SmevTeamplate.class);
                     if (teamplate == null){
                         throw new Exception("Invalid input: null");
@@ -65,7 +74,7 @@ public class Server {
                         throw new Exception("Invalid input: msgType - `" + teamplate.getMsgType() + "`");
                     }
                     if (teamplate.getTo() == null & teamplate.getMsgType().equals("SendResponseRequest")){
-                        throw new Exception("Invalid input: msgType - `null`");
+                        throw new Exception("Invalid input: getTo - `null`");
                     }
                     if (teamplate.getTagForSign() == null){
                         throw new Exception("Invalid input: tagForSign - `null`");
@@ -78,11 +87,26 @@ public class Server {
                     if(!transformers.containsKey(request.params(":alias")))
                         throw new Exception("Invalid input: alias - `" + request.params(":alias")+ "`");
 
-                    SmevMesage msg = transformers.get(request.params(":alias")).Transform(teamplate);
+                    SmevMesage msg = transformers.get(request.params(":alias")).Transform(teamplate, shemeType);
                     response.type("application/json");
                     response.status(200);
                     LOG.info(String.format("%s %s %s", request.requestMethod(), request.url(), response.status()));
                     return new Gson().toJson(msg);
+                } catch (Exception e) {
+                    response.type("application/json");
+                    response.status(500);
+                    LOG.info(String.format("%s %s %s", request.requestMethod(), request.url(), response.status()));
+                    return "{ \"error\": \"" + e.getMessage() + "\"}";
+                }
+            });
+
+            post("/api/v1/pkcs7/:alias", (request, response) -> {
+                try {
+                    byte[] data = Base64.getDecoder().decode(new String(request.body()).getBytes("UTF-8"));
+                    byte[] p7_data = transformers.get(request.params(":alias")).signPkcs7(data);
+                    byte[] encoded = Base64.getEncoder().encode(p7_data);
+                    return new String(encoded);
+
                 } catch (Exception e) {
                     response.type("application/json");
                     response.status(500);

@@ -47,7 +47,7 @@ async def send_mesage(req: SmevMesage, smev_server: str):
             raise HTTPException(400, f'invalid smev response {str(e)}: {response}')
 
 # create file in repo
-@app.post('/api/v1/send/{smev_server}/raw')
+@app.post('/api/v1/send/{smev_server}/xml')
 async def send_mesage_raw(req: SmevMesage, smev_server: str):
     if(smev_hosts[smev_server] == None):
         raise HTTPException(400, f'no such smev host: {smev_server}')
@@ -57,6 +57,19 @@ async def send_mesage_raw(req: SmevMesage, smev_server: str):
     headers = {'content-type': 'text/xml'}
     body = req.xml
     response = requests.post(host['url'], data=body, headers=headers, timeout=10)
+    response = response.content.decode('utf-8', errors='ignore')
+    try:
+        response = re.findall(r'<soap:Envelope[\s\S]*?</soap:Envelope>', response)[0]
+        xml = ET.fromstring(response)
+        xmlstr = ET.tostring(xml, encoding='utf-8').decode('utf-8')
+        return Response(content=xmlstr, media_type="application/xml")
+    except:
+        try:
+            xml = ET.fromstring(response)
+            response = ET.tostring(xml, encoding='utf-8').decode('utf-8')
+            return Response(content=response.content, media_type="application/xml")
+        except:
+            pass
     return Response(content=response.content, media_type="application/text")
 
 
