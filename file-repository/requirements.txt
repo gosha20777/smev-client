@@ -6,3 +6,4 @@ sqlalchemy
 aiofiles
 rq
 redis
+requests

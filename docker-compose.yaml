@@ -59,8 +59,10 @@ services:
     env_file: ./file-repository/app.conf
     volumes:
       - ./file-repository/storage/:/app/storage/
+    network_mode: "host"
     ports:
-      - 5004:5000
+      - 5004:5004
+    command: uvicorn server:app --host 0.0.0.0 --port 5004
     depends_on:
       - chainer
       - redis

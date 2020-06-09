@@ -12,7 +12,9 @@ from rq import Queue, Worker
 from rq.job import Job
 import rq
 import os
+import base64
 import json
+import requests
 
 # init
 db_smev_file.Base.metadata.create_all(bind=engine)
@@ -59,23 +61,6 @@ async def merge_file(files: smev_file.SmevMergeFile, db: Session = Depends(get_d
         return { "id": id, "path": f.path }
     f = smev_file.SmevFile(id=id, path=path)
     return await db_controller.create_file(db=db, file=f)
-    #try:
-    #    pathes = []
-    #    for id in files.ids:
-    #        f = await db_controller.get_file(db=db, id=id)
-    #        if f == None:
-    #            raise HTTPException(400, f"no such file {id}")
-    #        pathes.append(f.path)
-
-    #    id, path = await file_controller.megre_files(pathes)
-    #    f = await db_controller.get_file(db=db, id=id) 
-    #    if f != None:
-    #        return { "id": id, "path": f.path }
-
-    #    f = smev_file.SmevFile(id=id, path=path)
-    #    return await db_controller.create_file(db=db, file=f)
-    #except Exception as e:
-    #    raise HTTPException(400, detail=str(e))
 
 # create file in repo
 @app.post('/api/v1/file/from_smev')
@@ -111,6 +96,30 @@ async def get_file(id: str, db: Session = Depends(get_db)):
     if f == None:
         raise HTTPException(404, detail="no such file")
     return FileResponse(f.path, media_type='application/zip')
+
+@app.get('/api/v1/file/{id}/attachment/{alias}')
+async def get_attachment_from_file(id: str, alias: str, db: Session = Depends(get_db)):
+    f = await db_controller.get_file(db=db, id=id)
+    if f == None:
+        raise HTTPException(404, detail="no such file")
+
+    with open(f.path, "rb") as input_file:
+        base64_string = base64.b64encode(input_file.read()).decode()
+    
+    # sign file
+    host = f"http://localhost:5000/v1/pkcs7/{alias}"
+    headers = {'content-type': 'application/text'}
+    response = requests.post(host, data=base64_string, headers=headers, timeout=5)
+    if response.status_code != 200:
+        raise HTTPException(400, detail="cant sign file")
+    result = {
+		"fileName": os.path.basename(f.path),
+		"mimeType": "application/zip",
+		"signature": response.content.decode(),
+		"content": base64_string
+        }
+    return result
+
 
 # get photo info
 @app.get('/api/v1/files')

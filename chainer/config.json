@@ -28,13 +28,27 @@
     },
     "endpoints": [   
 		{
-			"endpoint": "/v1/signer/{cert_type}",
+			"endpoint": "/v1/signer/message/{cert_type}",
+			"method": "POST",
+			"querystring_params": [ "type" ],
+			"output_encoding": "no-op",
+			"backend": [
+			{
+				"host":[ "http://localhost:5000" ],
+				"url_pattern": "/api/v1/message/{cert_type}",
+				"encoding": "no-op",
+				"method": "POST"
+			}
+			]
+		},
+		{
+			"endpoint": "/v1/signer/pkcs7/{cert_type}",
 			"method": "POST",
 			"output_encoding": "no-op",
 			"backend": [
 			{
 				"host":[ "http://localhost:5000" ],
-				"url_pattern": "/api/v1/{cert_type}",
+				"url_pattern": "/api/v1/pkcs7/{cert_type}",
 				"encoding": "no-op",
 				"method": "POST"
 			}
@@ -175,13 +189,26 @@
 			]
 		},
 		{
-			"endpoint": "/v1/file/{id}/{task}",
+			"endpoint": "/v1/file/{id}/task/{task}",
 			"method": "GET",
 			"output_encoding": "no-op",
 			"backend": [
 			{
 				"host":[ "http://localhost:5004" ],
 				"url_pattern": "/api/v1/file/{id}/{task}",
+				"encoding": "no-op",
+				"method": "GET"
+			}
+			]
+		},
+		{
+			"endpoint": "/v1/file/{id}/attachment/{alias}",
+			"method": "GET",
+			"output_encoding": "no-op",
+			"backend": [
+			{
+				"host":[ "http://localhost:5004" ],
+				"url_pattern": "/api/v1/file/{id}/attachment/{alias}",
 				"encoding": "no-op",
 				"method": "GET"
 			}

@@ -35,7 +35,7 @@ async def send_request(req: SmevMesageRequest):
         raise HTTPException(400, str(ex))
     # sign mesage
     try:
-        host = f"http://localhost:8090/v1/signer/{req.cert_type}"
+        host = f"http://localhost:8090/v1/signer/message/{req.cert_type}"
         body = {
             "id": "0",
             "msgType": "SendRequestRequest",
@@ -126,7 +126,7 @@ async def finish_task(req: FinishTaskRequest):
         raise HTTPException(400, str(ex))
     # sign mesage
     try:
-        host = f"http://localhost:8090/v1/signer/{req.cert_type}"
+        host = f"http://localhost:8090/v1/signer/message/{req.cert_type}"
         body = { 
 	            "id": finish_id,
 	            "msgType": "AckRequest",
