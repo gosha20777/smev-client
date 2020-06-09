@@ -53,7 +53,7 @@ paths:
           description: "successful operation"
           schema:
             $ref: "#/definitions/Json2XmlResponse"
-  /signer/{cert_type}:
+  /signer/message/{cert_type}:
     post:
       tags:
       - "smev signer"
@@ -82,17 +82,17 @@ paths:
           description: "successful operation"
           schema:
             $ref: "#/definitions/SmevMesageXmlResponse"
-  /records:
+  /signer/pkcs7/{cert_type}:
     post:
       tags:
-      - "record repository"
-      summary: "Convert message to smev-3.X format"
+      - "smev signer"
+      summary: "make pkcs7 signature for a file"
       description: ""
       operationId: "signer"
       consumes:
-      - "application/json"
+      - "application/text"
       produces:
-      - "application/json"
+      - "application/text"
       parameters:
       - name: "cert_type"
         in: "path"
@@ -102,15 +102,283 @@ paths:
         format: "str"
       - in: "body"
         name: "body"
-        description: "Smev message xml template"
+        description: "base64 string of file"
         required: true
-        schema:
-          $ref: "#/definitions/SmevSignerRequest"
+        type: "string"
+        format: "base64"
       responses:
         "200":
           description: "successful operation"
           schema:
-            $ref: "#/definitions/SmevMesageXmlResponse"
+            description: "base64 string of pkcs7 signature"
+            type: "string"
+            format: "base64"
+  /records:
+    get:
+      tags:
+      - "record repository"
+      summary: "Get all records"
+      description: ""
+      operationId: "get record"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "page"
+        in: "query"
+        description: "page"
+        required: false
+        type: "int"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Record"
+  /record/{id}/new:
+    get:
+      tags:
+      - "record repository"
+      summary: "Create record with id"
+      description: ""
+      operationId: "create record"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "record id"
+        required: true
+        type: "string"
+        format: "uuid"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Record"
+  /record/{id}:
+    get:
+      tags:
+      - "record repository"
+      summary: "Get record by id"
+      description: ""
+      operationId: "get record"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "record id"
+        required: true
+        type: "string"
+        format: "uuid"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Record"
+    delete:
+      tags:
+      - "record repository"
+      summary: "Delete record by id"
+      description: ""
+      operationId: "delete record"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "record id"
+        required: true
+        type: "string"
+        format: "uuid"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              remove_records:
+                type: "int"
+  /record/{id}/{message_type}:
+    get:
+      tags:
+      - "record repository"
+      summary: "Get message from record"
+      description: ""
+      operationId: "get record message"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "record id"
+        required: true
+        type: "string"
+        format: "uuid"
+      - name: "message_type"
+        in: "path"
+        description: "record id"
+        required: true
+        type: "string"
+        enum:
+        - "SendRequestRequest"
+        - "SendResponseRequest"
+        - "GetRequestRequest"
+        - "GetResponseRequest"
+        - "AckRequest"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/RecordMessage"
+    put:
+      tags:
+      - "record repository"
+      summary: "Update record message"
+      description: ""
+      operationId: "put record message"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "record id"
+        required: true
+        type: "string"
+        format: "uuid"
+      - name: "message_type"
+        in: "path"
+        description: "record id"
+        required: true
+        type: "string"
+        enum:
+        - "SendRequestRequest"
+        - "SendResponseRequest"
+        - "GetRequestRequest"
+        - "GetResponseRequest"
+        - "AckRequest"
+      - name: "body"
+        in: "body"
+        description: "record for update"
+        required: true
+        schema:
+          $ref: "#/definitions/RecordMessageUpdate"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "xml"
+  /record/{id}/{message_type}/xml:
+    get:
+      tags:
+      - "record repository"
+      summary: "Get message from record as xml"
+      description: ""
+      operationId: "get record message"
+      produces:
+      - "application/xml"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "record id"
+        required: true
+        type: "string"
+        format: "uuid"
+      - name: "message_type"
+        in: "path"
+        description: "record id"
+        required: true
+        type: "string"
+        enum:
+        - "SendRequestRequest"
+        - "SendResponseRequest"
+        - "GetRequestRequest"
+        - "GetResponseRequest"
+        - "AckRequest"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "string"
+            format: "xml"
+  /record/{id}/{message_type}/id:
+    get:
+      tags:
+      - "record repository"
+      summary: "Get messageId element"
+      description: ""
+      operationId: "get record message"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "record id"
+        required: true
+        type: "string"
+        format: "uuid"
+      - name: "message_type"
+        in: "path"
+        description: "record id"
+        required: true
+        type: "string"
+        enum:
+        - "SendRequestRequest"
+        - "SendResponseRequest"
+        - "GetRequestRequest"
+        - "GetResponseRequest"
+        - "AckRequest"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              id:
+                type: "string"
+                format: "uuid"
+  /record/{id}/{message_type}/tfp_attachment:
+    get:
+      tags:
+      - "record repository"
+      summary: "Get smev ftp attachment info"
+      description: ""
+      operationId: "get_tfp_attachment"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "record id"
+        required: true
+        type: "string"
+        format: "uuid"
+      - name: "message_type"
+        in: "path"
+        description: "record id"
+        required: true
+        type: "string"
+        enum:
+        - "GetRequestResponse"
+        - "GetResponseResponse"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              user:
+                type: "string"
+                format: "smev ftp user"
+              password:
+                type: "string"
+                format: "smev ftp password"
+              path:
+                type: "string"
+                format: "smev ftp file path"
             
 definitions:
   Json2XmlResponse:
@@ -160,6 +428,46 @@ definitions:
       xml:
         type: "string"
         format: "xml"
+
+  Record:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      date:
+        type: "string"
+        format: "datetime (UTC)"
+      mesages:
+        type: "array"
+        items:
+          type: "string"
+          enum:
+          - "SendRequestRequest"
+          - "SendResponseRequest"
+          - "GetRequestRequest"
+          - "GetResponseRequest"
+          - "AckRequest"
+  RecordMessage:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+        format: "uuid"
+      xml:
+        type: "string"
+        format: "xml"
+  RecordMessageUpdate:
+    type: "object"
+    properties:
+      xml:
+        type: "string"
+        format: "xml"
+  RecordMessageUpdateResponse:
+    type: "object"
+    properties:
+      updated_records:
+        type: "int"
 
 externalDocs:
   description: "Find out more about"
