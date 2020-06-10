@@ -379,7 +379,231 @@ paths:
               path:
                 type: "string"
                 format: "smev ftp file path"
-            
+  /file/new:
+    post:
+      tags:
+      - "file repository"
+      summary: "create new file"
+      description: ""
+      operationId: "new file"
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "body"
+        in: "body"
+        description: "upload file"
+        required: true
+        type: "binary"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              id:
+                type: "string"
+                format: "hash"
+              path:
+                type: "string"
+                format: "path"
+  /file/merge:
+    post:
+      tags:
+      - "file repository"
+      summary: "Merge files"
+      description: ""
+      operationId: "merge files"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "body"
+        in: "body"
+        description: "upload file"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            ids:
+              items:
+                type: "string"
+                format: "hash id"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              id:
+                type: "string"
+                format: "hash id"
+              path:
+                type: "string"
+                format: "path"
+  /file/from_smev:
+    post:
+      tags:
+      - "file repository"
+      summary: "Get file from smev ftp"
+      description: ""
+      operationId: "from smev ftp"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "body"
+        in: "body"
+        description: "upload file"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            user:
+              type: "string"
+              format: "smev ftp user"
+            password:
+              type: "string"
+              format: "smev ftp password"
+            path:
+              type: "string"
+              format: "ftp path"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              job:
+                type: "string"
+                format: "tsak id"
+  /file/from_smev/{task_id}:
+    get:
+      tags:
+      - "file repository"
+      summary: "Get file from smev ftp (check tsak status)"
+      description: ""
+      operationId: "from smev ftp - get sttus"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "task_id"
+        in: "path"
+        description: "task id"
+        required: true
+        type: "string"
+      responses:
+        "201":
+          description: "ststus response"
+          schema:
+            type: "object"
+            properties:
+              status:
+                type: "string"
+                format: "status"
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              id:
+                type: "string"
+                format: "hash id"
+              path:
+                type: "string"
+                format: "path"
+  /file/{id}:
+    get:
+      tags:
+      - "file repository"
+      summary: "Get file"
+      description: ""
+      operationId: "get file"
+      produces:
+      - "multipart/form-data"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "file hash id"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "binary"
+            format: "file"
+  /file/{id}/attachment/{alias}:
+    get:
+      tags:
+      - "file repository"
+      summary: "Get attachment from file"
+      description: ""
+      operationId: "attachment from file"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "file hash id"
+        required: true
+        type: "string"
+      - name: "alias"
+        in: "path"
+        description: "sertificate alias"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              fileName:
+                type: "string"
+                format: "path"
+              mimeType:
+                type: "string"
+                format: "mime type"
+              signature:
+                type: "string"
+                format: "base64 (pkcs7)"
+              content:
+                type: "string"
+                format: "base64"
+  /files:
+    get:
+      tags:
+      - "file repository"
+      summary: "Get files"
+      description: ""
+      operationId: "get files"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "page"
+        in: "query"
+        description: "page number"
+        required: false
+        type: "int"
+      responses:
+        "200":
+          description: "ststus response"
+          schema:
+            type: "array"
+            items:
+              type: "object"
+              properties:
+                id:
+                  type: "string"
+                  format: "file hash id"
+                path:
+                  type: "string"
+                  format: "path"
+
 definitions:
   Json2XmlResponse:
     type: "object"
