@@ -22,6 +22,8 @@ tags:
   description: "manipulating and storing smev files"
 - name: "smev connector"
   description: "connect and communicate with smev 3 endpoints"
+- name: "plugins"
+  description: "plugins"
 schemes:
 - "https"
 - "http"
@@ -603,7 +605,75 @@ paths:
                 path:
                   type: "string"
                   format: "path"
-
+  /send-to-smev/{smev_server_alias}:
+    post:
+      tags:
+      - "smev connector"
+      summary: "send message to smev"
+      description: ""
+      operationId: "send message to smev"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "smev_server_alias"
+        in: "path"
+        description: "Smev server alias"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "smev message"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            id:
+              type: "string"
+              format: "uuid"
+            xml:
+              type: "string"
+              format: "xml"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "object"
+            properties:
+              id:
+                type: "string"
+                format: "uuid"
+              xml:
+                type: "string"
+                format: "xml"
+  /plugin/{plugin_name}:
+    post:
+      tags:
+      - "plugins"
+      summary: "call plugin"
+      description: ""
+      operationId: "call plugi"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "plugin_name"
+        in: "path"
+        description: "Plugin name"
+        required: true
+      - in: "body"
+        name: "body"
+        description: "smev message"
+        required: true
+        type: json
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: json
+            
 definitions:
   Json2XmlResponse:
     type: "object"
