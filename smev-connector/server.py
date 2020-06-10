@@ -78,9 +78,12 @@ def call_query_function():
     for smev_host in smev_hosts:
         try:
             # build GetResponseRequest
+            print(f'alias: {smev_host}\n\tcontent: {smev_hosts[smev_host]}', flush=True)
+            
+            smev_host = smev_hosts[smev_host]
             body = { "id": "0", "msgType": "GetResponseRequest", "tagForSign": "SIGNED_BY_CALLER" }
             headers = {'content-type': 'application/json'}
-            host = f'http://localhost:5000/api/v1/message/{smev_host["signature"]}?type={smev_host["version"]}'
+            host = f'http://localhost:5000/api/v1/message/{smev_host["signature"]}?type={str(smev_host["version"])}'
             response = requests.post(host, json=body, headers=headers, timeout=5)
             if response.status_code != 200:
                 raise Exception('can not build GetResponseRequest mesage')
