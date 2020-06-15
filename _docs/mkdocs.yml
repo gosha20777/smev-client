@@ -10,5 +10,7 @@ nav:
     - File Repository: file-repository.md
   - External API / Plugins:
     - Json2xml: json2xml.md
+  - Raw Examples:
+    - Ros Reestr: raw_requests_ros_reestr.md
 theme:
   name: 'material'

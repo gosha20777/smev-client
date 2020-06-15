@@ -8,5 +8,10 @@
         "url": "http://smev3-n0.test.gosuslugi.ru:7500/smev/v1.2/ws?wsd",
         "version": "1.2",
         "signature": "isogd"
-    } 
+    },
+    "smev-prod-1-1": {
+	"url": "http://10.10.24.20/v1/smev-prod/smev/v1.2/ws?wsd",
+	"version": "1.1",
+	"signature": "isogd"
+    }
 }
