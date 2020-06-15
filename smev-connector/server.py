@@ -29,7 +29,12 @@ async def send_mesage(req: SmevMesage, smev_server: str):
     response = requests.post(host['url'], data=body, headers=headers, timeout=10)
     response = response.content.decode('utf-8', errors='ignore')
     try:
-        response = re.findall(r'<soap:Envelope[\s\S]*?</soap:Envelope>', response)[0]
+        if 'soap:Envelope' in response:
+            response = re.findall(r'<soap:Envelope[\s\S]*?</soap:Envelope>', response)[0]
+        elif 'SOAP-ENV:Envelope' in response:
+            response = re.findall(r'<SOAP-ENV:Envelope[\s\S]*?</SOAP-ENV:Envelope>', response)[0]
+        else:
+            raise Exception('no soap response')
         xml = ET.fromstring(response)
         xmlstr = ET.tostring(xml, encoding='utf-8').decode('utf-8')
         id = req.id
@@ -59,7 +64,12 @@ async def send_mesage_raw(req: SmevMesage, smev_server: str):
     response = requests.post(host['url'], data=body, headers=headers, timeout=10)
     response = response.content.decode('utf-8', errors='ignore')
     try:
-        response = re.findall(r'<soap:Envelope[\s\S]*?</soap:Envelope>', response)[0]
+        if 'soap:Envelope' in response:
+            response = re.findall(r'<soap:Envelope[\s\S]*?</soap:Envelope>', response)[0]
+        elif 'SOAP-ENV:Envelope' in response:
+            response = re.findall(r'<SOAP-ENV:Envelope[\s\S]*?</SOAP-ENV:Envelope>', response)[0]
+        else:
+            raise Exception('no soap response')
         xml = ET.fromstring(response)
         xmlstr = ET.tostring(xml, encoding='utf-8').decode('utf-8')
         return Response(content=xmlstr, media_type="application/xml")
@@ -97,7 +107,12 @@ def call_query_function():
             response = requests.post(host, data=body, headers=headers, timeout=5)
             response = response.content.decode('utf-8', errors='ignore')
             try:
-                response = re.findall(r'<soap:Envelope[\s\S]*?</soap:Envelope>', response)[0]
+                if 'soap:Envelope' in response:
+                    response = re.findall(r'<soap:Envelope[\s\S]*?</soap:Envelope>', response)[0]
+                elif 'SOAP-ENV:Envelope' in response:
+                    response = re.findall(r'<SOAP-ENV:Envelope[\s\S]*?</SOAP-ENV:Envelope>', response)[0]
+                else:
+                    raise Exception('no soap response')
                 xml = ET.fromstring(response)
                 xmlstr = ET.tostring(xml, encoding='utf-8').decode('utf-8')
 
