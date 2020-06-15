@@ -107,7 +107,7 @@ async def get_attachment_from_file(id: str, alias: str, db: Session = Depends(ge
         base64_string = base64.b64encode(input_file.read()).decode()
     
     # sign file
-    host = f"http://localhost:5000/v1/pkcs7/{alias}"
+    host = f"http://localhost:5000/api/v1/pkcs7/{alias}"
     headers = {'content-type': 'application/text'}
     response = requests.post(host, data=base64_string, headers=headers, timeout=5)
     if response.status_code != 200:

@@ -73,7 +73,7 @@ async def send_mesage_raw(req: SmevMesage, smev_server: str):
     return Response(content=response.content, media_type="application/text")
 
 
-@cron.interval_schedule(seconds=20)
+#@cron.interval_schedule(seconds=20)
 def call_query_function():
     for smev_host in smev_hosts:
         try:
