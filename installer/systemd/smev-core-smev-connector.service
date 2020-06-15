@@ -1,0 +1,19 @@
+[Unit]
+Description=smev-core Smev-connector
+PartOf=smev-core-chainer.service
+After=syslog.target
+After=network.target
+After=smev-core.service
+After=smev-core-chainer.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+WorkingDirectory=/opt/smev-core/smev-connector
+ExecStart=/opt/smev-core/smev-connector/.virtualenv/bin/uvicorn server:app --host 127.0.0.1 --port 5004 --log-config /opt/smev-core/smev-connector/log-config.yaml
+
+[Install]
+WantedBy=multi-user.target

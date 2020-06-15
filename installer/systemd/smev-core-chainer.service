@@ -1,0 +1,21 @@
+[Unit]
+Description=smev-core Chainer
+PartOf=smev-core.service
+After=syslog.target
+After=network.target
+After=smev-core.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+WorkingDirectory=/opt/smev-core/chainer/
+ExecStart=/opt/smev-core/chainer/krakend run -c /opt/smev-core/chainer/config.json
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=smev-cere-chainer
+AmbientIdentifier=CAP_NET_BIND_SERVICE
+[Install]
+WantedBy=multi-user.target

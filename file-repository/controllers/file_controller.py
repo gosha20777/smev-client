@@ -6,10 +6,11 @@ from datetime import date
 from io import BytesIO
 from typing import List
 import random
+STORAGE = os.environ['STORAGE']
 
 async def save_upload_file(upload_file: UploadFile, id: str):
     try:
-        time_path = os.path.join('storage', str(date.today()))
+        time_path = os.path.join(STORAGE, str(date.today()))
         full_path = os.path.join(time_path, f'{id}.{upload_file.filename}')
         if not os.path.isdir(time_path):
             os.mkdir(time_path)
@@ -31,7 +32,7 @@ async def megre_files(pathes: List[str]):
 
     hash_object = hashlib.sha1(bytes([random.randrange(0, 256) for _ in range(0, 2024)]))
     id = hash_object.hexdigest()
-    time_path = os.path.join('storage', str(date.today()))
+    time_path = os.path.join(STORAGE, str(date.today()))
     full_path = os.path.join(time_path, f'{id}.{os.path.basename(pathes[0])}')
 
     if not os.path.isdir(time_path):

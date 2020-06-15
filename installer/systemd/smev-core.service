@@ -1,0 +1,20 @@
+[Unit]
+Description=smev-core Nginx
+After=syslog.target
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=forking
+PIDFile=/opt/smev-core/nginx/run/nginx.pid
+User=root
+ExecStartPre=/opt/smev-core/nginx/sbin/nginx -t -q -g 'daemon on; master_process on;'
+ExecStart=/opt/smev-core/nginx/sbin/nginx -g 'daemon on; master_process on;'
+ExecReload=/opt/smev-core/nginx/sbin/nginx -g 'daemon on; master_process on;' -s reload
+ExecStop=-/sbin/start-stop-daemon --quiet --stop --retry QUIT/5 --pidfile /opt/smev-core/nginx/run/nginx.pid
+TimeoutStopSec=5
+KillMode=mixed
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+
+[Install]
+WantedBy=multi-user.target

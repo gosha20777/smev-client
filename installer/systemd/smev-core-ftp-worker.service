@@ -1,0 +1,21 @@
+[Unit]
+Description=smev-core File-repository
+PartOf=smev-core-file-repository.service
+After=syslog.target
+After=network.target
+After=smev-core.service
+After=smev-core-chainer.service
+After=smev-core-file-repository.service
+StartLimitIntervalSec=0
+
+[Service]
+Environment=STORAGE=#storage#
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+WorkingDirectory=/opt/smev-core/file-repository
+ExecStart=/opt/smev-core/file-repository/.virtualenv/bin/rq worker --url redis://localhost:6379 ftp_queue
+
+[Install]
+WantedBy=multi-user.target

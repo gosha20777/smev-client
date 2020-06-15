@@ -1,0 +1,19 @@
+[Unit]
+Description=smev-core Signer
+PartOf=smev-core-chainer.service
+After=syslog.target
+After=network.target
+After=smev-core.service
+After=smev-core-chainer.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+WorkingDirectory=/opt/smev-core/signer
+ExecStart=/opt/smev-core/signer/bin/java -classpath . Server 5000 config.json
+
+[Install]
+WantedBy=multi-user.target

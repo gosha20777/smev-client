@@ -96,7 +96,7 @@ def call_query_function():
             host = smev_host['url']
             response = requests.post(host, data=body, headers=headers, timeout=5)
             response = response.content.decode('utf-8', errors='ignore')
-            try:    
+            try:
                 response = re.findall(r'<soap:Envelope[\s\S]*?</soap:Envelope>', response)[0]
                 xml = ET.fromstring(response)
                 xmlstr = ET.tostring(xml, encoding='utf-8').decode('utf-8')

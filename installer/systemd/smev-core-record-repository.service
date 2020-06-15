@@ -1,0 +1,24 @@
+[Unit]
+Description=smev-core Record-repository
+PartOf=smev-core-chainer.service
+After=syslog.target
+After=network.target
+After=smev-core.service
+After=smev-core-chainer.service
+StartLimitIntervalSec=0
+
+[Service]
+Environment=POSTGRES_USER=#user#
+Environment=POSTGRES_PASSWORD=#password#
+Environment=POSTGRES_HOST=#host#
+Environment=POSTGRES_PORT=#port#
+Environment=POSTGRES_DB=#db#
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+WorkingDirectory=/opt/smev-core/record-repository
+ExecStart=/opt/smev-core/record-repository/.virtualenv/bin/uvicorn server:app --host 127.0.0.1 --port 5002 --log-config /opt/smev-core/record-repository/log-config.yaml
+
+[Install]
+WantedBy=multi-user.target
