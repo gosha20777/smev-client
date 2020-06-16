@@ -19,7 +19,7 @@ import requests
 # init
 db_smev_file.Base.metadata.create_all(bind=engine)
 
-resdis_connection = Redis(host='redis', port=6379, db=0)
+resdis_connection = Redis(host='lacalhost', port=6379, db=0)
 queue = Queue('ftp_queue', connection=resdis_connection)
 
 app = FastAPI()
