@@ -153,7 +153,7 @@ async def finish_task(req: FinishTaskRequest):
 
         response = response.json()
         get_response_response = response['xml']
-        finish_id = re.findall(r'<ns2:MessageId>[\s\S]*?</ns2:MessageId>', get_response_response)[0]
+        finish_id = re.findall(r'<ns[0-9]:MessageId>[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}</ns[0-9]:MessageId>', get_response_response)[0]
         finish_id = re.findall(r'[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}', finish_id)[0]
     except Exception as ex:
         raise HTTPException(400, str(ex))
