@@ -202,8 +202,8 @@ async def finish_task(req: FinishTaskRequest):
     except Exception as ex:
         raise HTTPException(400, str(ex))
 
-    @app.post('/api/v1/plugin/send_request_ros_reestr')
-async def send_request(req: SmevMesageRosReestrRequest):
+@app.post('/api/v1/plugin/send_request_ros_reestr')
+async def send_request_rr(req: SmevMesageRosReestrRequest):
     try:
         # build smev message
         host = f"http://localhost:8090/v1/signer/message/{req.message_sert}?type=1.1"
