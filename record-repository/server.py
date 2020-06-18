@@ -93,7 +93,7 @@ async def get_record_content(id: str, mesage_type: str, db: Session = Depends(ge
 
     req_id = id
     try:
-        id = re.findall(r'<ns2:OriginalMessageId>[\s\S]*?</ns2:OriginalMessageId>', result)[0]
+        id = re.findall(r'<ns[0-9]:OriginalMessageId>[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}</ns[0-9]:OriginalMessageId>', result)[0]
         id = re.findall(r'[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}', id)[0]
     except:
         id = req_id
@@ -252,7 +252,7 @@ async def get_record_content_id(id: str, mesage_type: str, db: Session = Depends
     result = ET.tostring(root, encoding='utf-8')
     id = ""
     try:
-        id = re.findall(r'<ns2:MessageId>[\s\S]*?</ns2:MessageId>', result)[0]
+        id = re.findall(r'<ns[0-9]:MessageId>[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}</ns[0-9]:MessageId>', result)[0]
         id = re.findall(r'[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}', id)[0]
     except:
         raise HTTPException(404, detail="MessageId is not found")
