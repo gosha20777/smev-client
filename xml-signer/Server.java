@@ -70,6 +70,7 @@ public class Server {
                         !teamplate.getMsgType().equals("GetResponseRequest") &
                         !teamplate.getMsgType().equals("GetRequestRequest") &
                         !teamplate.getMsgType().equals("SendResponseRequest") &
+                        !teamplate.getMsgType().equals("GetIncomingQueueStatisticsRequest") &
                         !teamplate.getMsgType().equals("AckRequest")){
                         throw new Exception("Invalid input: msgType - `" + teamplate.getMsgType() + "`");
                     }
