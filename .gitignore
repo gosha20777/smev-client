@@ -132,3 +132,5 @@ dmypy.json
 .vscode/
 redis/
 file-repository/storage/
+*.old
+log_raw/
