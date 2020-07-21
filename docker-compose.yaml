@@ -95,6 +95,8 @@ services:
       dockerfile: Dockerfile
     container_name: smev_connector
     env_file: ./smev-connector/app.conf
+    volumes:
+      - ./log_raw:/app/raw/
     ports:
       - 5003:5003
     network_mode: "host"

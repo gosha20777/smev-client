@@ -4,6 +4,8 @@ from models.smev_mesage import SmevMesage
 import lxml.etree as ET
 import json
 import re
+import os
+from datetime import datetime
 from apscheduler.scheduler import Scheduler
 
 def get_key(dict):
@@ -83,13 +85,13 @@ async def send_mesage_raw(req: SmevMesage, smev_server: str):
     return Response(content=response.content, media_type="application/text")
 
 
-@cron.interval_schedule(seconds=20)
+@cron.interval_schedule(seconds=10)
 def call_query_function():
     for smev_host in smev_hosts:
         try:
             # build GetResponseRequest
             print(f'alias: {smev_host}\n\tcontent: {smev_hosts[smev_host]}', flush=True)
-            
+            smev_host_name = smev_host
             smev_host = smev_hosts[smev_host]
             body = { "id": "0", "msgType": "GetResponseRequest", "tagForSign": "SIGNED_BY_CALLER" }
             headers = {'content-type': 'application/json'}
@@ -118,7 +120,29 @@ def call_query_function():
 
                 id = re.findall(r'<ns[0-9]:OriginalMessageId>[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}</ns[0-9]:OriginalMessageId>', xmlstr)[0]
                 id = re.findall(r'[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}', id)[0]
+                
+                if not os.path.isdir('raw'):
+                    os.mkdir('raw')
+                if not os.path.isdir(os.path.join('raw', str(smev_host_name))):
+                    os.mkdir(os.path.join('raw', str(smev_host_name)))
+
+                with open(os.path.join('raw', str(smev_host_name), f'{id}-Response.xml'), 'w') as f:
+                    f.write(xmlstr)
+
             except:
+                if 'FAILURE' in response:
+                    if not os.path.isdir('raw'):
+                        os.mkdir('raw')
+                    
+                    if not os.path.isdir(os.path.join('raw', str(smev_host_name))):
+                        os.mkdir(os.path.join('raw', str(smev_host_name)))
+                    
+                    time = str(datetime.now())
+                    with open(os.path.join('raw', str(smev_host_name), f'error-Response.{time}.xml'), 'w') as f:
+                        f.write(str(response))
+                    with open(os.path.join('raw', str(smev_host_name), f'error-Request.{time}.xml'), 'w') as f:
+                        f.write(xmlstr_req)
+
                 raise Exception(f'wrong or empty smev responsse: {response}')
 
             # update db record
