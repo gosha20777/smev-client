@@ -72,6 +72,7 @@
 		{
 			"endpoint": "/v1/records",
 			"method": "GET",
+			"querystring_params": [ "page", "size" ],
 			"output_encoding": "no-op",
 			"backend": [
 			{

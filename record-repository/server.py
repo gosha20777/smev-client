@@ -40,8 +40,8 @@ async def create_record(id: str, db: Session = Depends(get_db)):
         raise HTTPException(500, detail='db error')
 
 @app.get('/api/v1/records')
-async def get_records(page: int = 0, db: Session = Depends(get_db)):
-    db_msgs = await db_controller.get_records(db=db, skip=page*50, limit=50)
+async def get_records(page: int = 0, size: int = 50, db: Session = Depends(get_db)):
+    db_msgs = await db_controller.get_records(db=db, skip=page*size, limit=size)
     records = []
     for msg in db_msgs:
         records.append(record.Record().create_from_db(msg))
