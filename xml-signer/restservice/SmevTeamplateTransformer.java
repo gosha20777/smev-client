@@ -206,7 +206,7 @@ public class SmevTeamplateTransformer
         final Certificate[] certs = new Certificate[1];
         certs[0] = getCert();
 
-        return CMSSign.createHashCMS(data, keys, certs, null, false);
+        return CMSSign.createHashCMS(data, keys, certs, null, true);
     }
 
 	public PrivateKey getKey() throws Exception {
