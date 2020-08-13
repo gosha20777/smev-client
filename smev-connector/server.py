@@ -29,6 +29,10 @@ async def send_mesage(req: SmevMesage, smev_server: str):
     headers = {'content-type': 'text/xml'}
     body = req.xml
     response = requests.post(host['url'], data=body, headers=headers, timeout=10)
+    
+    #RAW = host['url'] + '\n\tREQUEST POST\n' + body + '\n\tRESPONSE\n' + response.text
+    #open(f'raw/{datetime.now()}.txt', 'w').write(RAW)
+    
     response = response.content.decode('utf-8', errors='ignore')
     try:
         if 'soap:Envelope' in response:
