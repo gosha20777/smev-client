@@ -7,9 +7,10 @@ from io import BytesIO
 from typing import List
 import random
 STORAGE = os.environ['STORAGE']
+FTP = os.environ['FTP']
 
 def get_file_from_ftp(path: str, user: str = 'anonimus', password: str = 'password'):
-    id, path = _get_file_from_ftp(path=path, host='smev3-n0.test.gosuslugi.ru', user=user, password=password)
+    id, path = _get_file_from_ftp(path=path, host=FTP, user=user, password=password)
     return id, path
 
 def _get_file_from_ftp(path: str, host: str, user: str = 'anonimus', password: str = 'password'):
