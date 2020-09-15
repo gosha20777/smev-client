@@ -26,9 +26,9 @@ async def send_mesage(req: SmevMesage, smev_server: str):
 
     host = smev_hosts[smev_server]
 
-    headers = {'content-type': 'text/xml'}
+    headers = {'content-type': 'text/xml; charset=utf-8'}
     body = req.xml
-    response = requests.post(host['url'], data=body, headers=headers, timeout=10)
+    response = requests.post(host['url'], data=body.encode('utf-8'), headers=headers, timeout=10)
     
     #RAW = host['url'] + '\n\tREQUEST POST\n' + body + '\n\tRESPONSE\n' + response.text
     #open(f'raw/{datetime.now()}.txt', 'w').write(RAW)
