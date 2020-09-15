@@ -58,7 +58,7 @@ async def send_mesage(req: SmevMesage, smev_server: str):
             raise HTTPException(400, f'invalid smev response {str(e)}: {response}')
 
 # create file in repo
-@app.post('/api/v1/send/{smev_server}/xml')
+#@app.post('/api/v1/send/{smev_server}/xml')
 async def send_mesage_raw(req: SmevMesage, smev_server: str):
     if(smev_hosts[smev_server] == None):
         raise HTTPException(400, f'no such smev host: {smev_server}')

@@ -94,6 +94,7 @@ public class Server {
                     LOG.info(String.format("%s %s %s", request.requestMethod(), request.url(), response.status()));
                     return new Gson().toJson(msg);
                 } catch (Exception e) {
+		    e.printStackTrace();				
                     response.type("application/json");
                     response.status(500);
                     LOG.info(String.format("%s %s %s", request.requestMethod(), request.url(), response.status()));
