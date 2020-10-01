@@ -1,4 +1,0 @@
-<ns2:GetRequestRequest xmlns:ns3="urn://x-artefacts-smev-gov-ru/services/message-exchange/types/faults/1.2" xmlns:ns2="urn://x-artefacts-smev-gov-ru/services/message-exchange/types/1.2" xmlns="urn://x-artefacts-smev-gov-ru/services/message-exchange/types/basic/1.2">
-    <ns2:MessageTypeSelector xmlns:ns2="urn://x-artefacts-smev-gov-ru/services/message-exchange/types/basic/1.2" xmlns="urn://x-artefacts-smev-gov-ru/services/message-exchange/types/1.2" Id="SIGNED_BY_CALLER">#REQUEST_BODY#<ns2:Timestamp>#TIMESTAMP#</ns2:Timestamp></ns2:MessageTypeSelector>
-    <ns2:CallerInformationSystemSignature></ns2:CallerInformationSystemSignature>
-</ns2:GetRequestRequest>
