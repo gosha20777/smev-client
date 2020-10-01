@@ -7,25 +7,24 @@ services:
       - 8080:8080
     network_mode: "host"  
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./configs/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
   db:
     container_name: postgres
     image: postgres:latest
-    env_file: ./db/database.conf
+    env_file: ./configs/db/database.conf
     ports:
       - 5432:5432  
     volumes:
-      - ./db/data:/var/lib/postgresql
-
+      - ./db/:/var/lib/postgresql
   chainer:
     build:
-      context: krakend-smev
+      context: krakend
       dockerfile: Dockerfile
     container_name: chainer
     network_mode: "host"
-    env_file: ./chainer/app.conf
+    env_file: ./configs/krakend/app.conf
     volumes:
-      - ./chainer:/etc/krakend
+      - ./configs/krakend:/etc/krakend
     ports:
       - 8090:8090
     command: [ "run", "-c", "/etc/krakend/config.json" ]
@@ -45,7 +44,7 @@ services:
       context: record-repository
       dockerfile: Dockerfile
     container_name: record_repository
-    env_file: ./record-repository/app.conf
+    env_file: ./configs/record-repository/app.conf
     ports:
       - 5002:5000
     depends_on:
@@ -56,7 +55,7 @@ services:
       context: file-repository
       dockerfile: Dockerfile
     container_name: file_repository
-    env_file: ./file-repository/app.conf
+    env_file: ./configs/file-repository/app.conf
     volumes:
       - ./file-repository/storage/:/app/storage/
     network_mode: "host"
@@ -73,7 +72,7 @@ services:
       context: file-repository
       dockerfile: Dockerfile.worker
     container_name: ftp_worker
-    env_file: ./file-repository/app.conf
+    env_file: ./configs/file-repository/app.conf
     volumes:
       - ./file-repository/storage/:/app/storage/
     depends_on:
@@ -94,9 +93,10 @@ services:
       context: smev-connector
       dockerfile: Dockerfile
     container_name: smev_connector
-    env_file: ./smev-connector/app.conf
+    env_file: ./configs/smev-connector/app.conf
     volumes:
       - ./log_raw:/app/raw/
+      - ./configs/smev-connector:/app/configs
     ports:
       - 5003:5003
     network_mode: "host"
@@ -128,7 +128,7 @@ services:
       context: plugins
       dockerfile: Dockerfile
     container_name: plugin_app
-    env_file: ./plugins/app.conf
+    env_file: ./configs/plugins/app.conf
     ports:
       - 5005:5005
     network_mode: "host"

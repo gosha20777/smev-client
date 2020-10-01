@@ -1,0 +1,4 @@
+*.class
+*.jar
+bin/
+tmp/
