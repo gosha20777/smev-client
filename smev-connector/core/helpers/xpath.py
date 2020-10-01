@@ -1,5 +1,4 @@
 import io
-#import xml.etree.ElementTree as ET
 import lxml.etree as ET
 from lxml import objectify
 

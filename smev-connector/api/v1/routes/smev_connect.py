@@ -1,25 +1,31 @@
-from fastapi import FastAPI, HTTPException, Request, Response
-import requests
-from models.smev_mesage import SmevMesage
+from fastapi import APIRouter, HTTPException, Request, Response
+from apscheduler.scheduler import Scheduler
+from datetime import datetime
 import lxml.etree as ET
+import requests
 import json
 import re
 import os
-from datetime import datetime
-from apscheduler.scheduler import Scheduler
 
-def get_key(dict):
-    return list(dict.keys()).pop()
+from core.models.record import SmevMesage
+from core.helpers.dict_ops import pop_key
 
-smev_hosts = json.load(open('config.json', 'r'))
-
-app = FastAPI()
-
+router = APIRouter()
+# TODO: configure path 
+json_config_path = 'configs/config-v1.0.json'
+smev_hosts = json.load(open(json_config_path, 'r'))
 cron = Scheduler(daemon=True)
 cron.start()
 
-# create file in repo
-@app.post('/api/v1/send/{smev_server}')
+# TODO: 
+# - remove duplicate code
+# - debug mode
+
+@router.get("/probe")
+async def root():
+    return {"message": "API version 1.0"}
+
+@router.post('/send/{smev_server}')
 async def send_mesage(req: SmevMesage, smev_server: str):
     if(smev_hosts[smev_server] == None):
         raise HTTPException(400, f'no such smev host: {smev_server}')
@@ -30,8 +36,9 @@ async def send_mesage(req: SmevMesage, smev_server: str):
     body = req.xml
     response = requests.post(host['url'], data=body.encode('utf-8'), headers=headers, timeout=10)
     
-    #RAW = host['url'] + '\n\tREQUEST POST\n' + body + '\n\tRESPONSE\n' + response.text
-    #open(f'raw/{datetime.now()}.txt', 'w').write(RAW)
+    # TODO: if debug:
+    # RAW = host['url'] + '\n\tREQUEST POST\n' + body + '\n\tRESPONSE\n' + response.text
+    # open(f'raw/{datetime.now()}.txt', 'w').write(RAW)
     
     response = response.content.decode('utf-8', errors='ignore')
     try:
@@ -57,17 +64,16 @@ async def send_mesage(req: SmevMesage, smev_server: str):
         finally:
             raise HTTPException(400, f'invalid smev response {str(e)}: {response}')
 
-# create file in repo
-#@app.post('/api/v1/send/{smev_server}/xml')
+@router.post('/send/{smev_server}/xml')
 async def send_mesage_raw(req: SmevMesage, smev_server: str):
     if(smev_hosts[smev_server] == None):
         raise HTTPException(400, f'no such smev host: {smev_server}')
 
     host = smev_hosts[smev_server]
 
-    headers = {'content-type': 'text/xml'}
+    headers = {'content-type': 'text/xml; charset=utf-8'}
     body = req.xml
-    response = requests.post(host['url'], data=body, headers=headers, timeout=10)
+    response = requests.post(host['url'], data=body.encode('utf-8'), headers=headers, timeout=10)
     response = response.content.decode('utf-8', errors='ignore')
     try:
         if 'soap:Envelope' in response:
@@ -87,7 +93,6 @@ async def send_mesage_raw(req: SmevMesage, smev_server: str):
         except:
             pass
     return Response(content=response.content, media_type="application/text")
-
 
 @cron.interval_schedule(seconds=10)
 def call_query_function():

@@ -16,11 +16,11 @@ services:
       - 5432:5432  
     volumes:
       - ./db/:/var/lib/postgresql
-  chainer:
+  krakend:
     build:
       context: krakend
       dockerfile: Dockerfile
-    container_name: chainer
+    container_name: krakend
     network_mode: "host"
     env_file: ./configs/krakend/app.conf
     volumes:
@@ -37,7 +37,7 @@ services:
     ports:
       - 5001:5000
     depends_on:
-      - chainer
+      - krakend
 
   record_repository:
     build:
@@ -48,7 +48,7 @@ services:
     ports:
       - 5002:5000
     depends_on:
-      - chainer
+      - krakend
       - db
   file_repository:
     build:
@@ -63,7 +63,7 @@ services:
       - 5004:5004
     command: uvicorn server:app --host 0.0.0.0 --port 5004
     depends_on:
-      - chainer
+      - krakend
       - redis
       - db
 
@@ -100,9 +100,9 @@ services:
     ports:
       - 5003:5003
     network_mode: "host"
-    command: uvicorn server:app --host 0.0.0.0 --port 5003
+    command: uvicorn main:app --host 0.0.0.0 --port 5003
     depends_on:
-      - chainer
+      - krakend
       - db
 
   redoc:
@@ -114,7 +114,7 @@ services:
       - ./redoc:/usr/share/nginx/html/swagger/
     env_file: ./redoc/app.conf
     depends_on:
-      - chainer
+      - krakend
   wiki:
     image: squidfunk/mkdocs-material
     container_name: wiki
@@ -134,4 +134,4 @@ services:
     network_mode: "host"
     command: uvicorn server:app --host 0.0.0.0 --port 5005
     depends_on:
-      - chainer
+      - krakend

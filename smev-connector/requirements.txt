@@ -2,4 +2,7 @@ fastapi
 uvicorn
 requests
 lxml
+python-multipart
+redis==3.5.3
+rq==1.5.2
 apscheduler == 2.1.2
