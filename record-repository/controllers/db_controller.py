@@ -7,6 +7,9 @@ async def get_record(db: Session, id: str):
 async def get_records(db: Session, skip: int = 0, limit: int = 100):
     return db.query(db_record.Record).offset(skip).limit(limit).all()
 
+async def get_worker_records(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(db_record.Record).filter(db_record.Record.get_request_response != None).filter(db_record.Record.ack_request == None).offset(skip).limit(limit).all()
+
 async def create_record(db: Session, record: record.Record):
     db_rec = db_record.Record(id=record.id, date=record.date)
     db.add(db_rec)

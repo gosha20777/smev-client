@@ -68,7 +68,6 @@
 			}
 			]
 		},
-
 		{
 			"endpoint": "/v1/records",
 			"method": "GET",
@@ -78,6 +77,20 @@
 			{
 				"host":[ "http://localhost:5002" ],
 				"url_pattern": "/api/v1/records",
+				"encoding": "no-op",
+				"method": "GET"
+			}
+			]
+		},
+		{
+			"endpoint": "/v1/records/worker",
+			"method": "GET",
+			"querystring_params": [ "page", "size" ],
+			"output_encoding": "no-op",
+			"backend": [
+			{
+				"host":[ "http://localhost:5002" ],
+				"url_pattern": "/api/v1/records/worker",
 				"encoding": "no-op",
 				"method": "GET"
 			}

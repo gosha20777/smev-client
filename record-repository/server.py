@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from models.db import SessionLocal, engine
 from models import db_record
 from models import record
-from controllers import db_controller
+from controllers import db_controller, xml_parser
 import uuid
 import os
 import re
@@ -46,6 +46,16 @@ async def get_records(page: int = 0, size: int = 50, db: Session = Depends(get_d
     for msg in db_msgs:
         records.append(record.Record().create_from_db(msg))
         
+    return records
+
+@app.get('/api/v1/records/worker')
+async def get_records(page: int = 0, size: int = 50, db: Session = Depends(get_db)):
+    db_msgs = await db_controller.get_worker_records(db=db, skip=page*size, limit=size)
+    records = []
+    for msg in db_msgs:
+        r = record.WorkerRecord().create_from_db(msg)
+        r.communication_type = xml_parser.get_communication_type(msg.get_request_response)
+        records.append(r)
     return records
 
 # get record info

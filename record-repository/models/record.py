@@ -45,5 +45,8 @@ class Record(RecordBase):
     class Config:
         orm_mode = True
 
+class WorkerRecord(Record):
+    communication_type: str = ""
+
 class RecordUpdate(BaseModel):
     xml: str
