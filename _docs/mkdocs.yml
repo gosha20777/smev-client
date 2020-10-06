@@ -12,5 +12,6 @@ nav:
     - Ros Reestr: rosreestr_plugin.md
   - Raw Examples:
     - Ros Reestr: raw_requests_ros_reestr.md
+    - Еeply To an Incomming Request:  raw_requests_reply_incomming_request.md
 theme:
   name: 'material'
