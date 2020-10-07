@@ -5,6 +5,8 @@ import uuid
 import requests
 import re
 
+BASE_URL = "http://mogt-ml:8080/v1/signer" # http://localhost:8090/v1/signer
+
 class SmevMesageRequest(BaseModel):
     xsd_type: str
     json_template: dict
@@ -160,6 +162,68 @@ async def finish_task(req: FinishTaskRequest):
     # sign mesage
     try:
         host = f"http://localhost:8090/v1/signer/message/{req.cert_type}"
+        body = { 
+	            "id": finish_id,
+	            "msgType": "AckRequest",
+	            "tagForSign": "SIGNED_BY_CALLER"
+        }
+        headers = {'content-type': 'application/json'}
+        response = requests.post(host, json=body, headers=headers, timeout=5)
+        if response.status_code != 200:
+            raise Exception('Cant sign xml: api error')
+        
+        response = response.json()
+        ack_request = response['xml']
+        if ack_request == None:
+            raise Exception('Cant sign xml: xml is empty')
+    except Exception as ex:
+        raise HTTPException(400, str(ex))
+    # send to smev
+    try:
+        host = f"http://localhost:8090/v1/send-to-smev/{req.smev_host}"
+        body = {
+            "id": finish_id,
+            "xml":  ack_request
+            }
+        headers = {'content-type': 'application/json'}
+        response = requests.post(host, json=body, headers=headers, timeout=10)
+        if response.status_code != 200:
+            raise Exception('Cant send to smev: api error')
+    except Exception as ex:
+        raise HTTPException(400, str(ex))
+    # update record db
+    try:
+        host = f"http://localhost:8090/v1/record/{req.id}/AckRequest"
+        body = { "xml":  ack_request }
+        headers = {'content-type': 'application/json'}
+        response = requests.put(host, json=body, headers=headers, timeout=5)
+        if response.status_code != 200:
+            raise Exception('Cant update record to db: AckRequest')
+
+        return { "id": req.id }
+    except Exception as ex:
+        raise HTTPException(400, str(ex))
+
+@app.post('/api/v1/plugin/finish_response')
+async def finish_task(req: FinishTaskRequest):
+    # get record to db
+    try:
+        host = f"http://localhost:8090/v1/record/{req.id}/GetRequestResponse"
+        headers = {'content-type': 'application/json'}
+        response = requests.get(host, headers=headers, timeout=5)
+        if response.status_code != 200:
+            raise Exception('Cant get record to db: api error')
+        if response == None:
+            raise Exception('Cant get record to db: no such record')
+
+        response = response.json()
+        get_response_response = response['xml']
+        finish_id = req.id
+    except Exception as ex:
+        raise HTTPException(400, str(ex))
+    # sign mesage
+    try:
+        host = f"http://localhost:8090/v1/signer/message/{req.cert_type}?type=1.1"
         body = { 
 	            "id": finish_id,
 	            "msgType": "AckRequest",
