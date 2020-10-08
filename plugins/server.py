@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException, Request, Response
 from pydantic import BaseModel
+from typing import List
 from datetime import datetime
 import uuid
 import requests
@@ -48,6 +49,21 @@ class FinishTaskRequest(BaseModel):
     id: str
     cert_type: str
     smev_host: str
+
+class SmevReplyMessage(BaseModel):
+    xsd_type: str
+    json_template: dict
+    cert_type: str
+
+class SmevReplyAttachment(BaseModel):
+    files: List[str]
+    cert_type: str
+
+class SmevReply(BaseModel):
+    smev_host: str
+    id: str
+    message: SmevReplyMessage
+    attachment: SmevReplyAttachment = None
 
 app = FastAPI()
 
@@ -265,6 +281,10 @@ async def finish_task(req: FinishTaskRequest):
         return { "id": req.id }
     except Exception as ex:
         raise HTTPException(400, str(ex))
+
+@app.post('/api/v1/plugin/reply')
+async def finish_task(req: SmevReply):
+    return { 'id': req.id }
 
 @app.post('/api/v1/plugin/send_request_ros_reestr')
 async def send_request_rr(req: SmevMesageRosReestrRequest):
