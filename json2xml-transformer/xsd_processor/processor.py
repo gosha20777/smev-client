@@ -1,10 +1,11 @@
 from .singleton import Singleton
-from .xsd_loader import Loader
+from .xsd_loader import Loader, XSD_PATH
 from lxml import etree
+import os
 
 class XsdProcessor(metaclass=Singleton):
-    def __init__(self):
-        self.loader = Loader()
+    def __init__(self, smev_number):
+        self.loader = Loader(path=os.path.join(XSD_PATH, smev_number))
 
     async def process(self, element_type, params):
         xsd_element = self.loader.get_element(element_type)

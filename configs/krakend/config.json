@@ -56,13 +56,13 @@
 		},
 
 		{
-			"endpoint": "/v1/json2xml/{query_type}",
+			"endpoint": "/v1/json2xml/{sheme_number}/{query_type}",
 			"method": "POST",
 			"output_encoding": "no-op",
 			"backend": [
 			{
 				"host":[ "http://localhost:5001" ],
-				"url_pattern": "/api/v1/{query_type}",
+				"url_pattern": "/api/v1/{sheme_number}/{query_type}",
 				"encoding": "no-op",
 				"method": "POST"
 			}

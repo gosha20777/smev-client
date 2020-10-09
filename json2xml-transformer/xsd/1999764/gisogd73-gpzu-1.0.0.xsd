@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ul="urn://gisogd73/gpzu/1.0.0" xmlns:com="urn://gisogd73/commons/1.0.0" targetNamespace="urn://gisogd73/gpzu/1.0.0" elementFormDefault="qualified">
+	<xs:import namespace="urn://gisogd73/commons/1.0.0" schemaLocation="commons/gisogd73-commons-1.0.0.xsd"/>
+	<xs:complexType name="ResponseData">
+		<xs:sequence>
+			<xs:element name="Value" type="com:String-200" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Статус/причина ошибки</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Comment" type="com:String-2000" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Комментарий</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Name" type="com:String-200" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Номер заявления</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="RequestData">
+		<xs:sequence>
+			<xs:element name="OKTMO" type="com:OKATOType">
+				<xs:annotation>
+					<xs:documentation>Код региона по ОКТМО</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="service" type="ul:service">
+				<xs:annotation>
+					<xs:documentation>Служебная информация</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Panel_UL" type="ul:Panel_UL_Type" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Сведения об организации</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Panel_FL" type="ul:Panel_FL_Type" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Сведения о заявителе</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Panel_passport" type="ul:Panel_passport_Type" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Документ, удостоверяющий личность</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Panel_Land_info" type="ul:Panel_Land_info">
+				<xs:annotation>
+					<xs:documentation>Сведения о земельном участке</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Panel_Get_result" type="ul:Panel_Get_result">
+				<xs:annotation>
+					<xs:documentation>Способ получения результата предоставления государственной услуги</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OtherInfo" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Другие данные 1</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OtherInfo2" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Другие данные 2</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="service">
+		<xs:annotation>
+			<xs:documentation>Служебная информация</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="CurrentDate" type="xs:date" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Текущая дата</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="UserType" type="ul:UserType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Тип заявителя</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CaseNumber" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Номер заявки</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ServiceCode" type="com:String-255" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Номер услуги</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GroupID" type="com:String-255" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>ID цели</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="UserType" final="restriction">
+		<xs:annotation>
+			<xs:documentation>Тип заявителя из ЛК</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="EMPLOYEE"/>
+			<xs:enumeration value="BUSINESSMAN"/>
+			<xs:enumeration value="PERSON_RF"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="phone">
+		<xs:annotation>
+			<xs:documentation>Номер телефона</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="16"/>
+			<xs:pattern value="[+]?\d[(]?\d{3}[)]?\d{3}[-]?\d{2}[-]?\d{2}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Panel_UL_Type">
+		<xs:annotation>
+			<xs:documentation>Сведения об организации</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="orgName" type="com:String-500">
+				<xs:annotation>
+					<xs:documentation>Наименование организации</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="orgShortName" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Сокращенное наименование</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ogrn" type="com:OGRNCompanyType">
+				<xs:annotation>
+					<xs:documentation>ОГРН</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ul_address" type="com:FiasCustomAddressType">
+				<xs:annotation>
+					<xs:documentation>Адрес местонахождения</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ul_inn" type="com:LegalPersonINNType">
+				<xs:annotation>
+					<xs:documentation>ИНН</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ul_post_address" type="com:FiasCustomAddressType">
+				<xs:annotation>
+					<xs:documentation>Почтовый адрес</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ul_phone" type="ul:phone">
+				<xs:annotation>
+					<xs:documentation>Контактный телефон</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ul_fax" type="ul:phone" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Факс</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ul_email" type="com:EmailAddressRFC2822">
+				<xs:annotation>
+					<xs:documentation>Электронная почта</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Panel_FL_Type">
+		<xs:annotation>
+			<xs:documentation>Сведения о заявителе</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="sur" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Фамилия</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="nam" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Имя</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="pat" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Отчество</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="snils" type="com:SNILSType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>СНИЛС</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ogrnip" type="com:OGRNIPType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>ОГРНИП</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="home_addr" type="com:FiasCustomAddressType">
+				<xs:annotation>
+					<xs:documentation>Адрес места жительства</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="fl_post_address" type="com:FiasCustomAddressType">
+				<xs:annotation>
+					<xs:documentation>Почтовый адрес</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="fl_phone" type="ul:phone">
+				<xs:annotation>
+					<xs:documentation>Контактный телефон</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="fl_fax" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Факс</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="fl_email" type="com:EmailAddressRFC2822">
+				<xs:annotation>
+					<xs:documentation>Электронная почта</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Panel_passport_Type">
+		<xs:annotation>
+			<xs:documentation>Документ, удостоверяющий личность (паспорт)</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="docSeries" type="com:digits-4">
+				<xs:annotation>
+					<xs:documentation>Серия документа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="docNumber" type="com:digits-6">
+				<xs:annotation>
+					<xs:documentation>Номер документа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="docIssued" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Кем выдан</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="docDate" type="xs:date">
+				<xs:annotation>
+					<xs:documentation>Дата выдачи</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="Panel_Land_info">
+		<xs:annotation>
+			<xs:documentation>Сведения о земельном участке</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="kadastr_number" type="ul:KadastrNumber">
+				<xs:annotation>
+					<xs:documentation>Кадастровый номер земельного участка</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="square" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Площадь (кв.м)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="type_address" type="ul:land_type_address">
+				<xs:annotation>
+					<xs:documentation>Тип адреса</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="stead_address" type="com:FiasCustomAddressType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Местоположение земельного участка</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ref_point" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Адресный ориентир</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="KadastrNumber">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="18"/>
+			<xs:pattern value="\d{1,3}[:]\d{1,3}[:]\d{1,9}[:]\d+"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="Panel_Get_result">
+		<xs:annotation>
+			<xs:documentation>Способ получения результата предоставления государственной услуги</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="radio_sposob" type="ul:delivery_way">
+				<xs:annotation>
+					<xs:documentation>Способ получения результата</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="sposob_mfc" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>МФЦ</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="delivery_way" final="restriction">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Department">
+				<xs:annotation>
+					<xs:documentation>В ведомстве</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Mfc">
+				<xs:annotation>
+					<xs:documentation>В МФЦ</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="EPGU">
+				<xs:annotation>
+					<xs:documentation>В личном кабинете Единого портала государственных и муниципальных услуг, региональных порталов государственных и муниципальных услуг</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="land_type_address" final="restriction">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Address">
+				<xs:annotation>
+					<xs:documentation>Адрес</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Target_landmark">
+				<xs:annotation>
+					<xs:documentation>Адресный ориентир</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="Response" type="ul:ResponseData"/>
+	<xs:element name="Request" type="ul:RequestData"/>
+</xs:schema>
+

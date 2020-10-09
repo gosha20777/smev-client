@@ -14,12 +14,13 @@ class Loader(metaclass=Singleton):
 
     def load(self):
         self.schema = xsd.Schema()
-        for d in self.list_dirs(self._path):
-            for f in self.list_files(d):
-                tree = etree.parse(f)
-                t = Transport(d)
-                schema = xsd.Schema(tree.getroot(), transport=t)
-                self.schema.merge(schema)
+        for f in self.list_files(self._path):
+            tree = etree.parse(f)
+            t = Transport(self._path)
+            print(f, flush=True)
+            print(self._path, flush=True)
+            schema = xsd.Schema(tree.getroot(), transport=t)
+            self.schema.merge(schema)
 
     @staticmethod
     def list_dirs(path):

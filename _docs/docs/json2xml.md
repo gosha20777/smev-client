@@ -11,7 +11,7 @@
 
 ## API
 
-- **POST** `/api/v1/{xsd_element}`
+- **POST** `/api/v1/{xsd_smev_number}/{xsd_element}`
   *request*
 
   ```json
@@ -70,7 +70,7 @@ Put your xsd files and common folders at `xsd` directory and restart the app. Ap
 *request*
 
 ```json
-POST localhost:5000/api/v1/FNSVipULRequest/
+POST localhost:5000/api/v1/15980/FNSVipULRequest/
 Request:
 {
 	"ЗапросЮЛ": {
@@ -103,7 +103,7 @@ Response:
 *request*
 
 ```json
-POST localhost:5000/api/v1/PublicPrintOutRequest/
+POST localhost:5000/api/v1/15980/PublicPrintOutRequest/
 Request:
 {
 	"ExpertiseResultNumber": "00-1-2-3-000010-2000",
@@ -132,7 +132,7 @@ Response:
 *request*
 
 ```json
-POST localhost:5000/api/v1/FullPrintOutRequest/
+POST localhost:5000/api/v1/15980/FullPrintOutRequest/
 Request 1:
 {
 	"ExpertiseResultNumber": "00-1-2-3-000010-2000",
@@ -152,7 +152,7 @@ Response 1:
 *request*
 
 ```json
-POST localhost:5000/api/v1/DocumentsProlongationRequest/
+POST localhost:5000/api/v1/15980/DocumentsProlongationRequest/
 Request 1:
 {
 	"PrintOutNumber": "00000000-0000-0000-0000-000000000001",
