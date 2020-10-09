@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException, Request, Response
 from pydantic import BaseModel
 from typing import List
 from datetime import datetime
+from helpers import xpath
 import uuid
 import requests
 import re
@@ -283,8 +284,115 @@ async def finish_task(req: FinishTaskRequest):
         raise HTTPException(400, str(ex))
 
 @app.post('/api/v1/plugin/reply')
-async def finish_task(req: SmevReply):
-    return { 'id': req.id }
+async def reply_task(req: SmevReply):
+    # 0 check ack request
+    try:
+        host = f"http://localhost:8090/v1/record/{req.id}/AckRequest"
+        headers = {'content-type': 'application/json'}
+        response = requests.get(host, headers=headers, timeout=5)
+        if response.status_code != 200:
+            raise Exception('Message chain has no AckRequest')
+    except:
+        raise HTTPException(400, str(ex))
+
+    # 1 json2xml
+    try:
+        host = f"http://localhost:8090/v1/json2xml/{req.message.xsd_type}"
+        body = req.message.json_template
+        headers = {'content-type': 'application/json'}
+        response = requests.post(host, json=body, headers=headers, timeout=5)
+        if response.status_code != 200:
+            raise Exception('Cant convert json2xml: api error')
+
+        response = response.json()
+        send_response_request_teamplate = response['xml']
+        if send_response_request_teamplate == None:
+            raise Exception('Cant convert json2xml: xml is empty')
+    except:
+        raise HTTPException(400, str(ex))
+
+    # 2 get Reply To param
+    try:
+        host = f"http://localhost:8090/v1/record/{req.id}/GetRequestResponse"
+        headers = {'content-type': 'application/json'}
+        response = requests.get(host, headers=headers, timeout=5)
+        if response.status_code != 200:
+            raise Exception('Cant convert json2xml: api error')
+
+        get_request_response_xml = response['xml']
+        reply_to = xpath.get_elenent_text(get_request_response_xml, "//*[local-name()='ReplyTo']/*")
+    except:
+        raise HTTPException(400, str(ex))
+
+    # 3 sign mesage
+    try:
+        host = f"http://localhost:8090/v1/signer/message/{req.message.cert_type}?type=1.1"
+        body = {
+            "id": "0",
+            "msgType": "SendResponseRequest",
+            "tagForSign": "SIGNED_BY_CONSUMER",
+            "xml":  send_response_request_teamplate
+            }
+        headers = {'content-type': 'application/json'}
+        response = requests.post(host, json=body, headers=headers, timeout=5)
+        if response.status_code != 200:
+            raise Exception('Cant sign xml: api error')
+        
+        response = response.json()
+        send_response_request = response['xml']
+        id = response['id']
+        if send_response_request == None:
+            raise Exception('Cant sign xml: xml is empty')
+        if id == None:
+            raise Exception('Cant sign xml: id is empty')
+    except Exception as ex:
+        raise HTTPException(400, str(ex))
+
+    # add record to db
+    try:
+        host = f"http://localhost:8090/v1/record/{req.id}/SendResponseRequest"
+        body = { "xml":  send_response_request }
+        headers = {'content-type': 'application/json'}
+        response = requests.put(host, json=body, headers=headers, timeout=5)
+        if response.status_code != 200:
+            raise Exception('Cant update record to db: SendResponseRequest')
+    except Exception as ex:
+        raise HTTPException(400, str(ex))
+    
+    # send to smev
+    try:
+        host = f"http://localhost:8090/v1/send-to-smev/{req.smev_host}"
+        body = {
+            "id": id,
+            "xml":  send_response_request
+            }
+        headers = {'content-type': 'application/json'}
+        response = requests.post(host, json=body, headers=headers, timeout=10)
+        if response.status_code != 200:
+            raise Exception('Cant send to smev: api error')
+        
+        response = response.json()
+        send_response_response = response['xml']
+        resp_id = response['id']
+        if send_response_response == None:
+            raise Exception('Cant send to smev: xml is empty')
+        if resp_id == None:
+            raise Exception('Cant send to smev: id is empty')
+    except Exception as ex:
+        raise HTTPException(400, str(ex))
+
+    # update record db
+    try:
+        host = f"http://localhost:8090/v1/record/{req.id}/SendResponseResponse"
+        body = { "xml":  send_request_response }
+        headers = {'content-type': 'application/json'}
+        response = requests.put(host, json=body, headers=headers, timeout=5)
+        if response.status_code != 200:
+            raise Exception('Cant update record to db: SendResponseResponse')
+
+        return { "id": req.id }
+    except Exception as ex:
+        raise HTTPException(400, str(ex))
 
 @app.post('/api/v1/plugin/send_request_ros_reestr')
 async def send_request_rr(req: SmevMesageRosReestrRequest):
