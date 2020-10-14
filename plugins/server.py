@@ -328,25 +328,27 @@ async def reply_task(req: SmevReply):
         raise HTTPException(400, str(ex))
 
     # 3 sign attachment
-    has_attachment = False
-    if req.attachment != None and len(req.attachment.files) > 0:
-        has_attachment = True
-        try:
-            with urllib.request.urlopen(req.attachment.files[0]) as f:
-                content = f.read()
-        except:
-            raise Exception('Cant download attachment: api error')
-        b64_content = base64.b64encode(content)
-        host = f"http://localhost:8090/v1/signer/pkcs7/{req.attachment.cert_type}"
-        headers = {'content-type': 'application/text; charset=utf-8'}
-        response = requests.post(host, data=b64_content, headers=headers, timeout=5)
-        if response.status_code != 200:
-            raise Exception('Cant sign attachment: api error')
-        signature_str = response.content.decode()
-        b64_content = b64_content.decode()
-        hash_object = hashlib.sha1(content)
-        filename = hash_object.hexdigest()
-        
+    try:
+        has_attachment = False
+        if req.attachment != None and len(req.attachment.files) > 0:
+            has_attachment = True
+            try:
+                with urllib.request.urlopen(req.attachment.files[0]) as f:
+                    content = f.read()
+            except Exception as ex:
+                raise Exception(f'Cant download attachment: api error {ex}')
+            b64_content = base64.b64encode(content)
+            host = f"http://localhost:8090/v1/signer/pkcs7/{req.attachment.cert_type}"
+            headers = {'content-type': 'application/text; charset=utf-8'}
+            response = requests.post(host, data=b64_content, headers=headers, timeout=5)
+            if response.status_code != 200:
+                raise Exception('Cant sign attachment: api error')
+            signature_str = response.content.decode()
+            b64_content = b64_content.decode()
+            hash_object = hashlib.sha1(content)
+            filename = hash_object.hexdigest()
+    except Exception as ex:
+        raise HTTPException(400, str(ex))        
 
     # 3 sign mesage
     try:
