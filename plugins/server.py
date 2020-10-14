@@ -8,6 +8,7 @@ import requests
 import re
 import base64
 import urllib
+import hashlib
 
 BASE_URL = "http://mogt-ml:8080/v1/signer" # http://localhost:8090/v1/signer
 
@@ -359,6 +360,7 @@ async def reply_task(req: SmevReply):
                 "msgType": "SendResponseRequest",
                 "tagForSign": "SIGNED_BY_CONSUMER",
                 "xml":  send_response_request_teamplate,
+                "to": reply_to,
                 "attachment": {
     	            "fileName": filename,
     	            "mimeType": "application/binary",
@@ -371,6 +373,7 @@ async def reply_task(req: SmevReply):
                 "id": "0",
                 "msgType": "SendResponseRequest",
                 "tagForSign": "SIGNED_BY_CONSUMER",
+                "to": reply_to,
                 "xml":  send_response_request_teamplate
                 }
         headers = {'content-type': 'application/json'}
