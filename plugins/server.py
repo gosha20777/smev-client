@@ -6,6 +6,8 @@ from helpers import xpath
 import uuid
 import requests
 import re
+import base64
+import urllib
 
 BASE_URL = "http://mogt-ml:8080/v1/signer" # http://localhost:8090/v1/signer
 
@@ -292,7 +294,7 @@ async def reply_task(req: SmevReply):
         response = requests.get(host, headers=headers, timeout=5)
         if response.status_code != 200:
             raise Exception('Message chain has no AckRequest')
-    except:
+    except Exception as ex:
         raise HTTPException(400, str(ex))
 
     # 1 json2xml
@@ -308,7 +310,7 @@ async def reply_task(req: SmevReply):
         send_response_request_teamplate = response['xml']
         if send_response_request_teamplate == None:
             raise Exception('Cant convert json2xml: xml is empty')
-    except:
+    except Exception as ex:
         raise HTTPException(400, str(ex))
 
     # 2 get Reply To param
@@ -317,22 +319,58 @@ async def reply_task(req: SmevReply):
         headers = {'content-type': 'application/json'}
         response = requests.get(host, headers=headers, timeout=5)
         if response.status_code != 200:
-            raise Exception('Cant convert json2xml: api error')
-
+            raise Exception('Cant convert get Get Request Response: api error')
+        
+        response = response.json()
         get_request_response_xml = response['xml']
-        reply_to = xpath.get_elenent_text(get_request_response_xml, "//*[local-name()='ReplyTo']/*")
-    except:
+        reply_to = xpath.get_elenent_text(get_request_response_xml, "//*[local-name()='ReplyTo']")
+    except Exception as ex:
         raise HTTPException(400, str(ex))
+
+    # 3 sign attachment
+    has_attachment = False
+    if req.attachment != None and len(req.attachment.files) > 0:
+        has_attachment = True
+        try:
+            with urllib.request.urlopen(req.attachment.files[0]) as f:
+                content = f.read()
+        except:
+            raise Exception('Cant download attachment: api error')
+        b64_content = base64.b64encode(content)
+        host = f"http://localhost:8090/v1/signer/pkcs7/{req.attachment.cert_type}"
+        headers = {'content-type': 'application/text; charset=utf-8'}
+        response = requests.post(host, data=b64_content, headers=headers, timeout=5)
+        if response.status_code != 200:
+            raise Exception('Cant sign attachment: api error')
+        signature_str = response.content.decode()
+        b64_content = b64_content.decode()
+        hash_object = hashlib.sha1(content)
+        filename = hash_object.hexdigest()
+        
 
     # 3 sign mesage
     try:
         host = f"http://localhost:8090/v1/signer/message/{req.message.cert_type}?type=1.1"
-        body = {
-            "id": "0",
-            "msgType": "SendResponseRequest",
-            "tagForSign": "SIGNED_BY_CONSUMER",
-            "xml":  send_response_request_teamplate
-            }
+        if has_attachment == True:
+            body = {
+                "id": "0",
+                "msgType": "SendResponseRequest",
+                "tagForSign": "SIGNED_BY_CONSUMER",
+                "xml":  send_response_request_teamplate,
+                "attachment": {
+    	            "fileName": filename,
+    	            "mimeType": "application/binary",
+    	            "signature": signature_str,
+    	            "content": b64_content
+	                }
+                }
+        else:
+            body = {
+                "id": "0",
+                "msgType": "SendResponseRequest",
+                "tagForSign": "SIGNED_BY_CONSUMER",
+                "xml":  send_response_request_teamplate
+                }
         headers = {'content-type': 'application/json'}
         response = requests.post(host, json=body, headers=headers, timeout=5)
         if response.status_code != 200:
@@ -348,7 +386,7 @@ async def reply_task(req: SmevReply):
     except Exception as ex:
         raise HTTPException(400, str(ex))
 
-    # add record to db
+    # 4 add record to db
     try:
         host = f"http://localhost:8090/v1/record/{req.id}/SendResponseRequest"
         body = { "xml":  send_response_request }
@@ -359,7 +397,7 @@ async def reply_task(req: SmevReply):
     except Exception as ex:
         raise HTTPException(400, str(ex))
     
-    # send to smev
+    # 5 send to smev
     try:
         host = f"http://localhost:8090/v1/send-to-smev/{req.smev_host}"
         body = {
@@ -381,10 +419,10 @@ async def reply_task(req: SmevReply):
     except Exception as ex:
         raise HTTPException(400, str(ex))
 
-    # update record db
+    # 6 update record db
     try:
         host = f"http://localhost:8090/v1/record/{req.id}/SendResponseResponse"
-        body = { "xml":  send_request_response }
+        body = { "xml":  send_response_response }
         headers = {'content-type': 'application/json'}
         response = requests.put(host, json=body, headers=headers, timeout=5)
         if response.status_code != 200:
