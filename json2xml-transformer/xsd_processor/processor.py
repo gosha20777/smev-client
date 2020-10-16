@@ -4,10 +4,12 @@ from lxml import etree
 import os
 
 class XsdProcessor(metaclass=Singleton):
-    def __init__(self, smev_number):
-        self.loader = Loader(path=os.path.join(XSD_PATH, smev_number))
+    def __init__(self):
+        self.path = XSD_PATH
+        self.loader = Loader()
 
-    async def process(self, element_type, params):
+    async def process(self, smev_number, element_type, params):
+        self.loader.load(path=os.path.join(XSD_PATH, smev_number))
         xsd_element = self.loader.get_element(element_type)
         
         if not xsd_element:

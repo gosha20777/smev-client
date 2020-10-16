@@ -7,31 +7,22 @@ from .transport import Transport
 XSD_PATH = 'xsd'
 
 class Loader(metaclass=Singleton):
-    def __init__(self, path=XSD_PATH):
-        self._path = path
+    def __init__(self):
         self.schema = None
-        self.load()
 
-    def load(self):
+    def load(self, path: str):
+        self.schema = None
         self.schema = xsd.Schema()
-        for f in self.list_files(self._path):
+        for f in self.list_files(path):
             tree = etree.parse(f)
-            t = Transport(self._path)
-            print(f, flush=True)
-            print(self._path, flush=True)
+            t = Transport(path)
             schema = xsd.Schema(tree.getroot(), transport=t)
             self.schema.merge(schema)
 
-    @staticmethod
-    def list_dirs(path):
-        return [os.path.join(path, d) for d in os.listdir(path) if os.path.isdir(os.path.join(path, d))]
-
-    @staticmethod
-    def list_files(path):
+    def list_files(self, path):
         return [os.path.join(path, d) for d in os.listdir(path) if os.path.isfile(os.path.join(path, d))]
 
     def get_element(self, name):
-        print("name {}".format(name))
         template = '{{{}}}{}'
         for ns in self.schema.namespaces:
             fullname = template.format(ns, name)
