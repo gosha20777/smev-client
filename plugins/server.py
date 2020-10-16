@@ -59,8 +59,12 @@ class SmevReplyMessage(BaseModel):
     json_template: dict
     cert_type: str
 
+class SmevReplyFile(BaseModel):
+    url: str
+    name: str
+
 class SmevReplyAttachment(BaseModel):
-    files: List[str]
+    files: List[SmevReplyFile]
     cert_type: str
 
 class SmevReply(BaseModel):
@@ -334,7 +338,8 @@ async def reply_task(req: SmevReply):
         if req.attachment != None and len(req.attachment.files) > 0:
             has_attachment = True
             try:
-                with urllib.request.urlopen(req.attachment.files[0]) as f:
+                filename = req.attachment.files[0].name
+                with urllib.request.urlopen(req.attachment.files[0].url) as f:
                     content = f.read()
             except Exception as ex:
                 raise Exception(f'Cant download attachment: api error {ex}')
@@ -346,8 +351,6 @@ async def reply_task(req: SmevReply):
                 raise Exception('Cant sign attachment: api error')
             signature_str = response.content.decode()
             b64_content = b64_content.decode()
-            hash_object = hashlib.sha1(content)
-            filename = hash_object.hexdigest()
     except Exception as ex:
         raise HTTPException(400, str(ex))        
 
