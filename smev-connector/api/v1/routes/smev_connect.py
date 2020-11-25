@@ -9,6 +9,7 @@ import os
 
 from core.models.record import SmevMesage
 from core.helpers.dict_ops import pop_key
+from core.helpers import mtom_reader as mtom
 
 router = APIRouter()
 # TODO: configure path 
@@ -94,7 +95,7 @@ async def send_mesage_raw(req: SmevMesage, smev_server: str):
             pass
     return Response(content=response.content, media_type="application/text")
 
-@cron.interval_schedule(seconds=10)
+@cron.interval_schedule(seconds=15)
 def call_smev_queues():
     for smev_host in smev_hosts:
         print(f'client alias: {smev_host}', flush=True)
@@ -117,8 +118,8 @@ def call_smev_queues():
                 xmlstr_req = body
                 headers = {'content-type': 'text/xml'}
                 host = smev_host['url']
-                response = requests.post(host, data=body, headers=headers, timeout=5)
-                response = response.content.decode('utf-8', errors='ignore')
+                raw_response = requests.post(host, data=body, headers=headers, timeout=10)
+                response = raw_response.content.decode('utf-8', errors='ignore')
                 try:
                     if 'soap:Envelope' in response:
                         response = re.findall(r'<soap:Envelope[\s\S]*?</soap:Envelope>', response)[0]
@@ -131,14 +132,40 @@ def call_smev_queues():
 
                     id = re.findall(r'<ns[0-9]:OriginalMessageId>[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}</ns[0-9]:OriginalMessageId>', xmlstr)[0]
                     id = re.findall(r'[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}', id)[0]
-                
-                    # if not os.path.isdir('raw'):
-                    #     os.mkdir('raw')
-                    # if not os.path.isdir(os.path.join('raw', str(smev_host_name))):
-                    #     os.mkdir(os.path.join('raw', str(smev_host_name)))
 
-                    # with open(os.path.join('raw', str(smev_host_name), f'{id}-Response.xml'), 'w') as f:
-                    #     f.write(xmlstr)
+                    # read mtom
+                    mtom_ids: list = []
+                    mtom_ids_dict = mtom.get_mtom_attachments_ids(xmlstr)
+                    if len(mtom_ids_dict.keys()) > 0:
+                        mtom_files = mtom.get_mtom_files(raw_response, mtom_ids_dict)
+                        for mtom_file in mtom_files.keys():
+                            print(mtom_file)
+
+                            multipart_form_data = {
+                                'file': (mtom_file, mtom_files[mtom_file])
+                            }
+                            host = f'http://localhost:5004/api/v1/file/new'
+                            response = requests.post(host, files=multipart_form_data, timeout=5)
+                            if response.status_code == 200:
+                                f_id = response.json()
+                                f_meta = {
+                                    "id": f_id['id'],
+                                    "extension": f_id['path'].split(".")[-1]
+                                }
+                                mtom_ids.append(f_meta)
+                                print(f"get mtom id: {f_id['id']}")
+                
+                    if not os.path.isdir('raw'):
+                        os.mkdir('raw')
+                    if not os.path.isdir(os.path.join('raw', str(smev_host_name))):
+                        os.mkdir(os.path.join('raw', str(smev_host_name)))
+                    if not os.path.isdir(os.path.join('raw', str(smev_host_name), 'client')):
+                        os.mkdir(os.path.join('raw', str(smev_host_name), 'client'))
+                    if not os.path.isdir(os.path.join('raw', str(smev_host_name), 'client', queue)):
+                        os.mkdir(os.path.join('raw', str(smev_host_name), 'client', queue))
+                    
+                    with open(os.path.join('raw', str(smev_host_name), 'client', queue, f'{id}-Response.xml'), 'wb') as f:
+                        f.write(raw_response)
 
                 except:
                     if 'FAILURE' in response:
@@ -164,7 +191,7 @@ def call_smev_queues():
                 if response.status_code != 200:
                     raise Exception(f'can not update GetResponseRequest mesage record: status code {response.status_code}')
 
-                body = {  "xml": xmlstr }
+                body = {  "xml": xmlstr, "mtoms": mtom_ids }
                 headers = {'content-type': 'application/json'}
                 host = f'http://localhost:5002/api/v1/record/{id}/GetResponseResponse'
                 response = requests.put(host, json=body, headers=headers, timeout=5)
@@ -191,8 +218,8 @@ def call_smev_queues():
                 xmlstr_req = body
                 headers = {'content-type': 'text/xml'}
                 host = smev_host['url']
-                response = requests.post(host, data=body, headers=headers, timeout=5)
-                response = response.content.decode('utf-8', errors='ignore')
+                raw_response = requests.post(host, data=body, headers=headers, timeout=10)
+                response = raw_response.content.decode('utf-8', errors='ignore')
                 try:
                     if 'soap:Envelope' in response:
                         response = re.findall(r'<soap:Envelope[\s\S]*?</soap:Envelope>', response)[0]
@@ -205,14 +232,40 @@ def call_smev_queues():
 
                     id = re.findall(r'<ns[0-9]:MessageId>[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}</ns[0-9]:MessageId>', xmlstr)[0]
                     id = re.findall(r'[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}', id)[0]
-                
-                    # if not os.path.isdir('raw'):
-                    #     os.mkdir('raw')
-                    # if not os.path.isdir(os.path.join('raw', str(smev_host_name))):
-                    #     os.mkdir(os.path.join('raw', str(smev_host_name)))
 
-                    # with open(os.path.join('raw', str(smev_host_name), f'{id}-Response.xml'), 'w') as f:
-                    #     f.write(xmlstr)
+                    # read mtom
+                    mtom_ids: list = []
+                    mtom_ids_dict = mtom.get_mtom_attachments_ids(xmlstr)
+                    if len(mtom_ids_dict.keys()) > 0:
+                        mtom_files = mtom.get_mtom_files(raw_response, mtom_ids_dict)
+                        for mtom_file in mtom_files.keys():
+                            print(mtom_file)
+
+                            multipart_form_data = {
+                                'file': (mtom_file, mtom_files[mtom_file])
+                            }
+                            host = f'http://localhost:5004/api/v1/file/new'
+                            response = requests.post(host, files=multipart_form_data, timeout=5)
+                            if response.status_code == 200:
+                                f_id = response.json()
+                                f_meta = {
+                                    "id": f_id['id'],
+                                    "extension": f_id['path'].split(".")[-1]
+                                }
+                                mtom_ids.append(f_meta)
+                                print(f"get mtom id: {f_id['id']}")
+
+                    if not os.path.isdir('raw'):
+                        os.mkdir('raw')
+                    if not os.path.isdir(os.path.join('raw', str(smev_host_name))):
+                        os.mkdir(os.path.join('raw', str(smev_host_name)))
+                    if not os.path.isdir(os.path.join('raw', str(smev_host_name), 'worker')):
+                        os.mkdir(os.path.join('raw', str(smev_host_name), 'worker'))
+                    if not os.path.isdir(os.path.join('raw', str(smev_host_name), 'worker', queue)):
+                        os.mkdir(os.path.join('raw', str(smev_host_name), 'worker', queue))
+                    
+                    with open(os.path.join('raw', str(smev_host_name), 'worker', queue, f'{id}-Response.xml'), 'wb') as f:
+                        f.write(raw_response)
 
                 except:
                     if 'FAILURE' in response:
@@ -244,7 +297,7 @@ def call_smev_queues():
                 if response.status_code != 200:
                     raise Exception(f'can not update GetRequestResponse mesage record: status code {response.status_code}')
 
-                body = {  "xml": xmlstr }
+                body = {  "xml": xmlstr, "mtoms": mtom_ids }
                 headers = {'content-type': 'application/json'}
                 host = f'http://localhost:5002/api/v1/record/{id}/GetRequestResponse'
                 response = requests.put(host, json=body, headers=headers, timeout=5)

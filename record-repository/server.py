@@ -117,6 +117,9 @@ async def update_record_content(req: record.RecordUpdate, id: str, mesage_type: 
     if rec == None:
         raise HTTPException(404, detail="no such record")
 
+    if req.attachmens.count() > 0:
+        await db_controller.add_attachments_to_record(db=db, record=rec, attachments=req.attachmens)
+
     content = req.xml
 
     if mesage_type == 'GetRequestRequest':

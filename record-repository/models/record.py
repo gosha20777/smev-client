@@ -7,8 +7,13 @@ from datetime import datetime
 class RecordBase(BaseModel):
     id: str = ""
 
+class Attachment(BaseModel):
+    id: str = None
+    extension: str = None
+
 class Record(RecordBase):
     mesages: List[str] = []
+    attachmens: List[Attachment] = []
     date: datetime = datetime.now()
 
     def create(self, id: str):
@@ -18,6 +23,9 @@ class Record(RecordBase):
     def create_from_db(self, rec: db_record.Record):
         self.id = rec.id
         self.date = rec.date
+        self.attachmens = []
+        for a in rec.attachments:
+            self.attachmens.append(Attachment(id=a.id, extension=a.extension))
 
         if rec.get_request_request != None and rec.get_request_request != "":
             self.mesages.append("GetRequestRequest")
@@ -50,3 +58,4 @@ class WorkerRecord(Record):
 
 class RecordUpdate(BaseModel):
     xml: str
+    attachmens: List[Attachment] = []

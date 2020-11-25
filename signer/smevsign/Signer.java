@@ -31,10 +31,13 @@ public class Signer {
     private static boolean isInit;
 
     private static void init(){
-        System.setProperty("org.apache.xml.security.ignoreLineBreaks", "true");//Для соответствия требованиям методических рекомендаций 3.4
-        ru.CryptoPro.JCPxml.xmldsig.JCPXMLDSigInit.init(); //Обязательная инициализация для распознавания ГОСТа
+        //Для соответствия требованиям методических рекомендаций 3.4
+        System.setProperty("org.apache.xml.security.ignoreLineBreaks", "true");
+        //Обязательная инициализация для распознавания ГОСТа
+        ru.CryptoPro.JCPxml.xmldsig.JCPXMLDSigInit.init(); 
         try {
-            Transform.register(SMEV_TRANSFORM_URN, SmevTransformSpi.class.getName()); //Регистрация дополнительной трансформации
+            //Регистрация дополнительной трансформации
+            Transform.register(SMEV_TRANSFORM_URN, SmevTransformSpi.class.getName());
         } catch (AlgorithmAlreadyRegisteredException ignored) {
             //Алгоритм уже зарегистрирован
         } catch (Exception e) {
@@ -56,22 +59,14 @@ public class Signer {
 
         addSignatureNode(forSign, signature);
 
-        //ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        //Converters.documentToSoap(forSign).writeTo(outputStream);
-        //String OUTPUT = new String(outputStream.toByteArray());
-        //System.out.println("Before sign xml:\n" + OUTPUT + "\n");
-
         //Добавление узла <ds:Reference> для обработки XML в соответствии с заданным алгоритмом хеширования и правилами из <ds:Transforms>
         signature.addDocument("#" + attrSupplier.forSignElementId(), createTransformationNode(forSign), XMLDSIG_MORE_GOSTR3411);
 
-        signature.addKeyInfo(attrSupplier.x509Certificate());//создание узла <ds:KeyInfo> - информации об открытом ключе на основе сертификата
+        //создание узла <ds:KeyInfo> - информации об открытом ключе на основе сертификата
+        signature.addKeyInfo(attrSupplier.x509Certificate());
         
-        //outputStream = new ByteArrayOutputStream();
-        //Converters.documentToSoap(forSign).writeTo(outputStream);
-        //OUTPUT = new String(outputStream.toByteArray());
-        //System.out.println("Before signigature xml:\n" + OUTPUT + "\n");
-
-        signature.sign(attrSupplier.privateKey());//создание подписи XML-документа на основе ключа и заднных правил
+        //создание подписи XML-документа на основе ключа и заднных правил
+        signature.sign(attrSupplier.privateKey());
 
         return Converters.documentToSoap(forSign);
     }
