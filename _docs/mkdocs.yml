@@ -2,6 +2,7 @@ site_name: Smev 3 client
 nav:
   - Home: index.md
   - Architecture Description: architecture-description.md
+  - Install guide: 
   - Core API Components:
     - Json2xml: json2xml.md
     - Xml Signer: xml-signer.md
