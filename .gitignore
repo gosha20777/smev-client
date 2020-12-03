@@ -134,3 +134,4 @@ redis/
 file-repository/storage/
 *.old
 log_raw/
+log/
