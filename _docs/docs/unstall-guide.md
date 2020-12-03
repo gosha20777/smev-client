@@ -159,31 +159,36 @@ cd /opt/smev-client/file-repository && \
     python3.7 -m pip install virtualenv && \
     virtualenv .virtualenv && \
     source .virtualenv/bin/activate && \
-    pip install -r requirements.txt
+    pip install -r requirements.txt && \
+    mkdir log
 
 cd /opt/smev-client/json2xml-transformer && \
     python3.7 -m pip install virtualenv && \
     virtualenv .virtualenv && \
     source .virtualenv/bin/activate && \
-    pip install -r requirements.txt
+    pip install -r requirements.txt && \
+    mkdir log
 
 cd /opt/smev-client/record-repository && \
     python3.7 -m pip install virtualenv && \
     virtualenv .virtualenv && \
     source .virtualenv/bin/activate && \
-    pip install -r requirements.txt
+    pip install -r requirements.txt && \
+    mkdir log
 
 cd /opt/smev-client/smev-connector && \
     python3.7 -m pip install virtualenv && \
     virtualenv .virtualenv && \
     source .virtualenv/bin/activate && \
-    pip install -r requirements.txt
+    pip install -r requirements.txt && \
+    mkdir log
 
 cd /opt/smev-client/plugins && \
     python3.7 -m pip install virtualenv && \
     virtualenv .virtualenv && \
     source .virtualenv/bin/activate && \
-    pip install -r requirements.txt
+    pip install -r requirements.txt && \
+    mkdir log
 ```
 
 **configure smev-client**
@@ -409,10 +414,10 @@ systemctl enable smev-record-repository.service
 systemctl enable smev-connector.service
 systemctl enable smev-plugins.service
 
-systemctl srart smev-file-repository.service
-systemctl srart smev-file-repository-worker.service
-systemctl srart smev-json2xml.service
-systemctl srart smev-record-repository.service
-systemctl srart smev-connector.service
-systemctl srart smev-plugins.service
+systemctl start smev-file-repository.service
+systemctl start smev-file-repository-worker.service
+systemctl start smev-json2xml.service
+systemctl start smev-record-repository.service
+systemctl start smev-connector.service
+systemctl start smev-plugins.service
 ```
