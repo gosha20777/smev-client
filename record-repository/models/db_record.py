@@ -25,4 +25,4 @@ class Attachment(Base):
     __table_args__ = {'schema': 'smev3_client'}
     id = Column(String, primary_key=True, index=True)
     extension = Column(String)
-    record_id = Column(String, ForeignKey('smev_records.id'))
+    record_id = Column(String, ForeignKey('smev3_client.smev_records.id'))

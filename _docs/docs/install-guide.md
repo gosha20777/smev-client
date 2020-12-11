@@ -413,17 +413,24 @@ cd /etc/systemd/system
 **run smev-client**
 
 ```
-systemctl enable smev-file-repository.service
-systemctl enable smev-file-repository-worker.service
-systemctl enable smev-json2xml.service
-systemctl enable smev-record-repository.service
-systemctl enable smev-connector.service
+systemctl enable smev-file-repository.service && \
+systemctl enable smev-file-repository-worker.service && \
+systemctl enable smev-json2xml.service && \
+systemctl enable smev-record-repository.service && \
+systemctl enable smev-connector.service && \
 systemctl enable smev-plugins.service
 
-systemctl start smev-file-repository.service
-systemctl start smev-file-repository-worker.service
-systemctl start smev-json2xml.service
-systemctl start smev-record-repository.service
-systemctl start smev-connector.service
+systemctl start smev-file-repository.service && \
+systemctl start smev-file-repository-worker.service && \
+systemctl start smev-json2xml.service && \
+systemctl start smev-record-repository.service && \
+systemctl start smev-connector.service && \
 systemctl start smev-plugins.service
+
+systemctl stop smev-file-repository.service && \
+systemctl stop smev-file-repository-worker.service && \
+systemctl stop smev-json2xml.service && \
+systemctl stop smev-record-repository.service && \
+systemctl stop smev-connector.service && \
+systemctl stop smev-plugins.service
 ```
