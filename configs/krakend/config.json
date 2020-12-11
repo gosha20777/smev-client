@@ -2,7 +2,7 @@
     "version": 2,
     "name": "mogt gateway",
     "host": [ "0.0.0.0" ],
-    "port": 8090,
+    "port": 8080,
     "cache_ttl": "3600s",
     "timeout": "10s",
     "extra_config": {
@@ -23,7 +23,7 @@
         "router_disabled": false,
         "backend_disabled": false,
         "endpoint_disabled": false,
-        "listen_address": ":8091"
+        "listen_address": ":8090"
       }
     },
     "endpoints": [   
@@ -34,7 +34,7 @@
 			"output_encoding": "no-op",
 			"backend": [
 			{
-				"host":[ "http://localhost:5000" ],
+				"host":[ "http://localhost:6500" ],
 				"url_pattern": "/api/v1/message/{cert_type}",
 				"encoding": "no-op",
 				"method": "POST"
@@ -47,7 +47,7 @@
 			"output_encoding": "no-op",
 			"backend": [
 			{
-				"host":[ "http://localhost:5000" ],
+				"host":[ "http://localhost:6500" ],
 				"url_pattern": "/api/v1/pkcs7/{cert_type}",
 				"encoding": "no-op",
 				"method": "POST"
@@ -61,7 +61,7 @@
 			"output_encoding": "no-op",
 			"backend": [
 			{
-				"host":[ "http://localhost:5001" ],
+				"host":[ "http://localhost:6501" ],
 				"url_pattern": "/api/v1/{sheme_number}/{query_type}",
 				"encoding": "no-op",
 				"method": "POST"
@@ -75,7 +75,7 @@
 			"output_encoding": "no-op",
 			"backend": [
 			{
-				"host":[ "http://localhost:5002" ],
+				"host":[ "http://localhost:6502" ],
 				"url_pattern": "/api/v1/records",
 				"encoding": "no-op",
 				"method": "GET"
@@ -89,7 +89,7 @@
 			"output_encoding": "no-op",
 			"backend": [
 			{
-				"host":[ "http://localhost:5002" ],
+				"host":[ "http://localhost:6502" ],
 				"url_pattern": "/api/v1/records/worker",
 				"encoding": "no-op",
 				"method": "GET"
@@ -102,7 +102,7 @@
 			"output_encoding": "no-op",
 			"backend": [
 			{
-				"host":[ "http://localhost:5002" ],
+				"host":[ "http://localhost:6502" ],
 				"url_pattern": "/api/v1/record/{id}",
 				"encoding": "no-op",
 				"method": "GET"
@@ -115,7 +115,7 @@
 			"output_encoding": "no-op",
 			"backend": [
 			{
-				"host":[ "http://localhost:5002" ],
+				"host":[ "http://localhost:6502" ],
 				"url_pattern": "/api/v1/record/{id}/{mesage_type}",
 				"encoding": "no-op",
 				"method": "GET"
@@ -128,7 +128,7 @@
 			"output_encoding": "no-op",
 			"backend": [
 			{
-				"host":[ "http://localhost:5002" ],
+				"host":[ "http://localhost:6502" ],
 				"url_pattern": "/api/v1/record/{id}/{mesage_type}",
 				"encoding": "no-op",
 				"method": "PUT"
@@ -141,7 +141,7 @@
 			"output_encoding": "no-op",
 			"backend": [
 			{
-				"host":[ "http://localhost:5002" ],
+				"host":[ "http://localhost:6502" ],
 				"url_pattern": "/api/v1/record/{id}/{mesage_type}/{content_type}",
 				"encoding": "no-op",
 				"method": "GET"
@@ -154,7 +154,7 @@
 			"output_encoding": "no-op",
 			"backend": [
 			{
-				"host":[ "http://localhost:5002" ],
+				"host":[ "http://localhost:6502" ],
 				"url_pattern": "/api/v1/record/{id}/{mesage_type}/{content_type}",
 				"encoding": "no-op",
 				"method": "PUT"
@@ -167,7 +167,7 @@
 			"output_encoding": "no-op",
 			"backend": [
 			{
-				"host":[ "http://localhost:5002" ],
+				"host":[ "http://localhost:6502" ],
 				"url_pattern": "/api/v1/record/{id}",
 				"encoding": "no-op",
 				"method": "DELETE"
@@ -181,7 +181,7 @@
 			"output_encoding": "no-op",
 			"backend": [
 			{
-				"host":[ "http://localhost:5004" ],
+				"host":[ "http://localhost:6504" ],
 				"url_pattern": "/api/v1/file/{operation_type}",
 				"encoding": "no-op",
 				"method": "POST"
@@ -195,7 +195,7 @@
 			"output_encoding": "no-op",
 			"backend": [
 			{
-				"host":[ "http://localhost:5004" ],
+				"host":[ "http://localhost:6504" ],
 				"url_pattern": "/api/v1/file/{id}",
 				"encoding": "no-op",
 				"method": "GET"
@@ -208,7 +208,7 @@
 			"output_encoding": "no-op",
 			"backend": [
 			{
-				"host":[ "http://localhost:5004" ],
+				"host":[ "http://localhost:6504" ],
 				"url_pattern": "/api/v1/file/{id}/{task}",
 				"encoding": "no-op",
 				"method": "GET"
@@ -221,7 +221,7 @@
 			"output_encoding": "no-op",
 			"backend": [
 			{
-				"host":[ "http://localhost:5004" ],
+				"host":[ "http://localhost:6504" ],
 				"url_pattern": "/api/v1/file/{id}/attachment/{alias}",
 				"encoding": "no-op",
 				"method": "GET"
@@ -234,7 +234,7 @@
 			"output_encoding": "no-op",
 			"backend": [
 			{
-				"host":[ "http://localhost:5004" ],
+				"host":[ "http://localhost:6504" ],
 				"url_pattern": "/api/v1/files",
 				"encoding": "no-op",
 				"method": "GET"
@@ -248,7 +248,7 @@
 			"output_encoding": "no-op",
 			"backend": [
 			{
-				"host":[ "http://localhost:5003" ],
+				"host":[ "http://localhost:6503" ],
 				"url_pattern": "/api/v1/send/{smev_server}",
 				"encoding": "no-op",
 				"method": "POST"		
@@ -261,7 +261,7 @@
 			"output_encoding": "no-op",
 			"backend": [
 			{
-				"host":[ "http://localhost:5003" ],
+				"host":[ "http://localhost:6503" ],
 				"url_pattern": "/api/v1/send/{smev_server}/raw",
 				"encoding": "no-op",
 				"method": "POST"
@@ -276,7 +276,7 @@
 			"timeout": "20s",
 			"backend": [
 			{
-				"host":[ "http://localhost:5005" ],
+				"host":[ "http://localhost:6505" ],
 				"url_pattern": "/api/v1/plugin/{plugin_name}",
 				"encoding": "no-op",
 				"method": "POST"				

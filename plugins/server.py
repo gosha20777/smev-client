@@ -10,7 +10,7 @@ import base64
 import urllib
 import hashlib
 
-BASE_URL = "http://mogt-ml:8080/v1/signer" # http://localhost:8090/v1/signer
+BASE_URL = "http://localhost:8080/v1/signer"
 
 class SmevMesageRequest(BaseModel):
     xsd_type: str
@@ -79,7 +79,7 @@ app = FastAPI()
 async def send_request(req: SmevMesageRequest):
     # json2xml
     try:
-        host = f"http://localhost:8090/v1/json2xml/{req.xsd_type}"
+        host = f"http://localhost:8080/v1/json2xml/{req.xsd_type}"
         body = req.json_template
         headers = {'content-type': 'application/json'}
         response = requests.post(host, json=body, headers=headers, timeout=5)
@@ -94,7 +94,7 @@ async def send_request(req: SmevMesageRequest):
         raise HTTPException(400, str(ex))
     # sign mesage
     try:
-        host = f"http://localhost:8090/v1/signer/message/{req.cert_type}"
+        host = f"http://localhost:8080/v1/signer/message/{req.cert_type}"
         body = {
             "id": "0",
             "msgType": "SendRequestRequest",
@@ -117,13 +117,13 @@ async def send_request(req: SmevMesageRequest):
         raise HTTPException(400, str(ex))
     # add record to db
     try:
-        host = f"http://localhost:8090/v1/record/{id}/new"
+        host = f"http://localhost:8080/v1/record/{id}/new"
         headers = {'content-type': 'application/json'}
         response = requests.get(host, headers=headers, timeout=5)
         if response.status_code != 200:
             raise Exception('Cant create record to db: api error')
 
-        host = f"http://localhost:8090/v1/record/{id}/SendRequestRequest"
+        host = f"http://localhost:8080/v1/record/{id}/SendRequestRequest"
         body = { "xml":  send_request_request }
         headers = {'content-type': 'application/json'}
         response = requests.put(host, json=body, headers=headers, timeout=5)
@@ -133,7 +133,7 @@ async def send_request(req: SmevMesageRequest):
         raise HTTPException(400, str(ex))
     # send to smev
     try:
-        host = f"http://localhost:8090/v1/send-to-smev/{req.smev_host}"
+        host = f"http://localhost:8080/v1/send-to-smev/{req.smev_host}"
         body = {
             "id": id,
             "xml":  send_request_request
@@ -154,7 +154,7 @@ async def send_request(req: SmevMesageRequest):
         raise HTTPException(400, str(ex))
     # update record db
     try:
-        host = f"http://localhost:8090/v1/record/{id}/SendRequestResponse"
+        host = f"http://localhost:8080/v1/record/{id}/SendRequestResponse"
         body = { "xml":  send_request_response }
         headers = {'content-type': 'application/json'}
         response = requests.put(host, json=body, headers=headers, timeout=5)
@@ -169,7 +169,7 @@ async def send_request(req: SmevMesageRequest):
 async def finish_task(req: FinishTaskRequest):
     # get record to db
     try:
-        host = f"http://localhost:8090/v1/record/{req.id}/GetResponseResponse"
+        host = f"http://localhost:8080/v1/record/{req.id}/GetResponseResponse"
         headers = {'content-type': 'application/json'}
         response = requests.get(host, headers=headers, timeout=5)
         if response.status_code != 200:
@@ -185,7 +185,7 @@ async def finish_task(req: FinishTaskRequest):
         raise HTTPException(400, str(ex))
     # sign mesage
     try:
-        host = f"http://localhost:8090/v1/signer/message/{req.cert_type}"
+        host = f"http://localhost:8080/v1/signer/message/{req.cert_type}"
         body = { 
 	            "id": finish_id,
 	            "msgType": "AckRequest",
@@ -204,7 +204,7 @@ async def finish_task(req: FinishTaskRequest):
         raise HTTPException(400, str(ex))
     # send to smev
     try:
-        host = f"http://localhost:8090/v1/send-to-smev/{req.smev_host}"
+        host = f"http://localhost:8080/v1/send-to-smev/{req.smev_host}"
         body = {
             "id": finish_id,
             "xml":  ack_request
@@ -217,7 +217,7 @@ async def finish_task(req: FinishTaskRequest):
         raise HTTPException(400, str(ex))
     # update record db
     try:
-        host = f"http://localhost:8090/v1/record/{req.id}/AckRequest"
+        host = f"http://localhost:8080/v1/record/{req.id}/AckRequest"
         body = { "xml":  ack_request }
         headers = {'content-type': 'application/json'}
         response = requests.put(host, json=body, headers=headers, timeout=5)
@@ -232,7 +232,7 @@ async def finish_task(req: FinishTaskRequest):
 async def finish_task(req: FinishTaskRequest):
     # get record to db
     try:
-        host = f"http://localhost:8090/v1/record/{req.id}/GetRequestResponse"
+        host = f"http://localhost:8080/v1/record/{req.id}/GetRequestResponse"
         headers = {'content-type': 'application/json'}
         response = requests.get(host, headers=headers, timeout=5)
         if response.status_code != 200:
@@ -247,7 +247,7 @@ async def finish_task(req: FinishTaskRequest):
         raise HTTPException(400, str(ex))
     # sign mesage
     try:
-        host = f"http://localhost:8090/v1/signer/message/{req.cert_type}?type=1.1"
+        host = f"http://localhost:8080/v1/signer/message/{req.cert_type}?type=1.1"
         body = { 
 	            "id": finish_id,
 	            "msgType": "AckRequest",
@@ -266,7 +266,7 @@ async def finish_task(req: FinishTaskRequest):
         raise HTTPException(400, str(ex))
     # send to smev
     try:
-        host = f"http://localhost:8090/v1/send-to-smev/{req.smev_host}"
+        host = f"http://localhost:8080/v1/send-to-smev/{req.smev_host}"
         body = {
             "id": finish_id,
             "xml":  ack_request
@@ -279,7 +279,7 @@ async def finish_task(req: FinishTaskRequest):
         raise HTTPException(400, str(ex))
     # update record db
     try:
-        host = f"http://localhost:8090/v1/record/{req.id}/AckRequest"
+        host = f"http://localhost:8080/v1/record/{req.id}/AckRequest"
         body = { "xml":  ack_request }
         headers = {'content-type': 'application/json'}
         response = requests.put(host, json=body, headers=headers, timeout=5)
@@ -294,7 +294,7 @@ async def finish_task(req: FinishTaskRequest):
 async def reply_task(req: SmevReply):
     # 0 check ack request
     try:
-        host = f"http://localhost:8090/v1/record/{req.id}/AckRequest"
+        host = f"http://localhost:8080/v1/record/{req.id}/AckRequest"
         headers = {'content-type': 'application/json'}
         response = requests.get(host, headers=headers, timeout=5)
         if response.status_code != 200:
@@ -304,7 +304,7 @@ async def reply_task(req: SmevReply):
 
     # 1 json2xml
     try:
-        host = f"http://localhost:8090/v1/json2xml/{req.message.xsd_type}"
+        host = f"http://localhost:8080/v1/json2xml/{req.message.xsd_type}"
         body = req.message.json_template
         headers = {'content-type': 'application/json'}
         response = requests.post(host, json=body, headers=headers, timeout=5)
@@ -320,7 +320,7 @@ async def reply_task(req: SmevReply):
 
     # 2 get Reply To param
     try:
-        host = f"http://localhost:8090/v1/record/{req.id}/GetRequestResponse"
+        host = f"http://localhost:8080/v1/record/{req.id}/GetRequestResponse"
         headers = {'content-type': 'application/json'}
         response = requests.get(host, headers=headers, timeout=5)
         if response.status_code != 200:
@@ -344,7 +344,7 @@ async def reply_task(req: SmevReply):
             except Exception as ex:
                 raise Exception(f'Cant download attachment: api error {ex}')
             b64_content = base64.b64encode(content)
-            host = f"http://localhost:8090/v1/signer/pkcs7/{req.attachment.cert_type}"
+            host = f"http://localhost:8080/v1/signer/pkcs7/{req.attachment.cert_type}"
             headers = {'content-type': 'application/text; charset=utf-8'}
             response = requests.post(host, data=b64_content, headers=headers, timeout=5)
             if response.status_code != 200:
@@ -356,7 +356,7 @@ async def reply_task(req: SmevReply):
 
     # 3 sign mesage
     try:
-        host = f"http://localhost:8090/v1/signer/message/{req.message.cert_type}?type=1.1"
+        host = f"http://localhost:8080/v1/signer/message/{req.message.cert_type}?type=1.1"
         if has_attachment == True:
             body = {
                 "id": "0",
@@ -396,7 +396,7 @@ async def reply_task(req: SmevReply):
 
     # 4 add record to db
     try:
-        host = f"http://localhost:8090/v1/record/{req.id}/SendResponseRequest"
+        host = f"http://localhost:8080/v1/record/{req.id}/SendResponseRequest"
         body = { "xml":  send_response_request }
         headers = {'content-type': 'application/json'}
         response = requests.put(host, json=body, headers=headers, timeout=5)
@@ -407,7 +407,7 @@ async def reply_task(req: SmevReply):
     
     # 5 send to smev
     try:
-        host = f"http://localhost:8090/v1/send-to-smev/{req.smev_host}"
+        host = f"http://localhost:8080/v1/send-to-smev/{req.smev_host}"
         body = {
             "id": id,
             "xml":  send_response_request
@@ -429,7 +429,7 @@ async def reply_task(req: SmevReply):
 
     # 6 update record db
     try:
-        host = f"http://localhost:8090/v1/record/{req.id}/SendResponseResponse"
+        host = f"http://localhost:8080/v1/record/{req.id}/SendResponseResponse"
         body = { "xml":  send_response_response }
         headers = {'content-type': 'application/json'}
         response = requests.put(host, json=body, headers=headers, timeout=5)
@@ -444,7 +444,7 @@ async def reply_task(req: SmevReply):
 async def send_request_rr(req: SmevMesageRosReestrRequest):
     try:
         # build smev message
-        host = f"http://localhost:8090/v1/signer/message/{req.message_sert}?type=1.1"
+        host = f"http://localhost:8080/v1/signer/message/{req.message_sert}?type=1.1"
         body = { 
 	        "id": "0",
 	        "msgType": "SendRequestRequest",
@@ -473,13 +473,13 @@ async def send_request_rr(req: SmevMesageRosReestrRequest):
         raise HTTPException(400, str(ex))
     # add record to db
     try:
-        host = f"http://localhost:8090/v1/record/{id}/new"
+        host = f"http://localhost:8080/v1/record/{id}/new"
         headers = {'content-type': 'application/json'}
         response = requests.get(host, headers=headers, timeout=5)
         if response.status_code != 200:
             raise Exception('Cant create record to db: api error')
 
-        host = f"http://localhost:8090/v1/record/{id}/SendRequestRequest"
+        host = f"http://localhost:8080/v1/record/{id}/SendRequestRequest"
         body = { "xml":  send_request_request }
         headers = {'content-type': 'application/json'}
         response = requests.put(host, json=body, headers=headers, timeout=5)
@@ -489,7 +489,7 @@ async def send_request_rr(req: SmevMesageRosReestrRequest):
         raise HTTPException(400, str(ex))
     # send to smev
     try:
-        host = f"http://localhost:8090/v1/send-to-smev/{req.smev_host}"
+        host = f"http://localhost:8080/v1/send-to-smev/{req.smev_host}"
         body = {
             "id": id,
             "xml":  send_request_request
@@ -510,7 +510,7 @@ async def send_request_rr(req: SmevMesageRosReestrRequest):
         raise HTTPException(400, str(ex))
     # update record db
     try:
-        host = f"http://localhost:8090/v1/record/{id}/SendRequestResponse"
+        host = f"http://localhost:8080/v1/record/{id}/SendRequestResponse"
         body = { "xml":  send_request_response }
         headers = {'content-type': 'application/json'}
         response = requests.put(host, json=body, headers=headers, timeout=5)

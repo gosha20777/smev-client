@@ -144,7 +144,7 @@ def call_smev_queues():
                             multipart_form_data = {
                                 'file': (mtom_file, mtom_files[mtom_file])
                             }
-                            host = f'http://localhost:5004/api/v1/file/new'
+                            host = f'http://localhost:6504/api/v1/file/new'
                             response = requests.post(host, files=multipart_form_data, timeout=5)
                             if response.status_code == 200:
                                 f_id = response.json()
@@ -186,14 +186,14 @@ def call_smev_queues():
                 # update db record
                 body = {  "xml": xmlstr_req }
                 headers = {'content-type': 'application/json'}
-                host = f'http://localhost:5002/api/v1/record/{id}/GetResponseRequest'
+                host = f'http://localhost:6502/api/v1/record/{id}/GetResponseRequest'
                 response = requests.put(host, json=body, headers=headers, timeout=5)
                 if response.status_code != 200:
                     raise Exception(f'can not update GetResponseRequest mesage record: status code {response.status_code}')
 
                 body = {  "xml": xmlstr, "mtoms": mtom_ids }
                 headers = {'content-type': 'application/json'}
-                host = f'http://localhost:5002/api/v1/record/{id}/GetResponseResponse'
+                host = f'http://localhost:6502/api/v1/record/{id}/GetResponseResponse'
                 response = requests.put(host, json=body, headers=headers, timeout=5)
                 if response.status_code != 200:
                     raise Exception(f'can not update GetResponseResponse mesage record: status code {response.status_code}')
@@ -244,7 +244,7 @@ def call_smev_queues():
                             multipart_form_data = {
                                 'file': (mtom_file, mtom_files[mtom_file])
                             }
-                            host = f'http://localhost:5004/api/v1/file/new'
+                            host = f'http://localhost:6504/api/v1/file/new'
                             response = requests.post(host, files=multipart_form_data, timeout=5)
                             if response.status_code == 200:
                                 f_id = response.json()
@@ -285,21 +285,21 @@ def call_smev_queues():
 
                 # update db record
                 headers = {'content-type': 'application/json'}
-                host = f'http://localhost:5002/api/v1/record/{id}/new'
+                host = f'http://localhost:6502/api/v1/record/{id}/new'
                 response = requests.get(host, headers=headers, timeout=5)
                 if response.status_code != 200:
                     raise Exception(f'can not create record: status code {response.status_code}')
 
                 body = {  "xml": xmlstr_req }
                 headers = {'content-type': 'application/json'}
-                host = f'http://localhost:5002/api/v1/record/{id}/GetRequestRequest'
+                host = f'http://localhost:6502/api/v1/record/{id}/GetRequestRequest'
                 response = requests.put(host, json=body, headers=headers, timeout=5)
                 if response.status_code != 200:
                     raise Exception(f'can not update GetRequestResponse mesage record: status code {response.status_code}')
 
                 body = {  "xml": xmlstr, "mtoms": mtom_ids }
                 headers = {'content-type': 'application/json'}
-                host = f'http://localhost:5002/api/v1/record/{id}/GetRequestResponse'
+                host = f'http://localhost:6502/api/v1/record/{id}/GetRequestResponse'
                 response = requests.put(host, json=body, headers=headers, timeout=5)
                 if response.status_code != 200:
                     raise Exception(f'can not update GetRequestResponse mesage record: status code {response.status_code}')

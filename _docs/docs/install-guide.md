@@ -206,6 +206,7 @@ cd /etc/systemd/system
    configure:
 
    ```
+   [Unit]
    Description=Smev File Repository Worker
    After=syslog.target
    After=network.target
@@ -247,6 +248,7 @@ cd /etc/systemd/system
    configure:
 
    ```
+   [Unit]
    Description=Smev File Repository
    After=syslog.target
    After=network.target
@@ -271,7 +273,7 @@ cd /etc/systemd/system
    User=root
    WorkingDirectory=/opt/smev-client/file-repository/
    ExecStart=/opt/smev-client/file-repository/.virtualenv/bin/uvicorn \
-       server:app --host 127.0.0.1 --port 5004 \
+       server:app --host 127.0.0.1 --port 6504 \
        --log-config log-config.ini
    
    [Install]
@@ -287,6 +289,7 @@ cd /etc/systemd/system
    configure:
 
    ```
+   [Unit]
    Description=Smev Record Repository
    After=syslog.target
    After=network.target
@@ -307,7 +310,7 @@ cd /etc/systemd/system
    User=root
    WorkingDirectory=/opt/smev-client/record-repository/
    ExecStart=/opt/smev-client/record-repository/.virtualenv/bin/uvicorn \
-       server:app --host 127.0.0.1 --port 5002 \
+       server:app --host 127.0.0.1 --port 6502 \
        --log-config log-config.ini
    
    [Install]
@@ -323,6 +326,7 @@ cd /etc/systemd/system
    configure:
 
    ```
+   [Unit]
    Description=Smev Connector
    After=syslog.target
    After=network.target
@@ -338,7 +342,7 @@ cd /etc/systemd/system
    User=root
    WorkingDirectory=/opt/smev-client/smev-connector/
    ExecStart=/opt/smev-client/smev-connector/.virtualenv/bin/uvicorn \
-       main:app --host 127.0.0.1 --port 5003 \
+       main:app --host 127.0.0.1 --port 6503 \
        --log-config log-config.ini
    
    [Install]
@@ -354,6 +358,7 @@ cd /etc/systemd/system
    configure:
 
    ```
+   [Unit]
    Description=Smev json2xml
    After=syslog.target
    After=network.target
@@ -366,7 +371,7 @@ cd /etc/systemd/system
    User=root
    WorkingDirectory=/opt/smev-client/json2xml-transformer/
    ExecStart=/opt/smev-client/json2xml-transformer/.virtualenv/bin/uvicorn \
-       server:app --host 127.0.0.1 --port 5001 \
+       server:app --host 127.0.0.1 --port 6501 \
        --log-config log-config.ini
    
    [Install]
@@ -382,6 +387,7 @@ cd /etc/systemd/system
    configure:
 
    ```
+   [Unit]
    Description=Smev Plugins
    After=syslog.target
    After=network.target
@@ -397,7 +403,7 @@ cd /etc/systemd/system
    User=root
    WorkingDirectory=/opt/smev-client/plugins/
    ExecStart=/opt/smev-client/plugins/.virtualenv/bin/uvicorn \
-       server:app --host 127.0.0.1 --port 5005 \
+       server:app --host 127.0.0.1 --port 6505 \
        --log-config log-config.ini
    
    [Install]
