@@ -132,6 +132,8 @@ services:
     ports:
       - 6505:6505
     network_mode: "host"
-    command: uvicorn server:app --host 0.0.0.0 --port 5005
+    command: uvicorn main:app --host 0.0.0.0 --port 6505
+    volumes:
+      - ./plugins/tmp:/app/tmp/
     depends_on:
       - krakend

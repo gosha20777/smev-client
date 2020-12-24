@@ -17,7 +17,7 @@ class Record(Base):
     send_response_request = Column(String)
     send_response_response = Column(String)
     ack_request = Column(String)
-    attachments = relationship('Attachment', backref='smev_records',
+    attachments = relationship('Attachment', backref='smev3_client.smev_records',
                                 lazy='dynamic')
 
 class Attachment(Base):

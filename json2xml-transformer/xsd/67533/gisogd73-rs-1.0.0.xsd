@@ -1,0 +1,760 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn://gisogd73/rs/1.0.0" xmlns:com="urn://gisogd73/commons/1.0.0" targetNamespace="urn://gisogd73/rs/1.0.0" elementFormDefault="qualified">
+  <xs:import namespace="urn://gisogd73/commons/1.0.0" schemaLocation="commons/gisogd73-commons-1.0.0.xsd"/>
+
+  <xs:complexType name="ResponseType">
+    <xs:annotation>
+      <xs:documentation>Результат оказания услуги</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="techCode" type="com:String-200" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Статус/причина ошибки</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Comment" type="com:String-2000" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Комментарий</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CaseNumber" type="com:digits-1-20" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Номер заявления</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="RequestType">
+    <xs:annotation>
+      <xs:documentation>Данные запроса</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="ServiceInfo" type="tns:ServiceInfoType" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Служебная информация</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ApplicantInfo" type="tns:ApplicantInfoType" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Сведение о заявителе</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ObjectInfo" type="tns:ObjectInfoType" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Сведения об объекте строительства</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DocumentInfo" type="tns:DocumentInfoType" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Документы</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ServiceInfoType">
+    <xs:annotation>
+      <xs:documentation>Служебная информация</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="UserType" type="tns:UserTypeType" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Тип заявителя</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ServiceCode" type="xs:string" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Код цели</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="GroupID" type="xs:string" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Код ведомства</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CurrentDate" type="xs:date" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Текущая дата</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CaseNumber" type="xs:string" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Номер заявления</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="OKTMO" type="xs:string" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>ОКТМО</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="OtherInfo1" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Дополнительная информация 1</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="OtherInfo2" type="xs:string" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Дополнительная информация 2</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ApplicantInfoType">
+    <xs:annotation>
+      <xs:documentation>Сведение о заявителе</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="ULApplicantInfo" type="tns:ULApplicantInfoType" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Сведение о юридическом лице</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="FLApplicantInfo" type="tns:FLApplicantInfoType" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Сведения о физическом лице</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Introduce" type="tns:IntroduceType" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Персональные данные представляемого лица</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IntroduceDoc" type="tns:IntroduceDocType" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Удостоверение личности представляемого лица</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IPApplicantInfo" type="tns:IPApplicantInfoType" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Сведения об индивидуальном предпринимателе</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ULApplicantInfoType">
+    <xs:annotation>
+      <xs:documentation>Сведения о юридическом лице</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="FullName" type="tns:String-4000" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Наименование юридического лица</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="OGRN_UL" type="tns:OGRNULType" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>ОГРН</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="INN_UL" type="com:LegalPersonINNType" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>ИНН</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LastName_ul" type="tns:String-60" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Фамилия руководителя</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="FirstName_ul" type="tns:String-60" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Имя руководителя</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SecondName_ul" type="tns:String-60" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Отчество руководителя</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="URAddress_ul" type="com:FiasCustomAddressType" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Юридический адрес</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="AddressCheck" type="xs:boolean" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Почтовый адрес совпадает с юридическим</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="AddressFact_ul" type="com:FiasCustomAddressType" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Почтовый адрес</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="BaseFLApplicantInfoType">
+    <xs:annotation>
+      <xs:documentation>Сведения о физическом лице</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="LastName" type="tns:String-60" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Фамилия</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="FirstName" type="tns:String-60" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Имя</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SecondName" type="tns:String-60" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Отчество</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="snils" type="com:SNILSType" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>СНИЛС</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="URAddress" type="com:FiasCustomAddressType" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Адрес регистрации</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="AddressCheck" type="xs:boolean" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Адрес места жительства совпадает с адресом регистрации</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="AddressFact" type="com:FiasCustomAddressType" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Адрес места жительства</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Phone" type="tns:PhoneNumberVariable" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Контактный телефон</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PasInfo" type="tns:PassportRFTypeVariable" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Сведения о документе, удостоверяющем личность</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="FLApplicantInfoType">
+    <xs:annotation>
+      <xs:documentation>Сведения о физическом лице</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="tns:BaseFLApplicantInfoType">
+        <xs:sequence>
+          <xs:element name="Represent" type="tns:RepresentEnum" minOccurs="1" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>Статус заявителя</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="RepresentType" type="tns:RepresentTypeEnum" minOccurs="0" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>Статус законного представителя</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="IntroduceType">
+    <xs:annotation>
+      <xs:documentation>Персональные данные представляемого лица</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="LastName_int" type="tns:String-60" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Фамилия</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="FirstName_int" type="tns:String-60" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Имя</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SecondName_int" type="tns:String-60" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Отчество</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="BirthDate" type="xs:date" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Дата рождения</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="IntroduceDocType">
+    <xs:annotation>
+      <xs:documentation>Удостоверение личности представляемого лица</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="IntTypeDoc" type="tns:IntTypeDocType" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Тип документа</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IntSeries" type="com:digits-4" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Серия</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IntNumber" type="com:digits-6" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Номер</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IntIssueDate" type="xs:date" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Дата выдачи</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IntIssuer" type="com:String-255" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Кем выдан</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="IPApplicantInfoType">
+    <xs:annotation>
+      <xs:documentation>Сведения об индивидуальном предпринимателе</xs:documentation>
+    </xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="tns:BaseFLApplicantInfoType">
+        <xs:sequence>
+          <xs:element name="OGRN_ip" type="com:OGRNIPType" minOccurs="1" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>ОГРН</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="INN_ip" type="com:PhysicalPersonINNType" minOccurs="1" maxOccurs="1">
+            <xs:annotation>
+              <xs:documentation>ИНН</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="ObjectInfoType">
+    <xs:annotation>
+      <xs:documentation>Сведения об объекте строительства</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="ServiceTypeInfo" type="tns:ServiceTypeInfoType" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Тип услуги</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ObjectName" type="com:String-250" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Наименование объекта</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="AreaInfo" type="tns:AreaInfoType" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Сведения о земельном участке</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ChangeInfo" type="tns:String-4000" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Информация о вносимых изменениях</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PermissionInfo" type="tns:PermissionInfoType" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Реквизиты разрешения</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ResultInfo" type="tns:ResultInfoType" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Способ получения результата</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CaseAgreeInfo" type="tns:CaseAgreeInfoType" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Оформление согласия третьих лиц</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ServiceTypeInfoType">
+    <xs:annotation>
+      <xs:documentation>Тип услуги</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="ServiceType" type="tns:ServiceTypeType" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Тип заявления</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TargetType" type="tns:TargetTypeType" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Цель подачи заявления</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="OnlyRights" type="xs:boolean" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Являюсь не единственным правообладателем земельного(-ых) участка(-ов) и уведомлен(-а) о необходимости подачи заявления каждым собственником земельного(-ых) участка(-ов) в течении 1 рабочего дня с момента поступления данного заявления в ведомство</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="AreaInfoType">
+    <xs:annotation>
+      <xs:documentation>Сведения о земельном участке</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="KadNum" type="tns:KadastrNumber" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Кадастровый номер</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="AddressObject" type="com:FiasCustomAddressType" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Адрес земельного участка</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="PermissionInfoType">
+    <xs:annotation>
+      <xs:documentation>Реквизиты разрешения</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="PermissionNumber" type="com:String-255" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Номер</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PermissionDate" type="xs:date" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Дата выдачи</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ResultInfoType">
+    <xs:annotation>
+      <xs:documentation>Способ получения результата</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="ResultRadio" type="tns:ResultRadioType" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Способ получения результата</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MFC" type="com:ClassifItem" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>МФЦ</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PostalAddress" type="com:FiasCustomAddressType" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Почтовый адрес, по которому следует предоставить результат</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ResultEmail" type="com:EmailAddressRFC2822" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Адрес электронной почты, по которому следует предоставить результат</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="CaseAgreeInfoType">
+    <xs:annotation>
+      <xs:documentation>Оформление согласия третьих лиц</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="CaseAgree" type="xs:boolean" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Я являюсь застройщиком и подтверждаю свое согласие на получение государственной услуги по заявлению</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CaseAgreeNumber" type="com:String-255" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Номер заявления, по которому направляется согласие</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="DocumentInfoType">
+    <xs:annotation>
+      <xs:documentation>Документы</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Doc1" type="com:AppliedDocumentNoCodeRestriction" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Заключение, подтверждающие соответствия вносимых в проектную документацию изменений требованиям, указанным в части 3.8 статьи 49 ГкРФ, предоставленное лицом, являющимся членом саморегулируемой организации, основанной на членстве лиц, осуществляющих подготовку проектной документации, и утверждённое привлечённым этим лицом в соответствии с настоящим Кодексом специалистом по организации архитектурно-строительного проектирования в должности главного инженера проекта, в случае внесения изменений в проектную документацию в соответствии с частью 3.8 статьи 49 ГкРФ</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Doc2" type="com:AppliedDocumentNoCodeRestriction" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Заключение, подтверждающие соответствия вносимых в проектную документацию изменений требованиям, указанным в части 3.9 статьи 49 ГкРФ, предоставленное Агентством регионального государственного строительного надзора и государственной экспертизы Ульяновской области</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Doc3" type="com:AppliedDocumentNoCodeRestriction" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Согласие всех правообладателей объекта капитального строительства в случае реконструкции такого объекта</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Doc4" type="com:AppliedDocumentNoCodeRestriction" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Решение общего собрания собственников помещений и машино-мест в многоквартирном доме, принятое в соответствии с жилищным законодательством в случае реконструкции многоквартирного дома, или, если в результате такой реконструкции произойдет уменьшение размера общего имущества в многоквартирном доме, согласие всех собственников помещений и машино-мест в многоквартирном доме</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Doc5" type="com:AppliedDocumentNoCodeRestriction" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Результаты инженерных изысканий</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Doc6" type="com:AppliedDocumentNoCodeRestriction" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Проектная документация, включая пояснительную записку, схему планировочной организации земельного участка (или проект полосы отвода); разделы, содержащие архитектурные и конструктивные решения, а также решения и мероприятия, направленные на обеспечение доступа инвалидов к объекту капитального строительства; проект организации строительства объекта капитального строительства (включая проект организации работ по сносу)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Doc7" type="com:AppliedDocumentNoCodeRestriction" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Положительное заключение экспертизы проектной документации объекта капитального строительства</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Doc9" type="com:AppliedDocumentNoCodeRestriction" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Соглашение о проведении реконструкции, определяющее условия и порядок возмещения ущерба, причиненного указанному объекту при осуществлении реконструкции</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Doc10" type="com:AppliedDocumentNoCodeRestriction" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Разрешение на отклонение от предельных параметров разрешенного строительства, реконструкции (в случае, если застройщику было предоставлено такое разрешение в соответствии со статьей 40 ГрК РФ)</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Doc11" type="com:AppliedDocumentNoCodeRestriction" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Копия свидетельства об аккредитации юридического лица, выдавшего положительное заключение негосударственной экспертизы проектной документации, в случае, если представлено заключение негосударственной экспертизы проектной документации</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Doc12" type="com:AppliedDocumentNoCodeRestriction" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Копия решения об установлении или изменении зоны с особыми условиями использования территории в случае строительства объекта капитального строительства, в связи с размещением которого в соответствии с законодательством Российской Федерации подлежит установлению зона с особыми условиями использования территории, или в случае реконструкции объекта капитального строительства, в результате которой в отношении реконструированного объекта подлежит установлению зона с особыми условиями использования территории или ранее установленная зона с особыми условиями использования территории подлежит изменению</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Doc13" type="com:AppliedDocumentNoCodeRestriction" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Документы, предусмотренные законодательством Российской Федерации об объектах культурного наследия, в случае, если при проведении работ по сохранению объекта культурного наследия затрагиваются конструктивные и другие характеристики надежности и безопасности такого объекта</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Doc14" type="com:AppliedDocumentNoCodeRestriction" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Копия договора о развитии застроенной территории или договора о комплексном развитии территории в случае, если строительство, реконструкцию объектов капитального строительства планируется осуществлять в границах территории, в отношении которой органом местного самоуправления принято решение о развитии застроенной территории или решение о комплексном развитии территории по инициативе органа местного самоуправления, за исключением случая принятия решения о самостоятельном осуществлении комплексного развития территории</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="UserTypeType" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="PERSON_RF">
+        <xs:annotation>
+          <xs:documentation>Физическое лицо</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="EMPLOYEE">
+        <xs:annotation>
+          <xs:documentation>Юридическое лицо</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="BUSINESSMAN">
+        <xs:annotation>
+          <xs:documentation>Индивидуальный предприниматель</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ServiceTypeType" final="restriction">
+    <xs:annotation>
+      <xs:documentation>
+        Тип услуги
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="1"/>
+      <xs:enumeration value="2"/>
+      <xs:enumeration value="3"/>
+      <xs:enumeration value="4"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="TargetTypeType" final="restriction">
+    <xs:annotation>
+      <xs:documentation>
+        Цель подачи заявления
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="1"/>
+      <xs:enumeration value="2"/>
+      <xs:enumeration value="3"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ResultRadioType" final="restriction">
+    <xs:annotation>
+      <xs:documentation>
+        Способ получения результата
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="1"/>
+      <xs:enumeration value="2"/>
+      <xs:enumeration value="3"/>
+      <xs:enumeration value="4"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="RepresentEnum" final="restriction">
+    <xs:annotation>
+      <xs:documentation>
+        Статус заявителя
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="1"/>
+      <xs:enumeration value="2"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="RepresentTypeEnum" final="restriction">
+    <xs:annotation>
+      <xs:documentation>
+        Статус законного представителя
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="1"/>
+      <xs:enumeration value="2"/>
+      <xs:enumeration value="3"/>
+      <xs:enumeration value="4"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="IntTypeDocType" final="restriction">
+    <xs:annotation>
+      <xs:documentation>
+        Тип документа удостоверения личности представляемого лица
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:integer">
+      <xs:enumeration value="1"/>
+      <xs:enumeration value="2"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="String-60">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="60"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="String-4000">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="4000"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="KadastrNumber">
+    <xs:annotation>
+      <xs:documentation/>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="18"/>
+      <xs:pattern value="\d{1,3}[:]\d{1,3}[:]\d{1,9}[:]\d+"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="OGRNULType">
+    <xs:annotation>
+      <xs:documentation>ОГРН юридического лица</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:length value="13"/>
+      <xs:pattern value="\d{13}"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="PhoneNumberVariable">
+    <xs:annotation>
+      <xs:documentation>Номер телефона (форматированный или только цифры)</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="16"/>
+      <xs:pattern value="[+]\d[(]\d{3}[)]\d{3}[-]\d{2}[-]\d{2}"/>
+      <xs:pattern value="\d{11}"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="PassportRFTypeVariable">
+    <xs:annotation>
+      <xs:documentation>Паспорт РФ</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Type" type="com:String-255">
+        <xs:annotation>
+          <xs:documentation>Тип документа</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Series" type="com:digits-4">
+        <xs:annotation>
+          <xs:documentation>Серия</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Number" type="com:digits-6">
+        <xs:annotation>
+          <xs:documentation>Номер</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IssueDate" type="xs:date">
+        <xs:annotation>
+          <xs:documentation>Дата выдачи</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Issuer" type="com:String-255">
+        <xs:annotation>
+          <xs:documentation>Кем выдан</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="IssuerCode" type="tns:IssuerCodeVariable" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Код подразделения</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="IssuerCodeVariable">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="7"/>
+      <xs:pattern value="\d{3}[-]\d{3}"/>
+      <xs:pattern value="\d{6}"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:element name="Response" type="tns:ResponseType"/>
+  <xs:element name="Request" type="tns:RequestType"/>
+</xs:schema>
+

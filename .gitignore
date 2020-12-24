@@ -135,3 +135,6 @@ file-repository/storage/
 *.old
 log_raw/
 log/
+plugins/tmp/
+utils/tests/
+utils/config.json

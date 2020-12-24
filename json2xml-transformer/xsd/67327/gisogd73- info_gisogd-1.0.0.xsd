@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn://gisogd73/info_gisogd/1.0.0" xmlns:com="urn://gisogd73/commons/1.0.0" targetNamespace="urn://gisogd73/info_gisogd/1.0.0" elementFormDefault="qualified">
+<xs:import namespace="urn://gisogd73/commons/1.0.0" schemaLocation="commons/gisogd73-commons-1.0.0.xsd"/>
+
+  <xs:element name="Request">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="OKTMO" type="com:OKATOType">
+          <xs:annotation>
+            <xs:documentation>Код региона по ОКТМО</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="service" type="tns:service"/>
+        <xs:element name="Panel_UL" type="tns:Panel_UL" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Сведения об организации</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Panel_FL" type="tns:Panel_FL" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Сведения о заявителе</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Panel_FL_passport" type="tns:Panel_FL_passport" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>Документ, удостоверяющий личность (паспорт)</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Panel_ISOGD" type="tns:Panel_ISOGD">
+          <xs:annotation>
+            <xs:documentation>Сведения информационных систем обеспечения градостроительной деятельности</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Panel_notes" type="tns:Panel_notes">
+          <xs:annotation>
+            <xs:documentation>Примечания</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Panel_Get_info" type="tns:Panel_Get_info">
+          <xs:annotation>
+            <xs:documentation>Способ получения сведений</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="OtherInfo" type="xs:string" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>Другие данные 1</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="OtherInfo2" type="xs:string" minOccurs="0" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>Другие данные 2</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Response">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ValueCode" type="xs:int">
+          <xs:annotation>
+            <xs:documentation>Код статуса</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Value" type="com:String-200">
+          <xs:annotation>
+            <xs:documentation>Статус/причина ошибки</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="Name" type="com:digits-1-20" minOccurs="1" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation>Номер заявления</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="service">
+    <xs:sequence>
+      <xs:element name="CurrentDate" type="xs:date" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Текущая дата</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="UserType" type="tns:UserType" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Тип заявителя</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="CaseNumber" type="xs:string" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Номер заявки</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ServiceCode" type="com:String-255" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Номер услуги</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="GroupID" type="com:String-255" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>ID цели</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="phone">
+    <xs:annotation>
+      <xs:documentation>Номер телефона</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="16"/>
+      <xs:pattern value="[+]?\d[(]?\d{3}[)]?\d{3}[-]?\d{2}[-]?\d{2}"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="Panel_UL">
+    <xs:sequence>
+      <xs:element name="orgName" type="com:String-500">
+        <xs:annotation>
+          <xs:documentation>Наименование организации</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ul_address" type="com:FiasCustomAddressType">
+        <xs:annotation>
+          <xs:documentation>Юридический адрес</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ul_post_address" type="com:FiasCustomAddressType">
+        <xs:annotation>
+          <xs:documentation>Почтовый адрес</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ul_phone" type="tns:phone">
+        <xs:annotation>
+          <xs:documentation>Контактный телефон</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ul_inn" type="com:LegalPersonINNType">
+        <xs:annotation>
+          <xs:documentation>ИНН</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ul_ogrn" type="com:OGRNCompanyType">
+        <xs:annotation>
+          <xs:documentation>ОГРН</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="kpp" type="com:KPPType">
+        <xs:annotation>
+          <xs:documentation>КПП</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Panel_FL">
+    <xs:sequence>
+      <xs:element name="sur" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Фамилия</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="nam" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Имя</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="pat" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Отчество</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="home_addr" type="com:FiasCustomAddressType">
+        <xs:annotation>
+          <xs:documentation>Адрес проживания</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="fl_snils" type="com:SNILSType">
+        <xs:annotation>
+          <xs:documentation>СНИЛС</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="fl_phone" type="tns:phone">
+        <xs:annotation>
+          <xs:documentation>Контактный телефон</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Panel_FL_passport">
+    <xs:sequence>
+      <xs:element name="docSeries" type="com:digits-4">
+        <xs:annotation>
+          <xs:documentation>Серия документа</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="docNumber" type="com:digits-6">
+        <xs:annotation>
+          <xs:documentation>Номер документа</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="docIssued" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>Кем выдан</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="docDate" type="xs:date">
+        <xs:annotation>
+          <xs:documentation>Когда выдан</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Panel_ISOGD">
+    <xs:sequence>
+      <xs:element name="radio_obj" type="tns:radio_obj">
+        <xs:annotation>
+          <xs:documentation>на</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="FieldDropdown584" type="com:ClassifItem">
+        <xs:annotation>
+          <xs:documentation>Из раздела</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="obj_address" type="com:FiasCustomAddressType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Точный адрес</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ref_point" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Адресный ориентир</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="kadastr_number" type="tns:kadastr_number" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            Кадастровый номер земельного участка
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Panel_notes">
+    <xs:sequence>
+      <xs:element name="check1" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>Я предупрежден(а) о возможном отказе в предоставлении информации в соответствии с действующим законодательством Российской Федерации</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="check2" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>Настоящим даю свое согласие на обработку указанных в Запросе персональных данных с использованием автоматизированной системы.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Panel_Get_info">
+    <xs:sequence>
+      <xs:element name="radio_sposob" type="tns:radio_sposob">
+        <xs:annotation>
+          <xs:documentation>Способ получения сведений</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="sposob_mfc" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>МФЦ</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="UserType" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="PERSON_RF"/>
+      <xs:enumeration value="EMPLOYEE"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="radio_obj" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Land">
+        <xs:annotation>
+          <xs:documentation>Земельный участок</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Capital_Construction">
+        <xs:annotation>
+          <xs:documentation>Объект капитального строительства</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Territory">
+        <xs:annotation>
+          <xs:documentation>Территория</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="kadastr_number">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="27"/>
+      <xs:pattern value="\d{1,3}[:]\d{1,3}[:]\d{1,9}[:]\d+"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="radio_sposob" final="restriction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Department">
+        <xs:annotation>
+          <xs:documentation>В ведомстве</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Mfc">
+        <xs:annotation>
+          <xs:documentation>В МФЦ</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="EPGU">
+        <xs:annotation>
+          <xs:documentation>В личном кабинете Единого портала государственных и муниципальных услуг, региональных порталов государственных и муниципальных услуг</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
+

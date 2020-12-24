@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn://gisogd73/mfc_gisogd/1.0.0" targetNamespace="urn://gisogd73/mfc_gisogd/1.0.0" elementFormDefault="qualified">
+
+	<xs:complexType name="CancelRequestType">
+		<xs:annotation>
+			<xs:documentation>
+				Запрос на отмену заявления
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="reason" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ResponseType">
+		<xs:annotation>
+			<xs:documentation>Данные ответа</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="techCode" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Код статуса</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Comment" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Комментарий</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CaseNumber" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Номер заявления</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AdditionalInfo" type="tns:ClassifItemType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Дополнительная информация</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="MfcOfficeRequestType">
+		<xs:annotation>
+			<xs:documentation>Данные запроса</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="CaseNumber" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Номер заявления</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice>
+				<xs:element name="ClaimRequest" type="tns:RequestType"/>
+				<xs:element name="CancelRequest" type="tns:CancelRequestType"/>
+			</xs:choice>
+			<xs:element name="AdditionalInfo" type="tns:ClassifItemType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Дополнительная информация</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="RequestType">
+		<xs:annotation>
+			<xs:documentation>Данные запроса</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ServiceCode" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Код услуги</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="RecipientID" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Идентификатор системы-получателя</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="RecipientName" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Название системы-получателя</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Claim" type="tns:ClaimType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Данные дела</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ModeOfTransmissionDocuments" type="xs:boolean" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Документы направлены курьером</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DocComment" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Комментарий к передаваемым документам</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ClaimType">
+		<xs:annotation>
+			<xs:documentation>Данные дела</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="RegNum" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Номер дела</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Service" type="tns:ClassifItemType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Услуга</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Department" type="tns:ClassifItemType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Ведомство</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ServiceCenter" type="tns:ClassifItemType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>МФЦ</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Applicants" type="tns:ApplicantType" minOccurs="1" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Заявители</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AdditionalInfo" type="tns:ClassifItemType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Дополнительная информация</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ClassifItemType">
+		<xs:annotation>
+			<xs:documentation>Пара ключ-значение</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Key" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Ключ</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Value" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Значение</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ApplicantType">
+		<xs:annotation>
+			<xs:documentation>Данные заявителя</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ApplicantType" type="tns:ApplicantTypeType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Тип заявителя</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Citizen" type="tns:CitizenType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Данные заявителя ФЛ или ИП</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Organization" type="tns:OrganizationType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Данные заявителя ЮЛ</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Delegate" type="tns:CitizenType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Представитель заявителя (ФЛ)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OrgDelegate" type="tns:OrganizationType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Организация-представитель</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PowersDoc" type="tns:DocumentInfoType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Документ, подтверждающий полномочия представителя (ФЛ)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OrgPowersDoc" type="tns:DocumentInfoType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Документ, подтверждающий полномочия представителя-организации</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AdditionalInfo" type="tns:ClassifItemType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Дополнительная информация</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="CitizenType">
+		<xs:annotation>
+			<xs:documentation>Данные физического лица</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="SecondName" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Фамилия</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FirstName" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Имя</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Patronymic" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Отчество</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BirthDate" type="xs:date" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Дата рождения</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BirthPlace" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Место рождения</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Gender" type="tns:GenderType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Пол</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Citizenship" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Гражданство</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Inn" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>ИНН</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Snils" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>СНИЛС</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Ogrnip" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>ОГРНИП</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IdentityDocument" type="tns:DocumentInfoType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Документ, удостоверяющий личность</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CitizenContactData" type="tns:CitizenContactDataType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Контактные данные</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PayoutData" type="tns:PayoutDataType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Выплатная информация</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AdditionalInfo" type="tns:ClassifItemType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Дополнительная информация</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="CitizenContactDataType">
+		<xs:annotation>
+			<xs:documentation>Контактные данные физического лица</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="NotificationType" type="tns:NotificationTypeType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Тип уведомления</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Phone" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Контактный телефон</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Email" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Адрес электронной почты</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="RegistrationAddress" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Адрес регистрации</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="LivingAddress" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Адрес проживания</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StayAddress" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Адрес пребывания</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AdditionalInfo" type="tns:ClassifItemType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Дополнительная информация</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="OrganizationType">
+		<xs:annotation>
+			<xs:documentation>Данные юридического лица</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="OrganizationForm" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Организационно-правовая форма</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FullName" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Полное наименование</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ShortName" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Сокращенное наименование</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Inn" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>ИНН</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Ogrn" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>ОГРН</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Kpp" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>КПП</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Phone" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Контактный телефон</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Email" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Адрес электронной почты</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NotificationType" type="tns:NotificationTypeType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Тип уведомления</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="RegistrationDocumentInfo" type="tns:DocumentInfoType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Документ, подтверждающий государственную регистрацию юридического лица</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BossInfo" type="tns:BossInfoType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Сведения о руководителе организации-заявителя</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OrganizationContactData" type="tns:OrganizationContactDataType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Контактные данные</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PayoutData" type="tns:PayoutDataType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Выплатная информация</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AdditionalInfo" type="tns:ClassifItemType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Дополнительная информация</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="BossInfoType">
+		<xs:annotation>
+			<xs:documentation>Сведения о руководителе организации-заявителя</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="SecondName" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Фамилия</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FirstName" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Имя</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Patronymic" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Отчество</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="OrganizationContactDataType">
+		<xs:annotation>
+			<xs:documentation>Контактные данные юридического лица</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="LegalAddress" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Юридический адрес</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PostAddress" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Адрес почтовый</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AdditionalInfo" type="tns:ClassifItemType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Дополнительная информация</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+
+	<xs:complexType name="DocumentInfoType">
+		<xs:annotation>
+			<xs:documentation>Данные документа</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Name" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Название документа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Series" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Серия</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Number" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Номер</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Issuer" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Кем выдан</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IssuerCode" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Код подразделения</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IssueDate" type="xs:date" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Дата выдачи документа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ValidityDate" type="xs:date" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Срок действия документа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="AdditionalInfo" type="tns:ClassifItemType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Дополнительная информация</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="PayoutDataType">
+		<xs:annotation>
+			<xs:documentation>Выплатная информация</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="PayoutWay" type="tns:PayoutWayType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Cпособ получения выплаты</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BankName" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Наименование банка (отделения/филиала)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BankAccount" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Банковский (расчетный) счет</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BIK" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>БИК</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="GenderType" final="restriction">
+		<xs:annotation>
+			<xs:documentation>Пол</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Unknown"/>
+			<xs:enumeration value="Male"/>
+			<xs:enumeration value="Female"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="PayoutWayType" final="restriction">
+		<xs:annotation>
+			<xs:documentation>Cпособ получения выплаты</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="AccountTransfer"/>
+			<xs:enumeration value="PostOffice"/>
+			<xs:enumeration value="WithoutChanges"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="NotificationTypeType" final="restriction">
+		<xs:annotation>
+			<xs:documentation>Тип уведомления</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Phone"/>
+			<xs:enumeration value="Email"/>
+			<xs:enumeration value="Post"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="ApplicantTypeType" final="restriction">
+		<xs:annotation>
+			<xs:documentation>Тип заявителя</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Individual"/>
+			<xs:enumeration value="LegalEntity"/>
+			<xs:enumeration value="Entrepreneur"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="Request" type="tns:MfcOfficeRequestType"/>
+	<xs:element name="Response" type="tns:ResponseType"/>
+
+</xs:schema>
+
+
