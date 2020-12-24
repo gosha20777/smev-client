@@ -24,7 +24,7 @@ class Record(Base):
     if schema != 'NULL':
         attachments = relationship('Attachment', backref=f'{schema}.smev_records',
                                 lazy='dynamic')
-    elif:
+    else:
         attachments = relationship('Attachment', backref='smev_records',
                                 lazy='dynamic')
 
@@ -36,5 +36,5 @@ class Attachment(Base):
     extension = Column(String)
     if schema != 'NULL':
         record_id = Column(String, ForeignKey(f'{schema}.smev_records.id'))
-    elif:
+    else:
         record_id = Column(String, ForeignKey(f'smev_records.id'))
