@@ -26,7 +26,7 @@ services:
     volumes:
       - ./configs/krakend:/etc/krakend
     ports:
-      - 8090:8080
+      - 8080:8080
     command: [ "run", "-c", "/etc/krakend/config.json" ]
 
   json_2_xml:
@@ -35,10 +35,10 @@ services:
       dockerfile: Dockerfile
     container_name: json_2_xml
     ports:
-      - 6501:5000
+      - 6501:6501
+    command: uvicorn server:app --host 0.0.0.0 --port 6501
     depends_on:
       - krakend
-
   record_repository:
     build:
       context: record-repository
@@ -46,7 +46,8 @@ services:
     container_name: record_repository
     env_file: ./configs/record-repository/app.conf
     ports:
-      - 6502:5000
+      - 6502:6502
+    command: uvicorn server:app --host 0.0.0.0 --port 6502
     depends_on:
       - krakend
       - db
@@ -61,12 +62,11 @@ services:
     network_mode: "host"
     ports:
       - 6504:6504
-    command: uvicorn server:app --host 0.0.0.0 --port 5004
+    command: uvicorn server:app --host 0.0.0.0 --port 6504
     depends_on:
       - krakend
       - redis
       - db
-
   ftp_worker:
     build:
       context: file-repository
@@ -78,7 +78,6 @@ services:
     depends_on:
       - file_repository
       - redis
-  
   redis:
     image: redis:4.0.6-alpine
     container_name: redis
@@ -86,8 +85,6 @@ services:
       - "6378:6379"
     volumes:
       - ./redis:/data
-
-
   smev_connector:
     build:
       context: smev-connector
@@ -100,11 +97,10 @@ services:
     ports:
       - 6503:6503
     network_mode: "host"
-    command: uvicorn main:app --host 0.0.0.0 --port 5003
+    command: uvicorn main:app --host 0.0.0.0 --port 6503
     depends_on:
       - krakend
       - db
-
   redoc:
     image: redocly/redoc
     container_name: redoc
@@ -122,7 +118,6 @@ services:
       - 6581:8000
     volumes:
       - ./_docs:/docs
-
   plugin_app:
     build:
       context: plugins
