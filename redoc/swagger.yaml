@@ -673,6 +673,85 @@ paths:
           description: "successful operation"
           schema:
             type: json
+  /plugin/send_request_ros_reestr:
+    post:
+      tags:
+      - "plugins"
+      summary: "send request to ros riestr"
+      description: ""
+      operationId: "send request rosreestr"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "smev message"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            rosreestr_sert:
+              type: "string"
+              format: "ros reestr message sertificate alias"
+            smev_sert:
+              type: "string"
+              format: "smev message sertificate alias"
+            smev_host:
+              type: "string"
+              format: "smev host alias"
+            request_type:
+              type: "int"
+              format: "ros reestr message sertificate alias"
+            action_code:
+              type: "int"
+              format: "ros reestr message sertificate alias"
+            cadastral_number:
+              type: "string"
+              format: "cadastral number"
+            name:
+              type: "string"
+              format: "organization name"
+            inn:
+              type: "string"
+              format: "organization inn"
+            ogrn:
+              type: "string"
+              format: "organization ogrn"
+            kpp:
+              type: "string"
+              format: "organization kpp"
+            reg_date:
+              type: "string"
+              format: "organization reg. date"
+            declarant_kind:
+              type: "string"
+              format: "declarant kind"
+            object_type_code:
+              type: "string"
+              format: "object type code"
+            region_code:
+              type: "int"
+              format: "region code"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+            id:
+              type: "string"
+              format: "uuid"
+        "400":
+          description: "error"
+          schema:
+            type: object
+            properties:
+            detail:
+              type: "string"
+              format: "error"
+
             
 definitions:
   Json2XmlResponse:
