@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2006 rel. 3 U (http://www.altova.com) by Company (GNIVC FNS RF) -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="urn://x-artefacts-fns-vipul-tosmv-ru/311-14/4.0.6" xmlns:fnst="urn://x-artefacts-fns/vipul-types/4.0.6" targetNamespace="urn://x-artefacts-fns-vipul-tosmv-ru/311-14/4.0.6" elementFormDefault="qualified" attributeFormDefault="unqualified">
-	<xs:import namespace="urn://x-artefacts-fns/vipul-types/4.0.6" schemaLocation="./commons/fns-vipul-types.xsd"/>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="urn://x-artefacts-fns-vipul-tosmv-ru/311-14/4.0.5" xmlns:fnst="urn://x-artefacts-fns/vipul-types/4.0.5" targetNamespace="urn://x-artefacts-fns-vipul-tosmv-ru/311-14/4.0.5" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="urn://x-artefacts-fns/vipul-types/4.0.5" schemaLocation="./commons/fns-vipul-types.xsd"/>
 	<xs:element name="FNSVipULRequest">
 		<xs:annotation>
 			<xs:documentation>Запрос на предоставление из ЕГРЮЛ выписки о юридическом лице</xs:documentation>
@@ -2021,7 +2020,7 @@
 													<xs:element name="ГРНДатаИспр" type="fnst:ИдГРНДатаТип" minOccurs="0" maxOccurs="unbounded">
 														<xs:annotation>
 															<xs:documentation>ГРН и дата записи, которой внесены исправления в связи с технической ошибкой</xs:documentation>
-															<xs:documentation>Отсутствует, если в сведениях, внесенных в ЕГРЮЛ по данной записи, не исправлялись технические ошибки </xs:documentation>
+															<xs:documentation>Отсутствует, если в сведениях, внесенных в ЕГРИП по данной записи, не исправлялись технические ошибки </xs:documentation>
 														</xs:annotation>
 													</xs:element>
 												</xs:sequence>
@@ -2110,23 +2109,15 @@
 						</xs:attribute>
 					</xs:complexType>
 				</xs:element>
-				<xs:sequence>
-					<xs:element name="КодОбр">
-						<xs:annotation>
-							<xs:documentation>Код обработки</xs:documentation>
-							<xs:documentation>Перечень возможных значений кода обработки приведен в Руководстве пользователя сервиса</xs:documentation>
-						</xs:annotation>
-						<xs:simpleType>
-							<xs:restriction base="fnst:string-2"/>
-						</xs:simpleType>
-					</xs:element>
-					<xs:element name="AttachmentsBlock" type="fnst:_AttachmentsBlockType" minOccurs="0">
-						<xs:annotation>
-							<xs:documentation>Блок сведений о вложении</xs:documentation>
-							<xs:documentation>Обязателен при КодОбр=54</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-				</xs:sequence>
+				<xs:element name="КодОбр">
+					<xs:annotation>
+						<xs:documentation>Код обработки</xs:documentation>
+						<xs:documentation>Перечень возможных значений кода обработки приведен в Руководстве пользователя сервиса</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="fnst:string-2"/>
+					</xs:simpleType>
+				</xs:element>
 			</xs:choice>
 			<xs:attribute name="ИдДок" type="fnst:string-36" use="required">
 				<xs:annotation>
