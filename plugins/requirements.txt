@@ -1,4 +1,5 @@
 fastapi
+fastapi-utils
 uvicorn
 requests
 lxml

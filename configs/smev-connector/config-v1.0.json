@@ -3,10 +3,10 @@
         "url": "http://smev3-n0.test.gosuslugi.ru:7500/smev/v1.1/ws?wsd",
         "version": "1.1",
         "client_signatures": [ "isogd" ],
-        "worker_signatures": [ "ulyanovsk" ],
+        "worker_signatures": [ ],
         "ftp_host": "",
         "ftp_port": 21,
-        "signer_url": "http://mogt-ml:8080/v1/signer"
+        "signer_url": "http://mogt-ttpo:8080/v1/signer"
     },
     "smev-test-1-2": {
         "url": "http://smev3-n0.test.gosuslugi.ru:7500/smev/v1.2/ws?wsd",
@@ -15,6 +15,6 @@
         "worker_signatures": [ ],
         "ftp_host": "",
         "ftp_port": 21,
-        "signer_url": "http://mogt-ml:8080/v1/signer"
+        "signer_url": "http://mogt-ttpo:8080/v1/signer"
     }
 }

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2006 rel. 3 U (http://www.altova.com) by Company (GNIVC FNS RF) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="urn://x-artefacts-fns-vipul-tosmv-ru/311-14/4.0.6" xmlns:fnst="urn://x-artefacts-fns/vipul-types/4.0.6" targetNamespace="urn://x-artefacts-fns-vipul-tosmv-ru/311-14/4.0.6" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:import namespace="urn://x-artefacts-fns/vipul-types/4.0.6" schemaLocation="./commons/fns-vipul-types.xsd"/>
 	<xs:element name="FNSVipULRequest">

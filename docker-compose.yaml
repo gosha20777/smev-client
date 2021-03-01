@@ -1,5 +1,18 @@
 version: '3.5'
 services:
+  krakend:
+    build:
+      context: krakend
+      dockerfile: Dockerfile
+    container_name: krakend
+    network_mode: "host"
+    env_file: ./configs/krakend/app.conf
+    volumes:
+      - ./configs/krakend:/etc/krakend
+    ports:
+      - 8080:8080
+    command: [ "run", "-c", "/etc/krakend/config.json" ]
+
   nginx:
     container_name: nginx
     image: nginx
@@ -16,18 +29,6 @@ services:
       - 5432:5432  
     volumes:
       - ./db/:/var/lib/postgresql
-  krakend:
-    build:
-      context: krakend
-      dockerfile: Dockerfile
-    container_name: krakend
-    network_mode: "host"
-    env_file: ./configs/krakend/app.conf
-    volumes:
-      - ./configs/krakend:/etc/krakend
-    ports:
-      - 8080:8080
-    command: [ "run", "-c", "/etc/krakend/config.json" ]
 
   json_2_xml:
     build:

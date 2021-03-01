@@ -34,8 +34,8 @@
 			"output_encoding": "no-op",
 			"backend": [
 			{
-				"host":[ "http://localhost:6500" ],
-				"url_pattern": "/api/v1/message/{cert_type}",
+				"host":[ "http://mogt-ttpo:8080" ],
+				"url_pattern": "/v1/signer/message/{cert_type}",
 				"encoding": "no-op",
 				"method": "POST"
 			}
