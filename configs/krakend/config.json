@@ -268,7 +268,6 @@
 			}
 			]
 		},
-
 		{
 			"endpoint": "/v1/plugin/{plugin_name}",
 			"method": "POST",
@@ -277,9 +276,29 @@
 			"backend": [
 			{
 				"host":[ "http://localhost:6505" ],
-				"url_pattern": "/api/v1/{plugin_name}",
+				"url_pattern": "/v1/plugin/{plugin_name}",
 				"encoding": "no-op",
 				"method": "POST"				
+			}
+			]
+		},
+		{
+			"endpoint": "/docs/smev-plugins/",
+			"output_encoding": "no-op",
+			"backend": [
+			{
+				"host":[ "http://localhost:6505" ],
+				"url_pattern": "/docs/smev-plugins",
+				"encoding": "no-op"				
+			}
+			]
+		},
+		{
+			"endpoint": "/docs/smev-plugins/openapi.json",
+			"backend": [
+			{
+				"host":[ "http://localhost:6505" ],
+				"url_pattern": "/docs/smev-plugins/openapi.json"
 			}
 			]
 		}

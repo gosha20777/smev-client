@@ -5,11 +5,12 @@ from pydantic import BaseSettings
 # https://github.com/tiangolo/fastapi/issues/508#issuecomment-532360198
 class WorkerConfig(BaseSettings):
     project_name: str = "smev plugins api"
-    api_prefix: str = "/api/v1"
+    api_prefix: str = "/v1/plugin"
     version: str = "1.0.0"
+    openapi_url: str = "/docs/smev-plugins/openapi.json"
+    docs_url: str = "/docs/smev-plugins/"
     debug: bool = False
-
-    core_api_url: str = "./snapshotes/lacmus-1-4.h5"
+    
     class Config:
         env_file = '.env'
         env_file_encoding = 'utf-8'

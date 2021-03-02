@@ -13,8 +13,6 @@ class TaxDictBuilder:
         self.doc_id = doc_id
         self.doc_number = doc_number
     def build_request(self) -> dict:
-        print(self.org)
-        print(self.info)
         if self.org == 'OrganizationTypeEnum.ip':
             if self.info == 'InfoTypeEnum.inn':
                 result = {
